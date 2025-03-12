@@ -1,0 +1,14 @@
+Business Source License 1.1 (BUSL-1.1)
+
+Copyright (c) 2025 mzoritz
+All rights reserved.
+
+Terms of Use:
+
+The source code is publicly visible, but may not be distributed, modified, or used for commercial purposes without a commercial license.
+
+Private, non-commercial use is allowed, but redistribution or incorporation into other projects is prohibited.
+
+Commercial use requires a paid license. Licenses can be obtained at [your contact or website].
+
+Any unauthorized distribution, forks, or sublicensing of this repository are strictly prohibited.
