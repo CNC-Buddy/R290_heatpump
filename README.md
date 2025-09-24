@@ -1,2 +1,2 @@
-# terranext_modbus
-An integration for TerraNext devices, these are also known as SolarEast
+# R290 Heatpump Modbus Integration for HomeAssistant
+An integration for R290 Heatpump's produced by SolarEast
