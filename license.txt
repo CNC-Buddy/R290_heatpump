@@ -1,6 +1,6 @@
 Business Source License 1.1 (BUSL-1.1)
 
-Copyright (c) 2025 mzoritz
+Copyright (c) 2025 CNC-Buddy
 All rights reserved.
 
 Terms of Use:
