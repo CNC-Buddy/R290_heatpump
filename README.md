@@ -1,2 +1,118 @@
 # R290 Heatpump Modbus Integration for HomeAssistant
 An integration for R290 Heatpump's produced by SolarEast
+
+The Modbus communication is the same according to the instructions, same for the device parameters and settings. 
+Here is a list of the different sales types:
+
+###########__6kW - 230V___###############
+
+SolarEast Heat Pump Ltd. - BLN-006TC1  			            (China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - SMHP - 006C1 	(China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - BLN-006TC1  	  (China)
+12warm.de - Terra Next ONE - BLN-006TC1  		            (Germany)
+Hainzl - BLN-006TC1  				                          	(Germany)
+Erba Wärmetechnik GmbH - BLN-006TC1  		              	(Germany)
+WP Heater - BLN-006TC1  				                        (Germany)
+SKS Kompressoren GmbH - BLN-006TC1  		              	(Germany)
+M&S POWER - HP-M6-E-S  				                        	(Germany)
+Megawave Energy Ltd - MWMHPC-6KW1		                  	(United Kingdom)
+ARDEN Heat Pumps Pty Ltd - BLN-006TC1		              	(Australia)
+NAGAI - BLN-006TC1				                            	(Bosnia-Herzegovina, Croatia)
+SunAir Energy Solutions - BLN-006TC1  		            	(Spain, Nederland)
+PERFEXIM - PHA-50 50-006-0816-001		                  	(Poland)
+ElektroFrigo - BLN-006TC1				                        (Serbia)
+
+###########__8kW - 230V___###############
+
+SolarEast Heat Pump Ltd. - BLN-008TC1  		            	(China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - SMHP - 008C1  	(China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - BLN-008TC1    	(China)
+12warm.de - Terra Next ONE - BLN-008TC1              		(Germany)
+Hainzl - BLN-008TC1  				                          	(Germany)
+Megawave Energy Ltd - MWMHPC-8KW1		                  	(United Kingdom)
+NAGAI - BLN-008TC1				                            	(Bosnia-Herzegovina, Croatia)
+SunAir Energy Solutions - BLN-008TC1  		            	(Spain, Nederland)
+
+###########__8kW - 380V___###############
+
+SolarEast Heat Pump Ltd. - BLN-008TC3  	            		(China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - SMHP - 008C3  	(China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - BLN-008TC3    	(China)
+12warm.de - Terra Next ONE - BLN-008TC3  	            	(Germany)
+Hainzl - BLN-008TC3  				                          	(Germany)
+Megawave Energy Ltd - MWMHPC-8KW3		                  	(United Kingdom)
+SunAir Energy Solutions - BLN-008TC3  		            	(Spain, Nederland)
+
+###########__12kW - 230V___###############
+
+SolarEast Heat Pump Ltd. - BLN-012TC1  			            (China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - SMHP - 012C1  	(China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - BLN-012TC1    	(China)
+12warm.de - Terra Next ONE+ - BLN-012TC1          	  	(Germany)
+Hainzl - BLN-012TC1  			                          		(Germany)
+WP Heater - BLN-012TC1  				                        (Germany)
+SKS Kompressoren GmbH - BLN-012TC1  			              (Germany)
+M&S POWER - HP-M12-E-S  			                        	(Germany)
+Megawave Energy Ltd - MWMHPC-12KW1			                (United Kingdom)
+ARDEN Heat Pumps Pty Ltd - BLN-012TC1		              	(Australia)
+NAGAI - BLN-0012TC1					                            (Bosnia-Herzegovina, Croatia)
+SunAir Energy Solutions - BLN-012TC1  		            	(Spain, Nederland)
+PERFEXIM - PHA-50 50-012-1455-001			                  (Poland)
+ElektroFrigo - BLN-012TC1			                        	(Serbia)
+
+###########__12kW - 380V___###############
+
+SolarEast Heat Pump Ltd. - BLN-012TC3  		            	(China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - SMHP - 012C3  	(China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - BLN-012TC3  	  (China)
+12warm.de - Terra Next ONE+ - BLN-012TC3  	            (Germany)
+Hainzl - BLN-012TC3  				                          	(Germany)
+Erba Wärmetechnik GmbH - BLN-0012TC3  	            		(Germany)
+Kamäleon - BLN-0012TC3  	                        			(Germany)
+WP Heater - BLN-012TC3 			                        		(Germany)
+SKS Kompressoren GmbH - BLN-012TC3  		               	(Germany)
+M&S POWER - HP-M12-E-S2  		                        		(Germany)
+KWE - Primus BLN-012TC3  			                        	(Germany)
+Megawave Energy Ltd - MWMHPC-12KW3			                (United Kingdom)
+ARDEN Heat Pumps Pty Ltd - BLN-012TC3		              	(Australia)
+NAGAI - BLN-012TC3				                            	(Bosnia-Herzegovina, Croatia)
+SunAir Energy Solutions - BLN-012TC3  		            	(Spain, Nederland)
+PERFEXIM - PHA-50 50-012-1455-003		                  	(Poland)
+ElektroFrigo - BLN-012TC3			                        	(Serbia)
+
+###########__18kW - 230V___###############
+
+SolarEast Heat Pump Ltd. - BLN-018TC1  		            	(China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - SMHP - 018C1  	(China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - BLN-018TC1    	(China)
+12warm.de - Terra Next Pro - BLN-018TC1              		(Germany)
+Hainzl - BLN-018TC1  				                          	(Germany)
+SKS Kompressoren GmbH - BLN-018TC1  		              	(Germany)
+WP Heater - BLN-018TC1  			                        	(Germany)
+Megawave Energy Ltd - MWMHPC-18KW1		                	(United Kingdom)
+ARDEN Heat Pumps Pty Ltd - BLN-018TC1			              (Australia)
+NAGAI - BLN-018TC1				                            	(Bosnia-Herzegovina, Croatia)
+SunAir Energy Solutions - BLN-018TC1  		            	(Spain, Nederland)
+PERFEXIM - PHA-50 50-018-1945-001			                  (Poland)
+ElektroFrigo - BLN-018TC1			                        	(Serbia)
+
+###########__18kW - 380V___###############
+
+SolarEast Heat Pump Ltd. - BLN-018TC3  		             	(China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - SMHP - 018C3  	(China)
+Jiangsu Sunrain Solar Energy Co., Ltd. - BLN-018TC3    	(China)
+12warm.de - Terra Next Pro - BBLN-018TC3  		          (Germany)
+Hainzl - BLN-018TC3  				                          	(Germany)
+Erba Wärmetechnik GmbH - BLN-018TC3  		              	(Germany)
+SKS Kompressoren GmbH - BLN-018TC3  	              		(Germany)
+WP Heater - BLN-018TC3  			                        	(Germany)
+M&S POWER - HP-M18-E-S  			                        	(Germany)
+KWE - Primus BLN-018TC3  			                        	(Germany)
+Megawave Energy Ltd - MWMHPC-18KW3	                		(United Kingdom)
+ARDEN Heat Pumps Pty Ltd - BLN-018TC3			              (Australia)
+NAGAI - BLN-018TC3				                            	(Bosnia-Herzegovina, Croatia)
+SunAir Energy Solutions - BLN-018TC3  		            	(Spain, Nederland)
+PERFEXIM - PHA-50 50-018-1945-003	                  		(Poland)
+ElektroFrigo - BLN-018TC3			                        	(Serbia)
+
+#####################################################
