@@ -107,6 +107,24 @@ Entity naming uses the curve prefixes `heating`, `floor_heating`, `hotwater`, `c
 - Batching minimizes Modbus register calls and supports multiple scan intervals.
 - PV and COP logic are isolated so behavior can be refined without touching Modbus I/O.
 
+## Open Topics
+
+- Dashboard optimization [open]
+- Integrating L-Parameter [open]
+- Split COP: hot water vs heating [open]
+- Add remarks/notes [open]
+
+## Testing Stage
+
+- COP event-driven updates [implemented; needs verification]
+- PV optimization battery rule (<= threshold) [implemented; needs verification]
+- Config flow: dashboard create/recreate [implemented; needs verification]
+- Diagnostics at slave 2 (counters + status) [enabled by default; verify entities visible]
+- User parameters writable? [partially supported via numbers; verify coverage]
+- Heatcurve switch not affecting behavior? [to investigate]
+- Adjust hub default values [open; collect desired defaults]
+- Hub options reset on restart? [investigate] 
+
 ## My used Hardware
 
 - 2x Terra Next ONE+ - BLN-012TC3
