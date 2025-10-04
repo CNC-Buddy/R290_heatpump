@@ -7,9 +7,9 @@
 
 A Home Assistant custom integration for monitoring and controlling an R290 heat pump produced by SolarEast via Modbus, including PV-aware heatcurve optimization, COP calculation, and an optional Lovelace dashboard. You can find the diffrent Sales Names under Device Names for BLN0##TC#. It can be, that BLN0##TB# will also work.
 
-[Video: Feature Overview — placeholder]
+[Video: Feature Overview]
 
-- Demo video placeholder: replace with your link (e.g., https://your.demo/video)
+- Demo video will come soon:  (e.g., https://your.demo/video)
 
 ## Features
 
@@ -107,9 +107,13 @@ Entity naming uses the curve prefixes `heating`, `floor_heating`, `hotwater`, `c
 - Batching minimizes Modbus register calls and supports multiple scan intervals.
 - PV and COP logic are isolated so behavior can be refined without touching Modbus I/O.
 
-## Demo Video (Placeholder)
+## My used Hardware
 
-- Replace this line with a link or embed to your demo video showcasing setup, dashboard, PV optimization, and COP sensors.
+- 2x Terra Next ONE+ - BLN-012TC3
+- PUSR DR302 - Modbus RTU Gateway
+- Shelly 3EM for electrical enegry monitoring
+- kamstrup Multical 303 for heat energy monitoring
+- nanoCUL USB Stick 868 Mhz with CC1101 SMA antenna for Multical 303 readout with Wmbusmeters Addon
 
 ---
 
