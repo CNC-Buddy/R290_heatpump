@@ -1,0 +1,6 @@
+{
+  "name": "R290 Heatpump",
+  "content_in_root": false,
+  "domains": ["r290_heatpump"],
+  "country": "DE"
+}
