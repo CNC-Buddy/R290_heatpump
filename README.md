@@ -9,7 +9,7 @@ A Home Assistant custom integration for monitoring and controlling an R290 heat 
 
 [Video: Feature Overview]
 
-- Demo video will come soon:  (e.g., https://your.demo/video)
+- Demo video : [Demo at Youtube](https://youtu.be/2ENamuptTN0)
 
 ## Features
 
