@@ -38,6 +38,14 @@ A Home Assistant custom integration for monitoring and controlling an R290 heat 
 - Restart Home Assistant.
 - Add integration via Settings → Devices & Services → “Add Integration” → R290 Heat Pump.
 
+### Installation via HACS (recommended)
+
+- Open HACS: HACS > Integrations > menu (⋯) > Custom repositories
+- Add repository URL: `https://github.com/CNC-Buddy/R290_heatpump` with type "Integration"
+- Search for "R290 Heat Pump" in HACS and install
+- Restart Home Assistant
+- Add the integration: Settings > Devices & Services > Add Integration > R290 Heat Pump
+  
 ## Configuration (Flows)
 
 - Modbus Bridge
