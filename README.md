@@ -1,7 +1,7 @@
 [![GitHub release](https://img.shields.io/github/v/release/CNC-Buddy/R290_heatpump)](https://github.com/CNC-Buddy/R290_heatpump/releases)
 [![GitHub All Releases](https://img.shields.io/github/downloads/CNC-Buddy/R290_heatpump/total)](https://github.com/CNC-Buddy/R290_heatpump/releases)  
 [![Buy Me a Coffee](https://buymeacoffee.com/assets/img/custom_images/white_img.png)](https://buymeacoffee.com/cnc.buddy)
-<meta name="google-site-verification" content="t8JknsnisoEnV7XM_-NCcP2IoHK223EGol7Ifs_vePM" />
+
 
 
 # R290 Heat Pump (Home Assistant Integration)
