@@ -2,7 +2,7 @@
   "domain": "r290_heatpump",
   "name": "R290 Heat Pump",
   "codeowners": ["@CNC-Buddy"],
-  "version": "1.0.0",
+  "version": "1.0.1",
   "documentation": "https://github.com/CNC-Buddy/R290_heatpump",
   "issue_tracker": "https://github.com/CNC-Buddy/R290_heatpump/issues",
   "requirements": ["pymodbus>=3.10.0"],
