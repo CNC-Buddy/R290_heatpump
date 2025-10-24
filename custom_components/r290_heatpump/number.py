@@ -1,3 +1,5 @@
+# Version: 1.0.1
+# Last modified: 2025-10-24 17:33 by CNC-Buddy
 from typing import Optional
 import logging
 from homeassistant.components.number import NumberEntity, NumberDeviceClass, NumberMode
@@ -98,17 +100,46 @@ async def async_setup_entry(
             model="Heating Curve",
             sw_version="1.0.0",
         )
+        curve_cfg = PV_CURVE_CONFIG.get(device_type, {})
+        curve_prefix = {
+            "heating_curve": "heating",
+            "floor_heating_curve": "floor_heating",
+            "hot_water_curve": "hotwater",
+            "cooling_curve": "cooling",
+        }.get(device_type, "heating")
+
         defs = {
             "t_out_min": (-30, 10, 1, -15.0),
             "t_out_max": (0, 35, 1, 20.0),
             "t_flow_min": (20, 60, 1, 25.0),
             "t_flow_max": (25, 70, 1, 50.0),
             "inertia_hours": (0.0, 24.0, 0.1, 0.0),
-            "deadband_c": (0.0, 2.0, 0.1, 0.5),
+            "stepsize_c": (0.0, 2.0, 0.1, 0.5),
         }
         for key, (vmin, vmax, step, default) in defs.items():
-            init = entry.options.get(key, default)
-            entities.append(HeatCurveParamNumber(hass, entry, device_info, key, init, vmin, vmax, step))
+            if key == "stepsize_c":
+                init = entry.options.get("stepsize_c")
+                if init is None:
+                    init = entry.options.get("deadband_c")
+                if init is None:
+                    init = entry.data.get("stepsize_c", entry.data.get("deadband_c", default))
+            else:
+                init = entry.options.get(key, entry.data.get(key, default))
+            if init is None:
+                init = default
+            entities.append(
+                HeatCurveParamNumber(
+                    hass,
+                    entry,
+                    device_info,
+                    key,
+                    init,
+                    default,
+                    vmin,
+                    vmax,
+                    step,
+                )
+            )
 
         slave_id = int(entry.data.get(CONF_SLAVE, 1))
         if slave_id == 1 and device_type in PV_CURVE_CONFIG:
@@ -127,22 +158,104 @@ async def async_setup_entry(
                 model="PV Optimization",
                 sw_version="1.0.0",
             )
-            grid_default = entry.options.get("pv_grid_threshold_kw", entry.data.get("pv_grid_threshold_kw", curve_cfg.get("grid_threshold_default", 2.0)))
-            battery_default = entry.options.get("pv_battery_threshold_pct", entry.data.get("pv_battery_threshold_pct", curve_cfg.get("battery_threshold_default", 80.0)))
-            cooldown_default = entry.options.get("pv_cooldown_minutes", entry.data.get("pv_cooldown_minutes", curve_cfg.get("cooldown_default", 15)))
+            grid_threshold_legacy = entry.options.get(
+                "pv_grid_threshold_kw", entry.data.get("pv_grid_threshold_kw")
+            )
+            grid_min_default = entry.options.get(
+                "pv_grid_threshold_min_kw",
+                entry.data.get(
+                    "pv_grid_threshold_min_kw",
+                    grid_threshold_legacy
+                    if grid_threshold_legacy is not None
+                    else curve_cfg.get(
+                        "grid_threshold_min_default",
+                        curve_cfg.get("grid_threshold_default", 2.0),
+                    ),
+                ),
+            )
+            grid_max_default = entry.options.get(
+                "pv_grid_threshold_max_kw",
+                entry.data.get(
+                    "pv_grid_threshold_max_kw",
+                    grid_threshold_legacy
+                    if grid_threshold_legacy is not None
+                    else curve_cfg.get(
+                        "grid_threshold_max_default",
+                        curve_cfg.get("grid_threshold_default", float(grid_min_default)),
+                    ),
+                ),
+            )
+            try:
+                grid_min_default = float(grid_min_default)
+            except (TypeError, ValueError):
+                grid_min_default = float(
+                    curve_cfg.get(
+                        "grid_threshold_min_default",
+                        curve_cfg.get("grid_threshold_default", 2.0),
+                    )
+                )
+            try:
+                grid_max_default = float(grid_max_default)
+            except (TypeError, ValueError):
+                grid_max_default = float(
+                    curve_cfg.get(
+                        "grid_threshold_max_default",
+                        curve_cfg.get("grid_threshold_default", grid_min_default),
+                    )
+                )
+            if grid_max_default < grid_min_default:
+                grid_max_default = grid_min_default
+            battery_default = entry.options.get(
+                "pv_battery_threshold_pct",
+                entry.data.get(
+                    "pv_battery_threshold_pct",
+                    curve_cfg.get("battery_threshold_default", 80.0),
+                ),
+            )
+            try:
+                battery_default = float(battery_default)
+            except (TypeError, ValueError):
+                battery_default = float(curve_cfg.get("battery_threshold_default", 80.0))
+            hold_default = entry.options.get(
+                "pv_hold_minutes",
+                entry.options.get(
+                    "pv_cooldown_minutes",
+                    entry.data.get(
+                        "pv_hold_minutes",
+                        entry.data.get("pv_cooldown_minutes", curve_cfg.get("hold_default", 15)),
+                    ),
+                ),
+            )
             entities.append(
                 HeatcurvePvNumber(
                     entry,
                     pv_device_info,
-                    key="pv_grid_threshold_kw",
+                    key="pv_grid_threshold_min_kw",
                     prefix=prefix,
-                    name="PV Grid Threshold",
+                    name="PV Grid Threshold Min",
                     unit="kW",
                     device_class=NumberDeviceClass.POWER,
                     min_value=0.0,
                     max_value=50.0,
                     step=0.1,
-                    default_value=float(grid_default),
+                    default_value=float(grid_min_default),
+                    legacy_keys=("pv_grid_threshold_kw",),
+                )
+            )
+            entities.append(
+                HeatcurvePvNumber(
+                    entry,
+                    pv_device_info,
+                    key="pv_grid_threshold_max_kw",
+                    prefix=prefix,
+                    name="PV Grid Threshold Max",
+                    unit="kW",
+                    device_class=NumberDeviceClass.POWER,
+                    min_value=0.0,
+                    max_value=50.0,
+                    step=0.1,
+                    default_value=float(grid_max_default),
+                    legacy_keys=("pv_grid_threshold_kw",),
                 )
             )
             entities.append(
@@ -164,17 +277,54 @@ async def async_setup_entry(
                 HeatcurvePvNumber(
                     entry,
                     pv_device_info,
-                    key="pv_cooldown_minutes",
+                    key="pv_hold_minutes",
                     prefix=prefix,
-                    name="PV Cooldown",
+                    name="PV Offset Hold Time",
                     unit=UnitOfTime.MINUTES,
                     device_class=None,
                     min_value=0.0,
                     max_value=240.0,
                     step=1.0,
-                    default_value=float(cooldown_default),
+                    default_value=float(hold_default),
+                    legacy_keys=("pv_cooldown_minutes",),
                 )
             )
+        external_default = entry.options.get("external_offset_value", entry.data.get("external_offset_value", 0.0))
+        try:
+            external_default = float(external_default)
+        except (TypeError, ValueError):
+            external_default = 0.0
+        entities.append(
+            HeatcurveExternalOffsetNumber(
+                hass=hass,
+                entry=entry,
+                device_info=device_info,
+                prefix=curve_prefix,
+                initial_value=external_default,
+            )
+        )
+        external_hold_default = entry.options.get(
+            "external_offset_hold_minutes",
+            entry.data.get(
+                "external_offset_hold_minutes",
+                curve_cfg.get("external_hold_default", 5.0) if device_type in PV_CURVE_CONFIG else 5.0,
+            ),
+        )
+        try:
+            external_hold_default = float(external_hold_default)
+        except (TypeError, ValueError):
+            external_hold_default = float(
+                curve_cfg.get("external_hold_default", 5.0) if device_type in PV_CURVE_CONFIG else 5.0
+            )
+        entities.append(
+            HeatcurveExternalOffsetHoldNumber(
+                hass=hass,
+                entry=entry,
+                device_info=device_info,
+                prefix=curve_prefix,
+                initial_value=external_hold_default,
+            )
+        )
 
     _LOGGER.info("Registering %s number entities for %s", len(entities), device_type)
     async_add_entities(entities, update_before_add=True)
@@ -292,11 +442,24 @@ class R290HeatPumpModbusNumber(NumberEntity):
 
 
 class HeatCurveParamNumber(NumberEntity):
-    def __init__(self, hass: HomeAssistant, entry: ConfigEntry, device_info: DeviceInfo, key: str, value: float, vmin: float, vmax: float, step: float):
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        entry: ConfigEntry,
+        device_info: DeviceInfo,
+        key: str,
+        value,
+        default_value: float,
+        vmin: float,
+        vmax: float,
+        step: float,
+    ):
         super().__init__()
         self._hass = hass
         self._entry = entry
         self._key = key
+        self._default_value = float(default_value)
+        self._legacy_keys: tuple[str, ...] = ()
         # Map keys to friendly names and entity_id suffixes
         name_map = {
             "t_out_min": ("Min Outdoor temperature for maximum flow temperature", "t_out_min"),
@@ -304,9 +467,11 @@ class HeatCurveParamNumber(NumberEntity):
             "t_flow_min": ("Minimum flow temperature", "t_flow_min"),
             "t_flow_max": ("Maximum flow temperature", "t_flow_max"),
             "inertia_hours": ("Inertia (hours)", "inertia_hours"),
-            "deadband_c": ("Deadband (degC)", "deadband_c"),
+            "stepsize_c": ("Step Size (degC)", "stepsize_c"),
         }
         friendly, base_suffix = name_map.get(key, (key, key))
+        if key == "stepsize_c":
+            self._legacy_keys = ("deadband_c",)
         self._attr_name = friendly
         self._attr_unique_id = f"r290_heatpump_heatcurve_{entry.entry_id}_{key}"
         self._attr_device_info = device_info
@@ -321,7 +486,10 @@ class HeatCurveParamNumber(NumberEntity):
         self._attr_native_min_value = vmin
         self._attr_native_max_value = vmax
         self._attr_native_step = step
-        self._attr_native_value = float(value)
+        try:
+            self._attr_native_value = float(value)
+        except (TypeError, ValueError):
+            self._attr_native_value = self._default_value
         # Prefer input field over slider
         self._attr_mode = NumberMode.BOX
         # Stable entity_id names (domain number)
@@ -337,16 +505,58 @@ class HeatCurveParamNumber(NumberEntity):
         except Exception:
             pass
 
+    def _resolve_value(self) -> float:
+        try:
+            limit_sources = (self._entry.options, self._entry.data)
+        except AttributeError:
+            limit_sources = (self._entry.options,)
+        for source in limit_sources:
+            for candidate in (self._key, *self._legacy_keys):
+                if candidate in source:
+                    val = source.get(candidate)
+                    if val is None:
+                        continue
+                    try:
+                        return float(val)
+                    except (TypeError, ValueError):
+                        return self._default_value
+        return self._default_value
+
     async def async_set_native_value(self, value: float) -> None:
-        self._attr_native_value = float(value)
+        numeric = float(value)
+        self._attr_native_value = numeric
         opts = dict(self._entry.options)
-        opts[self._key] = float(value)
+        opts[self._key] = numeric
+        for legacy in self._legacy_keys:
+            opts.pop(legacy, None)
         self._hass.config_entries.async_update_entry(self._entry, options=opts)
+        data_store = dict(self._entry.data)
+        data_store[self._key] = numeric
+        for legacy in self._legacy_keys:
+            data_store.pop(legacy, None)
+        self._hass.config_entries.async_update_entry(self._entry, data=data_store)
         self.async_write_ha_state()
 
+    async def async_added_to_hass(self) -> None:
+        resolved = self._resolve_value()
+        self._attr_native_value = resolved
+        opts = dict(self._entry.options)
+        opts[self._key] = resolved
+        for legacy in self._legacy_keys:
+            opts.pop(legacy, None)
+        self._hass.config_entries.async_update_entry(self._entry, options=opts)
+        data_store = dict(self._entry.data)
+        data_store[self._key] = resolved
+        for legacy in self._legacy_keys:
+            data_store.pop(legacy, None)
+        self._hass.config_entries.async_update_entry(self._entry, data=data_store)
+        self.async_write_ha_state()
 
-
-
+    async def async_update(self) -> None:
+        try:
+            self._attr_native_value = float(self._resolve_value())
+        except (TypeError, ValueError):
+            self._attr_native_value = self._default_value
 
 class HeatcurvePvNumber(NumberEntity):
     def __init__(
@@ -363,10 +573,12 @@ class HeatcurvePvNumber(NumberEntity):
         max_value: float,
         step: float,
         default_value: float,
+        legacy_keys: tuple[str, ...] | None = None,
     ) -> None:
         super().__init__()
         self._entry = entry
         self._key = key
+        self._legacy_keys: tuple[str, ...] = tuple(legacy_keys or ())
         curve_names = {
             "heating": "Heating Curve",
             "floor_heating": "Floor Heating Curve",
@@ -386,14 +598,109 @@ class HeatcurvePvNumber(NumberEntity):
         self._attr_native_step = float(step)
         self._attr_mode = NumberMode.BOX
         self._default_value = float(default_value)
-        value = self._entry.options.get(self._key, self._entry.data.get(self._key, self._default_value))
-        try:
-            self._attr_native_value = float(value)
-        except (TypeError, ValueError):
-            self._attr_native_value = self._default_value
+        self._attr_native_value = self._resolve_value()
         try:
             suffix = self._key.replace("pv_", "pv_")
             self.entity_id = f"number.r290_heatpump_{prefix}_{suffix}"
+        except Exception:
+            pass
+
+    def _resolve_value(self) -> float:
+        sources = []
+        if hasattr(self._entry, "options"):
+            sources.append(self._entry.options)
+        if hasattr(self._entry, "data"):
+            sources.append(self._entry.data)
+        for source in sources:
+            if not source:
+                continue
+            for key in (self._key, *self._legacy_keys):
+                if key in source:
+                    val = source.get(key)
+                    if val is None:
+                        continue
+                    try:
+                        return float(val)
+                    except (TypeError, ValueError):
+                        return self._default_value
+        return self._default_value
+
+    async def async_added_to_hass(self) -> None:
+        resolved = self._resolve_value()
+        self._attr_native_value = resolved
+        opts = dict(self._entry.options)
+        opts[self._key] = resolved
+        for legacy in self._legacy_keys:
+            opts.pop(legacy, None)
+        self.hass.config_entries.async_update_entry(self._entry, options=opts)
+
+        data_store = dict(self._entry.data)
+        data_store[self._key] = resolved
+        for legacy in self._legacy_keys:
+            data_store.pop(legacy, None)
+        self.hass.config_entries.async_update_entry(self._entry, data=data_store)
+        self.async_write_ha_state()
+
+
+    async def async_set_native_value(self, value: float) -> None:
+        numeric = float(value)
+        self._attr_native_value = numeric
+        opts = dict(self._entry.options)
+        opts[self._key] = numeric
+        for legacy in self._legacy_keys:
+            opts.pop(legacy, None)
+        self.hass.config_entries.async_update_entry(self._entry, options=opts)
+        data_store = dict(self._entry.data)
+        data_store[self._key] = numeric
+        for legacy in self._legacy_keys:
+            data_store.pop(legacy, None)
+        self.hass.config_entries.async_update_entry(self._entry, data=data_store)
+        self.async_write_ha_state()
+
+    async def async_update(self) -> None:
+        try:
+            self._attr_native_value = float(self._resolve_value())
+        except (TypeError, ValueError):
+            self._attr_native_value = self._default_value
+
+
+
+class HeatcurveExternalOffsetNumber(NumberEntity):
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        entry: ConfigEntry,
+        device_info: DeviceInfo,
+        *,
+        prefix: str,
+        initial_value: float,
+    ) -> None:
+        super().__init__()
+        self._hass = hass
+        self._entry = entry
+        self._prefix = prefix
+        self._key = "external_offset_value"
+        curve_names = {
+            "heating": "Heating Curve",
+            "floor_heating": "Floor Heating Curve",
+            "hotwater": "Hot Water Curve",
+            "cooling": "Cooling Curve",
+        }
+        friendly_curve = curve_names.get(prefix, "Heating Curve")
+        self._attr_name = f"{friendly_curve} External Offset"
+        self._attr_unique_id = f"r290_heatpump_{prefix}_external_offset_{entry.entry_id}"
+        self._attr_device_info = device_info
+        self._attr_should_poll = False
+        self._attr_entity_category = EntityCategory.CONFIG
+        self._attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
+        self._attr_device_class = NumberDeviceClass.TEMPERATURE
+        self._attr_native_min_value = -10.0
+        self._attr_native_max_value = 10.0
+        self._attr_native_step = 0.5
+        self._attr_mode = NumberMode.BOX
+        self._attr_native_value = float(initial_value)
+        try:
+            self.entity_id = f"number.r290_heatpump_{prefix}_external_heating_offset"
         except Exception:
             pass
 
@@ -403,34 +710,106 @@ class HeatcurvePvNumber(NumberEntity):
             try:
                 self._attr_native_value = float(opts[self._key])
             except (TypeError, ValueError):
-                self._attr_native_value = self._default_value
+                self._attr_native_value = 0.0
                 opts[self._key] = self._attr_native_value
         else:
             opts[self._key] = self._attr_native_value
-        self.hass.config_entries.async_update_entry(self._entry, options=opts)
+        self._hass.config_entries.async_update_entry(self._entry, options=opts)
 
         data_store = dict(self._entry.data)
         data_store[self._key] = self._attr_native_value
-        self.hass.config_entries.async_update_entry(self._entry, data=data_store)
+        self._hass.config_entries.async_update_entry(self._entry, data=data_store)
         self.async_write_ha_state()
-
 
     async def async_set_native_value(self, value: float) -> None:
         self._attr_native_value = float(value)
         opts = dict(self._entry.options)
         opts[self._key] = float(value)
-        self.hass.config_entries.async_update_entry(self._entry, options=opts)
+        self._hass.config_entries.async_update_entry(self._entry, options=opts)
         data_store = dict(self._entry.data)
         data_store[self._key] = float(value)
-        self.hass.config_entries.async_update_entry(self._entry, data=data_store)
+        self._hass.config_entries.async_update_entry(self._entry, data=data_store)
         self.async_write_ha_state()
 
     async def async_update(self) -> None:
         try:
-            self._attr_native_value = float(self._entry.options.get(self._key, self._entry.data.get(self._key, self._default_value)))
+            self._attr_native_value = float(
+                self._entry.options.get(self._key, self._entry.data.get(self._key, self._attr_native_value))
+            )
         except (TypeError, ValueError):
-            self._attr_native_value = self._default_value
+            self._attr_native_value = 0.0
 
 
+class HeatcurveExternalOffsetHoldNumber(NumberEntity):
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        entry: ConfigEntry,
+        device_info: DeviceInfo,
+        *,
+        prefix: str,
+        initial_value: float,
+    ) -> None:
+        super().__init__()
+        self._hass = hass
+        self._entry = entry
+        self._prefix = prefix
+        self._key = "external_offset_hold_minutes"
+        curve_names = {
+            "heating": "Heating Curve",
+            "floor_heating": "Floor Heating Curve",
+            "hotwater": "Hot Water Curve",
+            "cooling": "Cooling Curve",
+        }
+        friendly_curve = curve_names.get(prefix, "Heating Curve")
+        self._attr_name = f"{friendly_curve} External Offset Hold"
+        self._attr_unique_id = f"r290_heatpump_{prefix}_external_offset_hold_{entry.entry_id}"
+        self._attr_device_info = device_info
+        self._attr_should_poll = False
+        self._attr_entity_category = EntityCategory.CONFIG
+        self._attr_native_unit_of_measurement = UnitOfTime.MINUTES
+        self._attr_device_class = None
+        self._attr_native_min_value = 0.0
+        self._attr_native_max_value = 240.0
+        self._attr_native_step = 1.0
+        self._attr_mode = NumberMode.BOX
+        self._attr_native_value = float(initial_value)
+        try:
+            self.entity_id = f"number.r290_heatpump_{prefix}_external_offset_hold_minutes"
+        except Exception:
+            pass
 
+    async def async_added_to_hass(self) -> None:
+        opts = dict(self._entry.options)
+        if self._key in opts:
+            try:
+                self._attr_native_value = float(opts[self._key])
+            except (TypeError, ValueError):
+                self._attr_native_value = 0.0
+                opts[self._key] = self._attr_native_value
+        else:
+            opts[self._key] = self._attr_native_value
+        self._hass.config_entries.async_update_entry(self._entry, options=opts)
 
+        data_store = dict(self._entry.data)
+        data_store[self._key] = self._attr_native_value
+        self._hass.config_entries.async_update_entry(self._entry, data=data_store)
+        self.async_write_ha_state()
+
+    async def async_set_native_value(self, value: float) -> None:
+        self._attr_native_value = float(value)
+        opts = dict(self._entry.options)
+        opts[self._key] = float(value)
+        self._hass.config_entries.async_update_entry(self._entry, options=opts)
+        data_store = dict(self._entry.data)
+        data_store[self._key] = float(value)
+        self._hass.config_entries.async_update_entry(self._entry, data=data_store)
+        self.async_write_ha_state()
+
+    async def async_update(self) -> None:
+        try:
+            self._attr_native_value = float(
+                self._entry.options.get(self._key, self._entry.data.get(self._key, self._attr_native_value))
+            )
+        except (TypeError, ValueError):
+            self._attr_native_value = 0.0

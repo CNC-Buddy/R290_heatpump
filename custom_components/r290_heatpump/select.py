@@ -1,3 +1,5 @@
+# Version: 1.0.1
+# Last modified: 2025-10-24 17:33 by CNC-Buddy
 import logging
 from typing import Dict
 from homeassistant.components.select import SelectEntity
@@ -73,9 +75,20 @@ async def async_setup_entry(
                 HeatcurvePvOffsetSelect(
                     entry,
                     pv_device_info,
-                    option_key="pv_grid_offset",
+                    option_key="pv_grid_offset_min",
                     prefix=prefix,
-                    title="PV Grid Offset",
+                    title="PV Grid Offset Min",
+                    legacy_keys=("pv_grid_offset",),
+                )
+            )
+            entities.append(
+                HeatcurvePvOffsetSelect(
+                    entry,
+                    pv_device_info,
+                    option_key="pv_grid_offset_max",
+                    prefix=prefix,
+                    title="PV Grid Offset Max",
+                    legacy_keys=("pv_grid_offset",),
                 )
             )
             entities.append(
@@ -163,12 +176,24 @@ class HeatcurvePvOffsetSelect(SelectEntity):
         option_key: str,
         prefix: str,
         title: str,
+        legacy_keys: tuple[str, ...] | None = None,
     ) -> None:
         super().__init__()
         self._entry = entry
         self._option_key = option_key
         self._prefix = prefix
         self._title = title
+        self._legacy_keys = tuple(legacy_keys or ())
+        self._legacy_value: int | None = None
+        for legacy_key in self._legacy_keys:
+            raw = entry.options.get(legacy_key, entry.data.get(legacy_key))
+            if raw is None:
+                continue
+            try:
+                self._legacy_value = int(float(raw))
+                break
+            except (TypeError, ValueError):
+                continue
         self._value_labels = PV_OFFSET_OPTIONS
         self._label_values = {label: value for value, label in self._value_labels.items()}
         self._current_value = 0
@@ -178,6 +203,8 @@ class HeatcurvePvOffsetSelect(SelectEntity):
 
         curve_names = {
             "pv_grid_offset": "PV Grid Offset",
+            "pv_grid_offset_min": "PV Grid Offset Min",
+            "pv_grid_offset_max": "PV Grid Offset Max",
             "pv_battery_offset": "PV Battery Offset",
         }
         base_name = curve_names.get(option_key, title)
@@ -208,19 +235,29 @@ class HeatcurvePvOffsetSelect(SelectEntity):
 
     async def async_added_to_hass(self) -> None:
         try:
-            raw = self._entry.options.get(self._option_key, self._entry.data.get(self._option_key, 0))
+            raw = self._entry.options.get(
+                self._option_key,
+                self._entry.data.get(
+                    self._option_key,
+                    self._legacy_value if self._legacy_value is not None else 0,
+                ),
+            )
             value = int(float(raw))
         except (TypeError, ValueError):
             value = 0
         hass = self.hass or getattr(self._entry, "hass", None)
         if value not in PV_OFFSET_OPTIONS:
             value = 0
-            opts = dict(self._entry.options)
-            opts[self._option_key] = value
-            if hass is not None:
-                hass.config_entries.async_update_entry(self._entry, options=opts)
+        opts = dict(self._entry.options)
+        opts[self._option_key] = value
+        for legacy_key in self._legacy_keys:
+            opts.pop(legacy_key, None)
+        if hass is not None:
+            hass.config_entries.async_update_entry(self._entry, options=opts)
         data_store = dict(self._entry.data)
         data_store[self._option_key] = value
+        for legacy_key in self._legacy_keys:
+            data_store.pop(legacy_key, None)
         if hass is not None:
             hass.config_entries.async_update_entry(self._entry, data=data_store)
         self._current_value = value
@@ -235,6 +272,8 @@ class HeatcurvePvOffsetSelect(SelectEntity):
         self._attr_current_option = option
         opts = dict(self._entry.options)
         opts[self._option_key] = value
+        for legacy_key in self._legacy_keys:
+            opts.pop(legacy_key, None)
         # Use the Home Assistant instance provided by the Entity base class
         # instead of a private attribute to avoid attribute errors during
         # service calls (e.g. select/select_option).
@@ -244,7 +283,13 @@ class HeatcurvePvOffsetSelect(SelectEntity):
 
     async def async_update(self) -> None:
         try:
-            raw = self._entry.options.get(self._option_key, self._entry.data.get(self._option_key, 0))
+            raw = self._entry.options.get(
+                self._option_key,
+                self._entry.data.get(
+                    self._option_key,
+                    self._legacy_value if self._legacy_value is not None else 0,
+                ),
+            )
             self._current_value = int(float(raw))
         except (TypeError, ValueError):
             self._current_value = 0

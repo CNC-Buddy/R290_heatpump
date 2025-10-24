@@ -1,3 +1,5 @@
+# Version: 1.0.1
+# Last modified: 2025-10-24 17:33 by CNC-Buddy
 from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.const import UnitOfElectricPotential, UnitOfTemperature
 

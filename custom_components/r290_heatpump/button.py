@@ -1,3 +1,5 @@
+# Version: 1.0.1
+# Last modified: 2025-10-24 17:33 by CNC-Buddy
 import logging
 from homeassistant.components.button import ButtonEntity
 from homeassistant.core import HomeAssistant

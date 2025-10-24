@@ -1,4 +1,6 @@
-﻿views:
+﻿# Version: 1.0.1
+# Last modified: 2025-10-24 17:33 by CNC-Buddy
+views:
   - type: sections
     max_columns: 3
     title: Realtime Parameters
@@ -8,7 +10,7 @@
         cards:
           - type: heading
             heading_style: title
-            heading: Realtime Parameters - Heat Pump 1
+            heading: Realtime Parameter - Wärmepumpe 1
           - type: tile
             entity: sensor.r290_heatpump_ac_input_voltage_slave_1
             name: AC Input Voltage
@@ -29,7 +31,8 @@
             entity: sensor.r290_heatpump_current_device_tooling_no_slave_1
             name: Current Device Tooling No
           - type: tile
-            entity: sensor.r290_heatpump_electronic_expansion_valve_steps_count_slave_1
+            entity: >-
+              sensor.r290_heatpump_electronic_expansion_valve_steps_count_slave_1
             name: Electronic Expansion Valve Steps Count
           - type: tile
             entity: sensor.r290_heatpump_exhaust_temperature_t5_slave_1
@@ -41,16 +44,21 @@
             entity: sensor.r290_heatpump_external_coil_tube_fin_t2_slave_1
             name: External Coil Tube Fin T2
           - type: tile
-            entity: sensor.r290_heatpump_fan_operating_frequency_rotational_speed_slave_1
+            entity: >-
+              sensor.r290_heatpump_fan_operating_frequency_rotational_speed_slave_1
             name: Fan Operating Frequency
           - type: tile
-            entity: sensor.r290_heatpump_fluorine_outlet_temperature_of_plate_heat_exchanger_slave_1
+            entity: >-
+              sensor.r290_heatpump_fluorine_outlet_temperature_of_plate_heat_exchanger_slave_1
             name: Fluorine Outlet Temperature
+            vertical: false
+            features_position: bottom
           - type: tile
             entity: sensor.r290_heatpump_high_pressure_saturation_temperature_slave_1
             name: High Pressure Saturation Temperature
           - type: tile
-            entity: sensor.r290_heatpump_internal_coil_tube_plate_replacement_t3_slave_1
+            entity: >-
+              sensor.r290_heatpump_internal_coil_tube_plate_replacement_t3_slave_1
             name: Internal Coil Tube Plate T3
           - type: tile
             entity: sensor.r290_heatpump_low_pressure_saturation_temperature_slave_1
@@ -71,6 +79,10 @@
             entity: sensor.r290_heatpump_water_outlet_temperature_t7_slave_1
             name: Water Outlet Temperature T7
           - type: tile
+            entity: sensor.r290_heatpump_total_water_outlet_temperature_slave_1
+            vertical: false
+            features_position: bottom
+          - type: tile
             entity: sensor.r290_heatpump_water_tank_temperature_slave_1
             name: Water Tank Temperature
           - type: tile
@@ -83,7 +95,7 @@
         cards:
           - type: heading
             heading_style: title
-            heading: Realtime Parameters - Heat Pump 2
+            heading: Realtime Parameter - Wärmepumpe 2
           - type: tile
             entity: sensor.r290_heatpump_ac_input_voltage_slave_2
             name: AC Input Voltage
@@ -100,7 +112,8 @@
             entity: sensor.r290_heatpump_current_device_tooling_no_slave_2
             name: Current Device Tooling No
           - type: tile
-            entity: sensor.r290_heatpump_electronic_expansion_valve_steps_count_slave_2
+            entity: >-
+              sensor.r290_heatpump_electronic_expansion_valve_steps_count_slave_2
             name: Electronic Expansion Valve Steps Count
           - type: tile
             entity: sensor.r290_heatpump_exhaust_temperature_t5_slave_2
@@ -112,16 +125,21 @@
             entity: sensor.r290_heatpump_external_coil_tube_fin_t2_slave_2
             name: External Coil Tube Fin T2
           - type: tile
-            entity: sensor.r290_heatpump_fan_operating_frequency_rotational_speed_slave_2
+            entity: >-
+              sensor.r290_heatpump_fan_operating_frequency_rotational_speed_slave_2
             name: Fan Operating Frequency
           - type: tile
-            entity: sensor.r290_heatpump_fluorine_outlet_temperature_of_plate_heat_exchanger_slave_2
+            entity: >-
+              sensor.r290_heatpump_fluorine_outlet_temperature_of_plate_heat_exchanger_slave_2
             name: Fluorine Outlet Temperature
+            vertical: false
+            features_position: bottom
           - type: tile
             entity: sensor.r290_heatpump_high_pressure_saturation_temperature_slave_2
             name: High Pressure Saturation Temperature
           - type: tile
-            entity: sensor.r290_heatpump_internal_coil_tube_plate_replacement_t3_slave_2
+            entity: >-
+              sensor.r290_heatpump_internal_coil_tube_plate_replacement_t3_slave_2
             name: Internal Coil Tube Plate T3
           - type: tile
             entity: sensor.r290_heatpump_low_pressure_saturation_temperature_slave_2
@@ -141,40 +159,37 @@
           - type: tile
             entity: sensor.r290_heatpump_water_outlet_temperature_t7_slave_2
             name: Water Outlet Temperature T7
-          - type: tile
-            entity: sensor.r290_heatpump_water_tank_temperature_slave_2
-            name: Water Tank Temperature
       - type: grid
         cards:
           - type: heading
             heading: R290 Heatpump COP Calculator
           - type: tile
-            entity: sensor.r290_heatpump_cop_last_7_days
+            entity: sensor.cop_last_7_days
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.r290_heatpump_cop_last_30_days
+            entity: sensor.cop_last_30_days
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.r290_heatpump_cop_last_365_days
+            entity: sensor.cop_last_365_days
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.r290_heatpump_cop_overall
+            entity: sensor.cop_overall
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.r290_heatpump_cop_today
+            entity: sensor.cop_today
             features_position: bottom
             vertical: false
           - type: tile
-            entity: sensor.r290_heatpump_cop_yesterday
+            entity: sensor.cop_yesterday
             features_position: bottom
             vertical: false
           - type: heading
             heading_style: title
-            heading: Power / Heat Meter
+            heading: Strom- / Wärmezähler
           - type: tile
             name: Actual Water Flow
             features_position: bottom
@@ -182,7 +197,7 @@
             entity: sensor.actual_water_flow
           - type: tile
             entity: sensor.warmepumpen_shelly_3em_power
-            name: Heat Pump Power
+            name: Leistung Wärmepumpen
             features_position: bottom
             vertical: false
           - type: tile
@@ -192,12 +207,12 @@
             vertical: false
           - type: tile
             entity: sensor.waermemengenzaehlerwp_t2_temperature
-            name: Return - T2 Temperature
+            name: Rücklauf - T2 Temperature
             features_position: bottom
             vertical: false
           - type: tile
             entity: sensor.warmepumpen_shelly_3em_energy_complete
-            name: Heat Pump Energy Usage
+            name: Stromverbrauch Wärmepumpen
             features_position: bottom
             vertical: false
           - type: tile
@@ -215,38 +230,67 @@
             features_position: bottom
             vertical: false
       - cards:
-          - type: heading
-            heading: Verlauf
+          - title: Verlauf WP1
+            type: history-graph
+            entities:
+              - entity: sensor.r290_heatpump_water_tank_temperature_slave_1
+              - entity: sensor.r290_heatpump_water_outlet_temperature_t7_slave_1
+              - entity: sensor.r290_heatpump_return_water_temperature_t6_slave_1
+              - entity: sensor.r290_heatpump_buffer_tank_temperature_t10_slave_1
+              - entity: sensor.warmepumpen_shelly_3em_power
+              - entity: sensor.r290_heatpump_water_flow_slave_1
+              - entity: sensor.r290_heatpump_heating_set_temperature_slave_1
+            logarithmic_scale: false
+            hours_to_show: 4
+            grid_options:
+              columns: 36
+              rows: 12
+          - title: Verlauf Wärmemengenzähler
+            type: history-graph
+            hours_to_show: 4
+            entities:
+              - sensor.waermemengenzaehlerwp_t1_temperature
+              - sensor.waermemengenzaehlerwp_t2_temperature
+            grid_options:
+              columns: 36
+              rows: 5
           - title: Verlauf
             type: history-graph
             hours_to_show: 8
             entities:
-              - sensor.waermemengenzaehlerwp_t1_temperature
-              - sensor.r290_heatpump_water_tank_temperature_slave_1
-              - sensor.r290_heatpump_water_outlet_temperature_t7_slave_1
-              - sensor.r290_heatpump_return_water_temperature_t6_slave_1
-              - sensor.waermemengenzaehlerwp_t2_temperature
+              - sensor.r290_heatpump_cop_today
+            grid_options:
+              columns: 36
+              rows: 5
+        column_span: 3
     cards: []
-    theme: ios-dark-mode-blue-red
     header:
       card:
         type: markdown
-        content: '# R290 Heat Pump - Control Center'
+        content: '# R290 Heatpump - Wärmepumensteuerung'
     badges:
-      - type: custom:mushroom-template-badge
-        content: Unit System Parameter
+      - type: entity
+        show_name: true
+        show_state: false
+        show_icon: true
+        name: Heat Curve
+        entity: sensor.compressor_1_runtime_slave_1
+        tap_action:
+          action: navigate
+          navigation_path: /r290-heatpump/heatpump-curve
+        color: blue
+        icon: mdi:home-thermometer-outline
+      - type: entity
+        show_name: true
+        show_state: false
+        show_icon: true
+        entity: sensor.compressor_1_runtime_slave_1
         icon: mdi:code-array
-        color: white
+        name: Unit System Parameter
         tap_action:
           action: navigate
-          navigation_path: /R290-heatpump/heatpump-usp
-      - type: custom:mushroom-template-badge
-        icon: mdi:heating-coil
-        color: white
-        tap_action:
-          action: navigate
-          navigation_path: /R290-heatpump/heatpump-curve
-        content: Heatcurve
+          navigation_path: /r290-heatpump/heatpump-usp
+        color: blue
   - type: sections
     max_columns: 2
     title: Unit System Parameters
@@ -261,121 +305,169 @@
           - type: vertical-stack
             cards:
               - type: tile
-                entity: number.r290_heatpump_p000_t1_external_ambient_temperature_sensor_slave_1
+                entity: >-
+                  number.r290_heatpump_p000_t1_external_ambient_temperature_sensor_slave_1
                 features_position: bottom
                 vertical: false
               - type: tile
-                entity: number.r290_heatpump_p001_high_pressure_switch_settings_slave_1
+                entity: >-
+                  number.r290_heatpump_p001_high_pressure_switch_settings_slave_1
               - type: tile
                 entity: number.r290_heatpump_p002_low_pressure_switch_settings_slave_1
               - type: tile
                 entity: number.r290_heatpump_p003_water_flow_switch_settings_slave_1
               - type: tile
-                entity: number.r290_heatpump_p004_thermal_overload_protection_switch_settings_slave_1
+                entity: >-
+                  number.r290_heatpump_p004_thermal_overload_protection_switch_settings_slave_1
               - type: tile
                 entity: number.r290_heatpump_p005_linkage_switch_settings_slave_1
               - type: tile
                 entity: number.r290_heatpump_p006_fan_motor_type_setting_slave_1
               - type: tile
-                entity: number.r290_heatpump_p007_high_pressure_protection_lockout_setting_slave_1
+                entity: >-
+                  number.r290_heatpump_p007_high_pressure_protection_lockout_setting_slave_1
               - type: tile
-                entity: number.r290_heatpump_p008_low_pressure_protection_lockout_setting_slave_1
+                entity: >-
+                  number.r290_heatpump_p008_low_pressure_protection_lockout_setting_slave_1
               - type: tile
-                entity: number.r290_heatpump_p009_exhaust_protection_lockout_setting_slave_1
+                entity: >-
+                  number.r290_heatpump_p009_exhaust_protection_lockout_setting_slave_1
               - type: tile
-                entity: number.r290_heatpump_p010_water_flow_switch_protection_lock_setting_slave_1
+                entity: >-
+                  number.r290_heatpump_p010_water_flow_switch_protection_lock_setting_slave_1
               - type: tile
-                entity: number.r290_heatpump_p011_high_pressure_protection_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p011_high_pressure_protection_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p012_high_pressure_frequency_limit_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p012_high_pressure_frequency_limit_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p013_low_pressure_protection_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p013_low_pressure_protection_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p014_low_pressure_frequency_limit_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p014_low_pressure_frequency_limit_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p015_exhaust_temperature_protection_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p015_exhaust_temperature_protection_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p016_exhaust_temperature_limit_frequency_slave_1
+                entity: >-
+                  number.r290_heatpump_p016_exhaust_temperature_limit_frequency_slave_1
               - type: tile
-                entity: number.r290_heatpump_p017_refrigeration_fan_speed_increase_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p017_refrigeration_fan_speed_increase_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p018_cooling_fan_deceleration_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p018_cooling_fan_deceleration_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p019_heating_fan_deceleration_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p019_heating_fan_deceleration_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p020_heating_fan_speed_increase_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p020_heating_fan_speed_increase_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p021_unit_prohibits_starting_low_temperature_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p021_unit_prohibits_starting_low_temperature_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p022_electric_heating_start_ambient_temperature_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p022_electric_heating_start_ambient_temperature_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p023_temperature_difference_between_inlet_and_outlet_water_exceeds_threshold_slave_1
+                entity: >-
+                  number.r290_heatpump_p023_temperature_difference_between_inlet_and_outlet_water_exceeds_threshold_slave_1
               - type: tile
-                entity: number.r290_heatpump_p024_return_water_temperature_compensation_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p024_return_water_temperature_compensation_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p025_outlet_water_temperature_compensation_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p025_outlet_water_temperature_compensation_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p026_air_conditioner_return_difference_slave_1
+                entity: >-
+                  number.r290_heatpump_p026_air_conditioner_return_difference_slave_1
               - type: tile
                 entity: number.r290_heatpump_p027_floor_heating_difference_slave_1
               - type: tile
-                entity: number.r290_heatpump_p028_pump_control_mode_when_device_reaches_target_temperature_and_shutdown_slave_1
+                entity: >-
+                  number.r290_heatpump_p028_pump_control_mode_when_device_reaches_target_temperature_and_shutdown_slave_1
               - type: tile
-                entity: number.r290_heatpump_p029_antifreeze_water_pump_running_time_every_10min_slave_1
+                entity: >-
+                  number.r290_heatpump_p029_antifreeze_water_pump_running_time_every_10min_slave_1
               - type: tile
                 entity: number.r290_heatpump_p030_defrost_mode_selection_slave_1
               - type: tile
-                entity: number.r290_heatpump_p031_enter_the_defrost_accumulated_running_time_threshold_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p031_enter_the_defrost_accumulated_running_time_threshold_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p032_enter_the_defrost_coil_temperature_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p032_enter_the_defrost_coil_temperature_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p033_enter_defrost_temperature_difference_1_slave_1
+                entity: >-
+                  number.r290_heatpump_p033_enter_defrost_temperature_difference_1_slave_1
               - type: tile
-                entity: number.r290_heatpump_p034_enter_defrost_temperature_difference_2_slave_1
+                entity: >-
+                  number.r290_heatpump_p034_enter_defrost_temperature_difference_2_slave_1
               - type: tile
                 entity: number.r290_heatpump_p035_max_defrost_time_slave_1
               - type: tile
-                entity: number.r290_heatpump_p036_exit_defrost_coil_temperature_slave_1
+                entity: >-
+                  number.r290_heatpump_p036_exit_defrost_coil_temperature_slave_1
               - type: tile
-                entity: number.r290_heatpump_p037_device_reaching_target_temperature_and_shutdown_mode_slave_1
+                entity: >-
+                  number.r290_heatpump_p037_device_reaching_target_temperature_and_shutdown_mode_slave_1
               - type: tile
-                entity: number.r290_heatpump_p038_heating_main_valve_initial_opening_constant_slave_1
+                entity: >-
+                  number.r290_heatpump_p038_heating_main_valve_initial_opening_constant_slave_1
               - type: tile
                 entity: number.r290_heatpump_p039_pressure_sensor_settings_slave_1
               - type: tile
-                entity: number.r290_heatpump_p040_cooling_target_superheat_correction_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p040_cooling_target_superheat_correction_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p041_heating_high_pressure_protection_and_frequency_limit_correction_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p041_heating_high_pressure_protection_and_frequency_limit_correction_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p042_heating_target_superheat_correction_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p042_heating_target_superheat_correction_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p043_medium_pressure_switch_settings_slave_1
+                entity: >-
+                  number.r290_heatpump_p043_medium_pressure_switch_settings_slave_1
               - type: tile
-                entity: number.r290_heatpump_p044_water_flow_switch_failure_detection_settings_slave_1
+                entity: >-
+                  number.r290_heatpump_p044_water_flow_switch_failure_detection_settings_slave_1
               - type: tile
                 entity: number.r290_heatpump_p045_communication_address_code_slave_1
               - type: tile
-                entity: number.r290_heatpump_p046_return_difference_of_the_opening_of_the_liquid_injection_solenoid_valve_slave_1
+                entity: >-
+                  number.r290_heatpump_p046_return_difference_of_the_opening_of_the_liquid_injection_solenoid_valve_slave_1
               - type: tile
-                entity: number.r290_heatpump_p047_evi_target_superheat_constant_slave_1
+                entity: >-
+                  number.r290_heatpump_p047_evi_target_superheat_constant_slave_1
               - type: tile
-                entity: number.r290_heatpump_p048_whether_the_tank_temperature_probe_is_enabled_slave_1
+                entity: >-
+                  number.r290_heatpump_p048_whether_the_tank_temperature_probe_is_enabled_slave_1
               - type: tile
-                entity: number.r290_heatpump_p049_hot_water_frequency_operating_percentage_slave_1
+                entity: >-
+                  number.r290_heatpump_p049_hot_water_frequency_operating_percentage_slave_1
               - type: tile
-                entity: number.r290_heatpump_p050_cooling_target_frequency_constant_a_slave_1
+                entity: >-
+                  number.r290_heatpump_p050_cooling_target_frequency_constant_a_slave_1
               - type: tile
-                entity: number.r290_heatpump_p051_cooling_minimum_frequency_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p051_cooling_minimum_frequency_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p052_cooling_target_frequency_upper_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p052_cooling_target_frequency_upper_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p053_cooling_target_frequency_lower_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p053_cooling_target_frequency_lower_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p054_heating_target_frequency_constant_b_slave_1
+                entity: >-
+                  number.r290_heatpump_p054_heating_target_frequency_constant_b_slave_1
               - type: tile
-                entity: number.r290_heatpump_p055_heating_target_frequency_upper_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p055_heating_target_frequency_upper_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p056_heating_target_frequency_lower_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p056_heating_target_frequency_lower_limit_slave_1
               - type: tile
                 entity: number.r290_heatpump_p057_heating_minimum_frequency_1_slave_1
               - type: tile
@@ -383,85 +475,120 @@
               - type: tile
                 entity: number.r290_heatpump_p059_heating_minimum_frequency_3_slave_1
               - type: tile
-                entity: number.r290_heatpump_p060_hot_water_target_frequency_constant_b_slave_1
+                entity: >-
+                  number.r290_heatpump_p060_hot_water_target_frequency_constant_b_slave_1
               - type: tile
-                entity: number.r290_heatpump_p061_hot_water_target_frequency_upper_limit_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p061_hot_water_target_frequency_upper_limit_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p062_hot_water_target_frequency_lower_limit_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p062_hot_water_target_frequency_lower_limit_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p063_hot_water_minimum_frequency_1_slave_1
+                entity: >-
+                  number.r290_heatpump_p063_hot_water_minimum_frequency_1_slave_1
               - type: tile
-                entity: number.r290_heatpump_p064_hot_water_minimum_frequency_2_slave_1
+                entity: >-
+                  number.r290_heatpump_p064_hot_water_minimum_frequency_2_slave_1
               - type: tile
-                entity: number.r290_heatpump_p065_hot_water_minimum_frequency_3_slave_1
+                entity: >-
+                  number.r290_heatpump_p065_hot_water_minimum_frequency_3_slave_1
               - type: tile
                 entity: number.r290_heatpump_p066_dc_fan_initial_frequency_slave_1
               - type: tile
-                entity: number.r290_heatpump_p067_dc_fan_heating_minimum_frequency_slave_1
+                entity: >-
+                  number.r290_heatpump_p067_dc_fan_heating_minimum_frequency_slave_1
               - type: tile
-                entity: number.r290_heatpump_p068_dc_fan_heating_maximum_frequency_slave_1
+                entity: >-
+                  number.r290_heatpump_p068_dc_fan_heating_maximum_frequency_slave_1
               - type: tile
-                entity: number.r290_heatpump_p069_dc_fan_cooling_minimum_frequency_slave_1
+                entity: >-
+                  number.r290_heatpump_p069_dc_fan_cooling_minimum_frequency_slave_1
               - type: tile
-                entity: number.r290_heatpump_p070_dc_fan_cooling_maximum_frequency_slave_1
+                entity: >-
+                  number.r290_heatpump_p070_dc_fan_cooling_maximum_frequency_slave_1
               - type: tile
-                entity: number.r290_heatpump_p071_turn_on_enthalpy_control_frequency_slave_1
+                entity: >-
+                  number.r290_heatpump_p071_turn_on_enthalpy_control_frequency_slave_1
               - type: tile
-                entity: number.r290_heatpump_p072_stop_enthalpy_increase_frequency_slave_1
+                entity: >-
+                  number.r290_heatpump_p072_stop_enthalpy_increase_frequency_slave_1
               - type: tile
-                entity: number.r290_heatpump_p073_refrigeration_main_valve_initial_opening_1_slave_1
+                entity: >-
+                  number.r290_heatpump_p073_refrigeration_main_valve_initial_opening_1_slave_1
               - type: tile
-                entity: number.r290_heatpump_p074_refrigeration_main_valve_initial_opening_2_slave_1
+                entity: >-
+                  number.r290_heatpump_p074_refrigeration_main_valve_initial_opening_2_slave_1
               - type: tile
-                entity: number.r290_heatpump_p075_refrigeration_main_valve_initial_opening_3_slave_1
+                entity: >-
+                  number.r290_heatpump_p075_refrigeration_main_valve_initial_opening_3_slave_1
               - type: tile
-                entity: number.r290_heatpump_p076_minimum_opening_of_refrigeration_main_valve_slave_1
+                entity: >-
+                  number.r290_heatpump_p076_minimum_opening_of_refrigeration_main_valve_slave_1
               - type: tile
-                entity: number.r290_heatpump_p077_minimum_opening_of_heating_main_valve_slave_1
+                entity: >-
+                  number.r290_heatpump_p077_minimum_opening_of_heating_main_valve_slave_1
               - type: tile
                 entity: number.r290_heatpump_p078_main_valve_maximum_opening_slave_1
               - type: tile
-                entity: number.r290_heatpump_p079_main_valve_initial_opening_constant_c_slave_1
+                entity: >-
+                  number.r290_heatpump_p079_main_valve_initial_opening_constant_c_slave_1
               - type: tile
-                entity: number.r290_heatpump_p080_main_valve_initial_opening_coefficient_a_slave_1
+                entity: >-
+                  number.r290_heatpump_p080_main_valve_initial_opening_coefficient_a_slave_1
               - type: tile
-                entity: number.r290_heatpump_p081_main_valve_initial_opening_coefficient_b_slave_1
+                entity: >-
+                  number.r290_heatpump_p081_main_valve_initial_opening_coefficient_b_slave_1
               - type: tile
-                entity: number.r290_heatpump_p082_auxiliary_valve_maximum_opening_slave_1
+                entity: >-
+                  number.r290_heatpump_p082_auxiliary_valve_maximum_opening_slave_1
               - type: tile
-                entity: number.r290_heatpump_p083_auxiliary_valve_minimum_opening_slave_1
+                entity: >-
+                  number.r290_heatpump_p083_auxiliary_valve_minimum_opening_slave_1
               - type: tile
                 entity: number.r290_heatpump_p084_main_valve_regulation_period_slave_1
               - type: tile
-                entity: number.r290_heatpump_p085_auxiliary_valve_initial_opening_constant_c_slave_1
+                entity: >-
+                  number.r290_heatpump_p085_auxiliary_valve_initial_opening_constant_c_slave_1
               - type: tile
-                entity: number.r290_heatpump_p086_auxiliary_valve_initial_opening_coefficient_a_slave_1
+                entity: >-
+                  number.r290_heatpump_p086_auxiliary_valve_initial_opening_coefficient_a_slave_1
               - type: tile
-                entity: number.r290_heatpump_p087_auxiliary_valve_initial_opening_coefficient_b_slave_1
+                entity: >-
+                  number.r290_heatpump_p087_auxiliary_valve_initial_opening_coefficient_b_slave_1
               - type: tile
-                entity: number.r290_heatpump_p088_silent_mode_compressor_frequency_slave_1
+                entity: >-
+                  number.r290_heatpump_p088_silent_mode_compressor_frequency_slave_1
               - type: tile
                 entity: number.r290_heatpump_p089_quiet_mode_fan_frequency_slave_1
               - type: tile
-                entity: number.r290_heatpump_p090_ambient_temperature_to_enter_evi_slave_1
+                entity: >-
+                  number.r290_heatpump_p090_ambient_temperature_to_enter_evi_slave_1
               - type: tile
-                entity: number.r290_heatpump_p091_time_to_forbid_entering_into_evi_time_slave_1
+                entity: >-
+                  number.r290_heatpump_p091_time_to_forbid_entering_into_evi_time_slave_1
               - type: tile
-                entity: number.r290_heatpump_p092_temperature_difference_to_enter_evi_slave_1
+                entity: >-
+                  number.r290_heatpump_p092_temperature_difference_to_enter_evi_slave_1
               - type: tile
-                entity: number.r290_heatpump_p093_compressor_continuous_running_time_to_enter_evi_slave_1
+                entity: >-
+                  number.r290_heatpump_p093_compressor_continuous_running_time_to_enter_evi_slave_1
               - type: tile
-                entity: number.r290_heatpump_p094_auxiliary_valve_adjustment_cycle_slave_1
+                entity: >-
+                  number.r290_heatpump_p094_auxiliary_valve_adjustment_cycle_slave_1
               - type: tile
-                entity: number.r290_heatpump_p095_cascade_water_pump_running_mode_slave_1
+                entity: >-
+                  number.r290_heatpump_p095_cascade_water_pump_running_mode_slave_1
               - type: tile
                 entity: number.r290_heatpump_p096_hot_water_return_difference_slave_1
               - type: tile
-                entity: number.r290_heatpump_p097_water_tank_temperature_automatic_compensation_slave_1
+                entity: >-
+                  number.r290_heatpump_p097_water_tank_temperature_automatic_compensation_slave_1
               - type: tile
-                entity: number.r290_heatpump_p098_manual_compensation_value_of_water_tank_temperature_slave_1
+                entity: >-
+                  number.r290_heatpump_p098_manual_compensation_value_of_water_tank_temperature_slave_1
               - type: tile
-                entity: number.r290_heatpump_p099_pump_speed_control_temperature_difference_slave_1
+                entity: >-
+                  number.r290_heatpump_p099_pump_speed_control_temperature_difference_slave_1
               - type: tile
                 entity: number.r290_heatpump_p100_pwm_water_pump_minimum_speed_slave_1
               - type: tile
@@ -469,63 +596,1541 @@
               - type: tile
                 entity: number.r290_heatpump_p102_four_way_valve_control_mode_slave_1
               - type: tile
-                entity: number.r290_heatpump_p103_mode_switching_minimum_runtime_slave_1
+                entity: >-
+                  number.r290_heatpump_p103_mode_switching_minimum_runtime_slave_1
               - type: tile
-                entity: number.r290_heatpump_p104_operating_frequency_percentage_when_switching_modes_slave_1
+                entity: >-
+                  number.r290_heatpump_p104_operating_frequency_percentage_when_switching_modes_slave_1
               - type: tile
-                entity: number.r290_heatpump_p105_cooling_mode_operating_ambient_temperature_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p105_cooling_mode_operating_ambient_temperature_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p106_heating_mode_operating_ambient_temperature_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p106_heating_mode_operating_ambient_temperature_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p107_hot_water_mode_operating_ambient_temperature_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p107_hot_water_mode_operating_ambient_temperature_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p108_hot_water_setting_temperature_upper_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p108_hot_water_setting_temperature_upper_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p109_hot_water_setting_temperature_lower_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p109_hot_water_setting_temperature_lower_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p110_heating_set_temperature_upper_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p110_heating_set_temperature_upper_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p111_heating_set_temperature_lower_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p111_heating_set_temperature_lower_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p112_cooling_set_temperature_upper_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p112_cooling_set_temperature_upper_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p113_cooling_set_temperature_lower_limit_slave_1
+                entity: >-
+                  number.r290_heatpump_p113_cooling_set_temperature_lower_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p114_selection_of_the_number_of_compressor_slave_1
+                entity: >-
+                  number.r290_heatpump_p114_selection_of_the_number_of_compressor_slave_1
               - type: tile
                 entity: number.r290_heatpump_p115_model_selection_slave_1
               - type: tile
-                entity: number.r290_heatpump_p116_unit_temperature_control_method_slave_1
+                entity: >-
+                  number.r290_heatpump_p116_unit_temperature_control_method_slave_1
               - type: tile
-                entity: number.r290_heatpump_p117_ambient_temperature_to_enter_antifreeze_mode_slave_1
+                entity: >-
+                  number.r290_heatpump_p117_ambient_temperature_to_enter_antifreeze_mode_slave_1
               - type: tile
-                entity: number.r290_heatpump_p118_antifreeze_inlet_and_outlet_water_temperature_slave_1
+                entity: >-
+                  number.r290_heatpump_p118_antifreeze_inlet_and_outlet_water_temperature_slave_1
               - type: tile
                 entity: number.r290_heatpump_p119_refrigerant_type_slave_1
               - type: tile
                 entity: number.r290_heatpump_p120_low_temperature_start_limit_slave_1
               - type: tile
-                entity: number.r290_heatpump_p121_heating_frequency_shield_1_stage_low_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p121_heating_frequency_shield_1_stage_low_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p122_heating_frequency_shield_1_stage_high_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p122_heating_frequency_shield_1_stage_high_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p123_heating_frequency_shield_2_stage_low_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p123_heating_frequency_shield_2_stage_low_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p124_heating_frequency_shield_2_stage_high_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p124_heating_frequency_shield_2_stage_high_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p125_heating_frequency_shield_3_stage_low_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p125_heating_frequency_shield_3_stage_low_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p126_heating_frequency_shield_3_stage_high_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p126_heating_frequency_shield_3_stage_high_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p127_cooling_frequency_shield_1_stage_low_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p127_cooling_frequency_shield_1_stage_low_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p128_cooling_frequency_shield_1_stage_high_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p128_cooling_frequency_shield_1_stage_high_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p129_cooling_frequency_shield_2_stage_low_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p129_cooling_frequency_shield_2_stage_low_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p130_cooling_frequency_shield_2_stage_high_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p130_cooling_frequency_shield_2_stage_high_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p131_cooling_frequency_shield_3_stage_low_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p131_cooling_frequency_shield_3_stage_low_value_slave_1
               - type: tile
-                entity: number.r290_heatpump_p132_cooling_frequency_shield_3_stage_high_value_slave_1
+                entity: >-
+                  number.r290_heatpump_p132_cooling_frequency_shield_3_stage_high_value_slave_1
               - type: tile
+                entity: number.r290_heatpump_p133_fan_module_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p134_water_flow_is_too_low_protection_value_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p135_temperature_difference_to_start_anti_condensation_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p136_ambient_temperature_to_open_throttle_bypass_valve_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p137_throttle_bypass_valve_delay_compressor_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p138_defrost_compressor_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p139_air_conditioning_electric_heating_options_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p140_hot_water_electric_heating_options_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p141_dew_point_duration_of_defrost_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p142_dew_point_constant_of_defrost_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p143_water_temperature_to_enter_defrost_mode_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p144_ambient_temperature_to_enter_defrost_mode_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p145_water_outlet_antifreeze_protection_value_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p146_pump_range_setting_value_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p147_cooling_anti_freeze_mode_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p148_cooling_anti_freeze_temperature_value_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p149_water_out_of_the_high_limit_frequency_value_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p150_secondary_heating_pump_selection_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p151_hot_water_heat_source_return_difference_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p152_heating_heat_source_return_difference_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p153_combined_hot_water_heat_source_upper_temperature_limit_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p154_combined_heating_heat_source_upper_temperature_limit_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p155_compressor_code_function_reserved_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p156_auxiliary_electronic_expansion_valve_selection_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p157_auxiliary_electronic_expansion_valve_to_reduce_temperature_difference_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p158_heating_limit_water_temperature_start_ambient_temperature_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p159_limit_temperature_constant_p159_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p160_limit_temperature_coefficient_p160_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p161_auxiliary_pump_selection_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p162_anti_freezing_interval_for_hot_water_pipes_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p162_minimum_feedback_of_pump_speed_regulation_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p164_level_control_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p165_load_return_difference_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p166_load_shedding_hysteresis_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p167_emergency_stop_return_difference_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p168_hot_water_mode_start_ratio_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p169_non_hot_water_mode_start_ratio_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p170_loading_cycle_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p171_shield_low_voltage_switch_ambient_temperature_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p172_target_frequency_constant_c_of_dc_fan_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p173_target_frequency_of_heating_fan_lower_limit_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p174_defrost_valve_opening_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p175_constant_temperature_operation_cycle_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p176_minimum_defrosting_time_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p177_defrost_segmented_water_temperature_setting_value_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p178_high_water_temperature_defrosting_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p179_strong_mode_frequency_increase_value_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p180_powerful_mode_frequency_cap_increase_value_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p181_defrost_mode_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p182_pipe_electric_heating_option_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p183_parameter_password_setting_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p184_35d_working_condition_compressor_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p185_35c_working_condition_compressor_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p186_35b_working_condition_compressor_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p187_35a_working_condition_compressor_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p188_35e_working_condition_compressor_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p189_55d_working_condition_compressor_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p190_55c_working_condition_compressor_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p191_55b_working_condition_compressor_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p192_55a_working_condition_compressor_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p193_55e_working_condition_compressor_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p194_35d_working_condition_fan_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p195_35c_working_condition_fan_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p196_35b_working_condition_fan_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p197_35a_working_condition_fan_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p198_35e_working_condition_fan_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p199_55d_working_condition_fan_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p200_55c_working_condition_fan_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p201_55b_working_condition_fan_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p202_55a_working_condition_fan_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p203_55e_working_condition_fan_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p204_35d_operating_condition_main_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p205_35c_working_condition_main_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p206_35b_working_condition_main_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p207_35a_working_condition_main_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p208_35e_working_condition_main_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p209_55d_operating_condition_main_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p210_55c_operating_condition_main_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p211_55b_working_condition_main_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p212_target_superheat_of_main_valve_in_55a_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p213_55e_working_condition_main_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p214_initial_opening_of_main_valve_in_35d_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p215_initial_opening_of_main_valve_in_35c_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p216_initial_opening_of_main_valve_in_35b_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p217_initial_opening_of_main_valve_in_35a_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p218_initial_opening_of_main_valve_in_35e_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p219_initial_opening_of_main_valve_in_55d_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p220_initial_opening_of_main_valve_in_55c_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p221_initial_opening_of_main_valve_in_55b_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p222_initial_opening_of_main_valve_in_55a_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p223_initial_opening_of_main_valve_in_55e_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p224_35d_operating_condition_auxiliary_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p225_35c_operating_condition_auxiliary_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p226_35b_operating_condition_auxiliary_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p227_35a_working_condition_auxiliary_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p228_35e_working_condition_auxiliary_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p229_55d_working_condition_auxiliary_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p230_55c_working_condition_auxiliary_valve_target_superheat_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p231_auxiliary_valve_target_superheat_in_55b_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p232_auxiliary_valve_target_superheat_in_55a_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p233_auxiliary_valve_target_superheat_in_55e_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p234_initial_opening_of_auxiliary_valve_in_35d_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p235_initial_opening_of_auxiliary_valve_in_35c_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p236_initial_opening_of_auxiliary_valve_in_35b_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p237_initial_opening_of_auxiliary_valve_in_35a_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p238_initial_opening_of_auxiliary_valve_in_35e_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p239_initial_opening_of_auxiliary_valve_in_55d_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p240_initial_opening_of_auxiliary_valve_in_55c_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p241_initial_opening_of_auxiliary_valve_in_55b_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p242_initial_opening_of_auxiliary_valve_in_55a_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p243_initial_opening_of_auxiliary_valve_in_55e_working_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p244_target_water_flow_in_35_low_water_temperature_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p245_target_water_flow_under_55_high_water_temperature_conditions_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p246_35_low_water_temperature_rated_fan_frequency_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p247_initial_opening_of_main_valve_under_35_low_water_temperature_rated_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p248_initial_opening_of_main_valve_under_55_high_water_temperature_rated_condition_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p248_initial_opening_of_main_valve_under_55_high_water_temperature_rated_condition_slave_1_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p250_target_superheat_of_main_valve_under_35_low_water_temperature_rated_condition_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p251_pfc_shutdown_current_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p252_target_superheat_of_main_valve_under_55_high_water_temperature_rated_condition_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p253_pfc_turn_on_current_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p254_heating_medium_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p255_smart_grid_options_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p256_peak_grid_running_time_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p257_dual_temperature_zone_selection_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p258_mixed_water_regulating_valve_cycle_slave_1
+              - type: tile
+                entity: number.r290_heatpump_p259_mixing_valve_full_cycle_time_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p260_max_rotate_speed_of_dc_water_pump_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p261_rotate_speed_of_dc_water_pump_under_constant_temperature_slave_1
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p262_floor_heating_test_mode_selection_slave_1
+      - type: grid
+        cards:
+          - type: heading
+            heading: R290 Heatpump (Slave 2) - Unit System Parameters
+            heading_style: title
+          - type: vertical-stack
+            cards:
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p000_t1_external_ambient_temperature_sensor_slave_2
+                features_position: bottom
+                vertical: false
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p001_high_pressure_switch_settings_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p002_low_pressure_switch_settings_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p003_water_flow_switch_settings_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p004_thermal_overload_protection_switch_settings_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p005_linkage_switch_settings_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p006_fan_motor_type_setting_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p007_high_pressure_protection_lockout_setting_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p008_low_pressure_protection_lockout_setting_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p009_exhaust_protection_lockout_setting_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p010_water_flow_switch_protection_lock_setting_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p011_high_pressure_protection_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p012_high_pressure_frequency_limit_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p013_low_pressure_protection_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p014_low_pressure_frequency_limit_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p015_exhaust_temperature_protection_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p016_exhaust_temperature_limit_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p017_refrigeration_fan_speed_increase_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p018_cooling_fan_deceleration_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p019_heating_fan_deceleration_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p020_heating_fan_speed_increase_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p021_unit_prohibits_starting_low_temperature_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p022_electric_heating_start_ambient_temperature_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p023_temperature_difference_between_inlet_and_outlet_water_exceeds_threshold_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p024_return_water_temperature_compensation_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p025_outlet_water_temperature_compensation_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p026_air_conditioner_return_difference_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p027_floor_heating_difference_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p028_pump_control_mode_when_device_reaches_target_temperature_and_shutdown_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p029_antifreeze_water_pump_running_time_every_10min_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p030_defrost_mode_selection_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p031_enter_the_defrost_accumulated_running_time_threshold_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p032_enter_the_defrost_coil_temperature_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p033_enter_defrost_temperature_difference_1_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p034_enter_defrost_temperature_difference_2_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p035_max_defrost_time_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p036_exit_defrost_coil_temperature_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p037_device_reaching_target_temperature_and_shutdown_mode_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p038_heating_main_valve_initial_opening_constant_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p039_pressure_sensor_settings_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p040_cooling_target_superheat_correction_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p041_heating_high_pressure_protection_and_frequency_limit_correction_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p042_heating_target_superheat_correction_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p043_medium_pressure_switch_settings_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p044_water_flow_switch_failure_detection_settings_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p045_communication_address_code_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p046_return_difference_of_the_opening_of_the_liquid_injection_solenoid_valve_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p047_evi_target_superheat_constant_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p048_whether_the_tank_temperature_probe_is_enabled_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p049_hot_water_frequency_operating_percentage_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p050_cooling_target_frequency_constant_a_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p051_cooling_minimum_frequency_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p052_cooling_target_frequency_upper_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p053_cooling_target_frequency_lower_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p054_heating_target_frequency_constant_b_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p055_heating_target_frequency_upper_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p056_heating_target_frequency_lower_limit_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p057_heating_minimum_frequency_1_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p058_heating_minimum_frequency_2_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p059_heating_minimum_frequency_3_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p060_hot_water_target_frequency_constant_b_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p061_hot_water_target_frequency_upper_limit_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p062_hot_water_target_frequency_lower_limit_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p063_hot_water_minimum_frequency_1_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p064_hot_water_minimum_frequency_2_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p065_hot_water_minimum_frequency_3_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p066_dc_fan_initial_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p067_dc_fan_heating_minimum_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p068_dc_fan_heating_maximum_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p069_dc_fan_cooling_minimum_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p070_dc_fan_cooling_maximum_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p071_turn_on_enthalpy_control_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p072_stop_enthalpy_increase_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p073_refrigeration_main_valve_initial_opening_1_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p074_refrigeration_main_valve_initial_opening_2_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p075_refrigeration_main_valve_initial_opening_3_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p076_minimum_opening_of_refrigeration_main_valve_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p077_minimum_opening_of_heating_main_valve_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p078_main_valve_maximum_opening_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p079_main_valve_initial_opening_constant_c_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p080_main_valve_initial_opening_coefficient_a_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p081_main_valve_initial_opening_coefficient_b_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p082_auxiliary_valve_maximum_opening_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p083_auxiliary_valve_minimum_opening_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p084_main_valve_regulation_period_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p085_auxiliary_valve_initial_opening_constant_c_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p086_auxiliary_valve_initial_opening_coefficient_a_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p087_auxiliary_valve_initial_opening_coefficient_b_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p088_silent_mode_compressor_frequency_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p089_quiet_mode_fan_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p090_ambient_temperature_to_enter_evi_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p091_time_to_forbid_entering_into_evi_time_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p092_temperature_difference_to_enter_evi_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p093_compressor_continuous_running_time_to_enter_evi_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p094_auxiliary_valve_adjustment_cycle_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p095_cascade_water_pump_running_mode_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p096_hot_water_return_difference_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p097_water_tank_temperature_automatic_compensation_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p098_manual_compensation_value_of_water_tank_temperature_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p099_pump_speed_control_temperature_difference_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p100_pwm_water_pump_minimum_speed_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p101_pump_control_mode_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p102_four_way_valve_control_mode_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p103_mode_switching_minimum_runtime_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p104_operating_frequency_percentage_when_switching_modes_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p105_cooling_mode_operating_ambient_temperature_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p106_heating_mode_operating_ambient_temperature_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p107_hot_water_mode_operating_ambient_temperature_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p108_hot_water_setting_temperature_upper_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p109_hot_water_setting_temperature_lower_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p110_heating_set_temperature_upper_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p111_heating_set_temperature_lower_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p112_cooling_set_temperature_upper_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p113_cooling_set_temperature_lower_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p114_selection_of_the_number_of_compressor_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p115_model_selection_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p116_unit_temperature_control_method_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p117_ambient_temperature_to_enter_antifreeze_mode_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p118_antifreeze_inlet_and_outlet_water_temperature_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p119_refrigerant_type_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p120_low_temperature_start_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p121_heating_frequency_shield_1_stage_low_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p122_heating_frequency_shield_1_stage_high_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p123_heating_frequency_shield_2_stage_low_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p124_heating_frequency_shield_2_stage_high_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p125_heating_frequency_shield_3_stage_low_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p126_heating_frequency_shield_3_stage_high_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p127_cooling_frequency_shield_1_stage_low_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p128_cooling_frequency_shield_1_stage_high_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p129_cooling_frequency_shield_2_stage_low_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p130_cooling_frequency_shield_2_stage_high_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p131_cooling_frequency_shield_3_stage_low_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p132_cooling_frequency_shield_3_stage_high_value_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p133_fan_module_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p134_water_flow_is_too_low_protection_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p135_temperature_difference_to_start_anti_condensation_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p136_ambient_temperature_to_open_throttle_bypass_valve_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p137_throttle_bypass_valve_delay_compressor_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p138_defrost_compressor_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p139_air_conditioning_electric_heating_options_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p140_hot_water_electric_heating_options_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p141_dew_point_duration_of_defrost_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p142_dew_point_constant_of_defrost_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p143_water_temperature_to_enter_defrost_mode_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p144_ambient_temperature_to_enter_defrost_mode_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p145_water_outlet_antifreeze_protection_value_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p146_pump_range_setting_value_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p147_cooling_anti_freeze_mode_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p148_cooling_anti_freeze_temperature_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p149_water_out_of_the_high_limit_frequency_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p150_secondary_heating_pump_selection_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p151_hot_water_heat_source_return_difference_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p152_heating_heat_source_return_difference_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p153_combined_hot_water_heat_source_upper_temperature_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p154_combined_heating_heat_source_upper_temperature_limit_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p155_compressor_code_function_reserved_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p156_auxiliary_electronic_expansion_valve_selection_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p157_auxiliary_electronic_expansion_valve_to_reduce_temperature_difference_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p158_heating_limit_water_temperature_start_ambient_temperature_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p159_limit_temperature_constant_p159_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p160_limit_temperature_coefficient_p160_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p161_auxiliary_pump_selection_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p162_anti_freezing_interval_for_hot_water_pipes_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p162_minimum_feedback_of_pump_speed_regulation_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p164_level_control_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p165_load_return_difference_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p166_load_shedding_hysteresis_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p167_emergency_stop_return_difference_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p168_hot_water_mode_start_ratio_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p169_non_hot_water_mode_start_ratio_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p170_loading_cycle_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p171_shield_low_voltage_switch_ambient_temperature_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p172_target_frequency_constant_c_of_dc_fan_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p173_target_frequency_of_heating_fan_lower_limit_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p174_defrost_valve_opening_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p175_constant_temperature_operation_cycle_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p176_minimum_defrosting_time_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p177_defrost_segmented_water_temperature_setting_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p178_high_water_temperature_defrosting_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p179_strong_mode_frequency_increase_value_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p180_powerful_mode_frequency_cap_increase_value_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p181_defrost_mode_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p182_pipe_electric_heating_option_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p183_parameter_password_setting_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p184_35d_working_condition_compressor_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p185_35c_working_condition_compressor_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p186_35b_working_condition_compressor_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p187_35a_working_condition_compressor_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p188_35e_working_condition_compressor_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p189_55d_working_condition_compressor_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p190_55c_working_condition_compressor_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p191_55b_working_condition_compressor_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p192_55a_working_condition_compressor_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p193_55e_working_condition_compressor_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p194_35d_working_condition_fan_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p195_35c_working_condition_fan_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p196_35b_working_condition_fan_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p197_35a_working_condition_fan_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p198_35e_working_condition_fan_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p199_55d_working_condition_fan_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p200_55c_working_condition_fan_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p201_55b_working_condition_fan_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p202_55a_working_condition_fan_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p203_55e_working_condition_fan_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p204_35d_operating_condition_main_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p205_35c_working_condition_main_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p206_35b_working_condition_main_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p207_35a_working_condition_main_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p208_35e_working_condition_main_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p209_55d_operating_condition_main_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p210_55c_operating_condition_main_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p211_55b_working_condition_main_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p212_target_superheat_of_main_valve_in_55a_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p213_55e_working_condition_main_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p214_initial_opening_of_main_valve_in_35d_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p215_initial_opening_of_main_valve_in_35c_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p216_initial_opening_of_main_valve_in_35b_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p217_initial_opening_of_main_valve_in_35a_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p218_initial_opening_of_main_valve_in_35e_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p219_initial_opening_of_main_valve_in_55d_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p220_initial_opening_of_main_valve_in_55c_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p221_initial_opening_of_main_valve_in_55b_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p222_initial_opening_of_main_valve_in_55a_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p223_initial_opening_of_main_valve_in_55e_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p224_35d_operating_condition_auxiliary_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p225_35c_operating_condition_auxiliary_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p226_35b_operating_condition_auxiliary_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p227_35a_working_condition_auxiliary_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p228_35e_working_condition_auxiliary_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p229_55d_working_condition_auxiliary_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p230_55c_working_condition_auxiliary_valve_target_superheat_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p231_auxiliary_valve_target_superheat_in_55b_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p232_auxiliary_valve_target_superheat_in_55a_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p233_auxiliary_valve_target_superheat_in_55e_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p234_initial_opening_of_auxiliary_valve_in_35d_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p235_initial_opening_of_auxiliary_valve_in_35c_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p236_initial_opening_of_auxiliary_valve_in_35b_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p237_initial_opening_of_auxiliary_valve_in_35a_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p238_initial_opening_of_auxiliary_valve_in_35e_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p239_initial_opening_of_auxiliary_valve_in_55d_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p240_initial_opening_of_auxiliary_valve_in_55c_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p241_initial_opening_of_auxiliary_valve_in_55b_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p242_initial_opening_of_auxiliary_valve_in_55a_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p243_initial_opening_of_auxiliary_valve_in_55e_working_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p244_target_water_flow_in_35_low_water_temperature_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p245_target_water_flow_under_55_high_water_temperature_conditions_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p246_35_low_water_temperature_rated_fan_frequency_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p247_initial_opening_of_main_valve_under_35_low_water_temperature_rated_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p248_initial_opening_of_main_valve_under_55_high_water_temperature_rated_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p248_initial_opening_of_main_valve_under_55_high_water_temperature_rated_condition_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p250_target_superheat_of_main_valve_under_35_low_water_temperature_rated_condition_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p251_pfc_shutdown_current_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p252_target_superheat_of_main_valve_under_55_high_water_temperature_rated_condition_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p253_pfc_turn_on_current_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p254_heating_medium_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p255_smart_grid_options_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p256_peak_grid_running_time_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p257_dual_temperature_zone_selection_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p258_mixed_water_regulating_valve_cycle_slave_2
+              - type: tile
+                entity: number.r290_heatpump_p259_mixing_valve_full_cycle_time_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p260_max_rotate_speed_of_dc_water_pump_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p261_rotate_speed_of_dc_water_pump_under_constant_temperature_slave_2
+              - type: tile
+                entity: >-
+                  number.r290_heatpump_p262_floor_heating_test_mode_selection_slave_2
+    icon: ''
+    cards: []
+    header:
+      card:
+        type: markdown
+        content: '# R290 Heatpump - Unit System Parameters'
+  - type: sections
+    max_columns: 4
+    title: HeatCurves
+    path: heatpump-curve
+    icon: ''
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: User Parameters
+            heading_style: title
+          - type: tile
+            entity: select.r290_heatpump_on_off_slave_1
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: select.r290_heatpump_set_mode_slave_1
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: number.r290_heatpump_indoor_temperature_set_point_slave_1
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: select.r290_heatpump_frequency_conversion_mode_slave_1
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: select.r290_heatpump_heating_curve_setting_slave_1
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: select.r290_heatpump_cooling_curve_setting_slave_1
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: select.r290_heatpump_floor_heating_curve_setting_slave_1
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: select.r290_heatpump_hot_water_curve_setting_slave_1
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: number.r290_heatpump_heating_set_temperature_slave_1
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: number.r290_heatpump_cooling_set_temperature_slave_1
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: number.r290_heatpump_floor_heating_set_temperature_slave_1
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: number.r290_heatpump_hot_water_set_temperature_slave_1
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+        column_span: 4
+      - type: grid
+        cards:
+          - type: heading
+            heading: Heating Curve
+            heading_style: title
+          - type: tile
+            entity: switch.r290_heatpump_heating_curve_active
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: sensor.r290_heatpump_heating_curve_now
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: number.r290_heatpump_heating_stepsize_c
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_heating_inertia_hours
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_heating_t_out_min
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_heating_t_flow_max
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_heating_t_out_max
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_heating_t_flow_min
+            features_position: bottom
+            vertical: false
+          - type: entities
+            entities:
+              - entity: switch.r290_heatpump_heating_pv_optimization
+              - entity: number.r290_heatpump_heating_pv_grid_threshold_min_kw
+              - entity: number.r290_heatpump_heating_pv_grid_threshold_max_kw
+              - entity: select.r290_heatpump_heating_pv_grid_offset_min
+              - entity: select.r290_heatpump_heating_pv_grid_offset_max
+              - entity: number.r290_heatpump_heating_pv_hold_minutes
+              - entity: number.r290_heatpump_heating_external_offset_hold_minutes
+              - entity: select.r290_heatpump_heating_pv_battery_offset
+              - entity: number.r290_heatpump_heating_pv_battery_threshold_pct
+            title: PV Optimization
+            state_color: false
+      - type: grid
+        cards:
+          - type: heading
+            heading: TerraNext Cooling Curve
+          - type: tile
+            entity: switch.r290_heatpump_cooling_curve_active
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: sensor.r290_heatpump_cooling_curve_now
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: number.r290_heatpump_cooling_stepsize_c
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_cooling_inertia_hours
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_cooling_t_out_min
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_cooling_t_flow_max
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_cooling_t_out_max
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_cooling_t_flow_min
+            features_position: bottom
+            vertical: false
+          - type: entities
+            entities:
+              - entity: switch.r290_heatpump_cooling_pv_optimization
+              - entity: number.r290_heatpump_cooling_pv_grid_threshold_min_kw
+              - entity: number.r290_heatpump_cooling_pv_grid_threshold_max_kw
+              - entity: select.r290_heatpump_cooling_pv_grid_offset_min
+              - entity: select.r290_heatpump_cooling_pv_grid_offset_max
+              - entity: number.r290_heatpump_cooling_pv_hold_minutes
+              - entity: number.r290_heatpump_cooling_external_offset_hold_minutes
+              - entity: select.r290_heatpump_cooling_pv_battery_offset
+              - entity: number.r290_heatpump_cooling_pv_battery_threshold_pct
+            title: PV Optimization
+            state_color: false
+      - type: grid
+        cards:
+          - type: heading
+            heading: TerraNext Floor Heating Curve
+          - type: tile
+            entity: switch.r290_heatpump_floor_heating_curve_active
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: sensor.r290_heatpump_floor_heating_curve_now
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: number.r290_heatpump_floor_heating_stepsize_c
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_floor_heating_inertia_hours
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_floor_heating_t_out_min
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_floor_heating_t_flow_max
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_floor_heating_t_out_max
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_floor_heating_t_flow_min
+            features_position: bottom
+            vertical: false
+          - type: entities
+            entities:
+              - entity: switch.r290_heatpump_floor_heating_pv_optimization
+              - entity: number.r290_heatpump_floor_heating_pv_grid_threshold_min_kw
+              - entity: number.r290_heatpump_floor_heating_pv_grid_threshold_max_kw
+              - entity: select.r290_heatpump_floor_heating_pv_grid_offset_min
+              - entity: select.r290_heatpump_floor_heating_pv_grid_offset_max
+              - entity: number.r290_heatpump_floor_heating_pv_hold_minutes
+              - entity: number.r290_heatpump_floor_heating_external_offset_hold_minutes
+              - entity: select.r290_heatpump_floor_heating_pv_battery_offset
+              - entity: number.r290_heatpump_floor_heating_pv_battery_threshold_pct
+            title: PV Optimization
+            state_color: false
+      - type: grid
+        cards:
+          - type: heading
+            heading: TerraNext Hot Water Curve
+          - type: tile
+            entity: switch.r290_heatpump_hotwater_curve_active
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: sensor.r290_heatpump_hotwater_curve_now
+            features_position: bottom
+            vertical: false
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: number.r290_heatpump_hotwater_stepsize_c
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_hotwater_inertia_hours
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_hotwater_t_out_min
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_hotwater_t_flow_max
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_hotwater_t_out_max
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: number.r290_heatpump_hotwater_t_flow_min
+            features_position: bottom
+            vertical: false
+          - type: entities
+            entities:
+              - entity: switch.r290_heatpump_hotwater_pv_optimization
+              - entity: number.r290_heatpump_hotwater_pv_grid_threshold_min_kw
+              - entity: number.r290_heatpump_hotwater_pv_grid_threshold_max_kw
+              - entity: select.r290_heatpump_hotwater_pv_grid_offset_min
+              - entity: select.r290_heatpump_hotwater_pv_grid_offset_max
+              - entity: number.r290_heatpump_hotwater_pv_hold_minutes
+              - entity: number.r290_heatpump_hotwater_external_offset_hold_minutes
+              - entity: select.r290_heatpump_hotwater_pv_battery_offset
+              - entity: number.r290_heatpump_hotwater_pv_battery_threshold_pct
+            title: PV Optimization
+            state_color: false
+    cards: []
+    header:
+      card:
+        type: markdown
+        content: '# R290 Heatpump - Heizkurven'
+    subview: false

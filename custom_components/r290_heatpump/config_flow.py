@@ -1,4 +1,6 @@
-﻿import logging
+﻿# Version: 1.0.1
+# Last modified: 2025-10-24 17:33 by CNC-Buddy
+import logging
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.const import CONF_SLAVE, CONF_SCAN_INTERVAL

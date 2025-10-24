@@ -1,3 +1,5 @@
+# Version: 1.0.1
+# Last modified: 2025-10-24 17:33 by CNC-Buddy
 import asyncio
 import logging
 from typing import Optional
@@ -89,7 +91,14 @@ async def async_setup_entry(
             model="Heating Curve",
             sw_version="1.0.0",
         )
+        curve_prefix = {
+            "heating_curve": "heating",
+            "floor_heating_curve": "floor_heating",
+            "hot_water_curve": "hotwater",
+            "cooling_curve": "cooling",
+        }.get(device_type, "heating")
         entities.append(HeatcurveActiveSwitch(hass, entry, device_info))
+        entities.append(HeatcurveExternalOffsetSwitch(hass, entry, device_info, curve_prefix))
         slave_id = int(entry.data.get(CONF_SLAVE, 1))
         if slave_id == 1 and device_type in PV_CURVE_CONFIG:
             curve_cfg = PV_CURVE_CONFIG[device_type]
@@ -371,6 +380,56 @@ class HeatcurveActiveSwitch(SwitchEntity):
         self.async_write_ha_state()
 
 
+
+
+
+class HeatcurveExternalOffsetSwitch(SwitchEntity):
+    def __init__(self, hass: HomeAssistant, entry: ConfigEntry, device_info: DeviceInfo, prefix: str) -> None:
+        super().__init__()
+        self._hass = hass
+        self._entry = entry
+        self._curve_prefix = prefix
+        curve_names = {
+            "heating": "Heating Curve External Offset",
+            "floor_heating": "Floor Heating External Offset",
+            "hotwater": "Hot Water External Offset",
+            "cooling": "Cooling External Offset",
+        }
+        self._attr_name = curve_names.get(prefix, "Heating Curve External Offset")
+        self._attr_unique_id = f"r290_heatpump_{prefix}_external_heating_offset_{entry.entry_id}"
+        self._attr_device_info = device_info
+        self._attr_should_poll = False
+        self._attr_entity_category = EntityCategory.CONFIG
+        self._attr_is_on = bool(entry.options.get("external_offset_enabled", False))
+        try:
+            self.entity_id = f"switch.r290_heatpump_{prefix}_external_heating_offset"
+        except Exception:
+            pass
+
+    @property
+    def is_on(self) -> bool:
+        return self._attr_is_on
+
+    async def async_added_to_hass(self) -> None:
+        self._attr_is_on = bool(self._entry.options.get("external_offset_enabled", False))
+        self.async_write_ha_state()
+
+    async def async_turn_on(self, **kwargs) -> None:
+        opts = dict(self._entry.options)
+        opts["external_offset_enabled"] = True
+        self._hass.config_entries.async_update_entry(self._entry, options=opts)
+        self._attr_is_on = True
+        self.async_write_ha_state()
+
+    async def async_turn_off(self, **kwargs) -> None:
+        opts = dict(self._entry.options)
+        opts["external_offset_enabled"] = False
+        self._hass.config_entries.async_update_entry(self._entry, options=opts)
+        self._attr_is_on = False
+        self.async_write_ha_state()
+
+    async def async_update(self) -> None:
+        self._attr_is_on = bool(self._entry.options.get("external_offset_enabled", False))
 
 
 
