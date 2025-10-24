@@ -1,3 +1,5 @@
+# Version: 1.0.1
+# Last modified: 2025-10-24 17:33 by CNC-Buddy
 """R290 Heat Pump Integration - Init."""
 import logging
 from homeassistant.config_entries import ConfigEntry
