@@ -141,8 +141,9 @@ Entity naming uses the curve prefixes `heating`, `floor_heating`, `hotwater`, `c
 - Shelly 3EM for electrical enegry monitoring
 - kamstrup Multical 303 for heat energy monitoring
 - nanoCUL USB Stick 868 Mhz with CC1101 SMA antenna for Multical 303 readout with Wmbusmeters Addon
+ 
+---
 
---
 Contributions and issue reports are welcome. Please describe your setup (bridge mode, firmware, HA version) when reporting issues.
 
 -------------------------------------------------------
