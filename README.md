@@ -142,6 +142,9 @@ Entity naming uses the curve prefixes `heating`, `floor_heating`, `hotwater`, `c
 - kamstrup Multical 303 for heat energy monitoring
 - nanoCUL USB Stick 868 Mhz with CC1101 SMA antenna for Multical 303 readout with Wmbusmeters Addon
 
+--
+Contributions and issue reports are welcome. Please describe your setup (bridge mode, firmware, HA version) when reporting issues.
+
 -------------------------------------------------------
 
 The Modbus communication is the same according to the instructions, same for the device parameters and settings. 
@@ -260,4 +263,3 @@ ElektroFrigo - BLN-018TC3			                        	(Serbia)
 
 #####################################################
 
-Contributions and issue reports are welcome. Please describe your setup (bridge mode, firmware, HA version) when reporting issues.
