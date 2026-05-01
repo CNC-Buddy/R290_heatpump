@@ -1,5 +1,5 @@
-# Version: 1.0.1
-# Last modified: 2025-10-24 17:33 by CNC-Buddy
+# Version: 1.0.2
+# Last modified: 2026-05-01 10:48 by CNC-Buddy
 from typing import Dict
 
 PV_CURVE_CONFIG: Dict[str, dict] = {
@@ -8,6 +8,7 @@ PV_CURVE_CONFIG: Dict[str, dict] = {
         "grid_threshold_default": 2.0,
         "grid_threshold_min_default": 2.0,
         "grid_threshold_max_default": 3.0,
+        "offset_reset_default": 0.25,
         "grid_offset_min_default": 0.0,
         "grid_offset_max_default": 0.0,
         "battery_threshold_default": 80.0,
@@ -19,6 +20,7 @@ PV_CURVE_CONFIG: Dict[str, dict] = {
         "grid_threshold_default": 2.0,
         "grid_threshold_min_default": 2.0,
         "grid_threshold_max_default": 3.0,
+        "offset_reset_default": 0.25,
         "grid_offset_min_default": 0.0,
         "grid_offset_max_default": 0.0,
         "battery_threshold_default": 80.0,
@@ -30,6 +32,7 @@ PV_CURVE_CONFIG: Dict[str, dict] = {
         "grid_threshold_default": 5.0,
         "grid_threshold_min_default": 5.0,
         "grid_threshold_max_default": 7.0,
+        "offset_reset_default": 0.25,
         "grid_offset_min_default": 0.0,
         "grid_offset_max_default": 0.0,
         "battery_threshold_default": 90.0,
@@ -41,6 +44,7 @@ PV_CURVE_CONFIG: Dict[str, dict] = {
         "grid_threshold_default": 3.0,
         "grid_threshold_min_default": 3.0,
         "grid_threshold_max_default": 4.0,
+        "offset_reset_default": 0.25,
         "grid_offset_min_default": 0.0,
         "grid_offset_max_default": 0.0,
         "battery_threshold_default": 70.0,
