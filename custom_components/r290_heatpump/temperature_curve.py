@@ -1,11 +1,10 @@
-# Version: 1.0.1
-# Last modified: 2025-10-24 17:33 by CNC-Buddy
+# Version: 1.0.2
+# Last modified: 2026-05-10 10:48 by CNC-Buddy
 import logging
 import math
 import asyncio
-from collections import deque
 from datetime import timedelta
-from typing import Optional, Deque, Tuple
+from typing import Optional, Tuple
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass
 from homeassistant.const import UnitOfTemperature, STATE_ON, CONF_SLAVE
 from homeassistant.helpers.event import (
@@ -71,8 +70,7 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         self._pv_candidate_since: Optional[float] = None
         self._pv_hold_remaining: float = 0.0
         self._pv_hold_handle: Optional[asyncio.TimerHandle] = None
-        self._pv_power_history: Deque[Tuple[float, float]] = deque()
-        self._pv_last_power_avg: float = 0.0
+        self._pv_last_power_kw: float = 0.0
         self._pv_power_sensor: Optional[str] = None
         self._pv_battery_sensor: Optional[str] = None
         self._pv_power_listener = None
@@ -170,6 +168,7 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
             f"select.r290_heatpump_{prefix}_pv_battery_offset",
             f"number.r290_heatpump_{prefix}_pv_grid_threshold_min_kw",
             f"number.r290_heatpump_{prefix}_pv_grid_threshold_max_kw",
+            f"number.r290_heatpump_{prefix}_pv_offset_reset_kw",
             f"number.r290_heatpump_{prefix}_pv_battery_threshold_pct",
             f"number.r290_heatpump_{prefix}_pv_hold_minutes",
             f"number.r290_heatpump_{prefix}_external_offset_hold_minutes",
@@ -246,8 +245,7 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
                 self._pv_pending_offset = None
                 self._pv_hold_remaining = 0.0
                 self._cancel_pv_hold_timer()
-            self._pv_power_history.clear()
-            self._pv_last_power_avg = 0.0
+            self._pv_last_power_kw = 0.0
             return 0.0
 
         grid_candidate: Optional[float] = None
@@ -264,7 +262,8 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
                         power_kw = power_val / 1000.0
                     else:
                         power_kw = power_val
-                    avg_power_kw = self._average_recent_power(power_kw, record=commit)
+                    self._pv_last_power_kw = float(power_kw)
+                    avg_power_kw = self._pv_last_power_kw
                     threshold_min = float(
                         opts.get(
                             "pv_grid_threshold_min_kw",
@@ -289,6 +288,13 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
                             ),
                         )
                     )
+                    offset_reset_threshold = float(
+                        opts.get(
+                            "pv_offset_reset_kw",
+                            self._pv_defaults.get("offset_reset_default", 0.25),
+                        )
+                    )
+                    offset_reset_threshold = max(0.0, offset_reset_threshold)
                     if threshold_max < threshold_min:
                         threshold_min, threshold_max = threshold_max, threshold_min
                     offset_min = float(
@@ -311,7 +317,7 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
                     )
                     offset_min = max(-10.0, min(10.0, offset_min))
                     offset_max = max(-10.0, min(10.0, offset_max))
-                    if avg_power_kw <= 0.25:
+                    if avg_power_kw < offset_reset_threshold:
                         grid_candidate = 0.0
                     elif avg_power_kw < threshold_min:
                         grid_candidate = self._pv_current_offset
@@ -328,8 +334,7 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
                 except (ValueError, TypeError):
                     pass
         else:
-            self._pv_power_history.clear()
-            self._pv_last_power_avg = 0.0
+            self._pv_last_power_kw = 0.0
 
         battery_sensor = opts.get("pv_battery_sensor") or self._entry.data.get("pv_battery_sensor")
         if battery_sensor:
@@ -392,7 +397,11 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         current_sign = 0.0 if math.isclose(current, 0.0, abs_tol=0.01) else math.copysign(1.0, current)
         candidate_sign = 0.0 if math.isclose(candidate, 0.0, abs_tol=0.01) else math.copysign(1.0, candidate)
         magnitude_increasing = abs(candidate) > abs(current) + 1e-6
-        sign_changed = candidate_sign != current_sign and not (candidate_sign == 0.0 and current_sign == 0.0)
+        sign_changed = (
+            candidate_sign != current_sign
+            and candidate_sign != 0.0
+            and current_sign != 0.0
+        )
 
         if magnitude_increasing or sign_changed:
             self._pv_current_offset = candidate
@@ -569,25 +578,11 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
             except Exception:
                 pass
             attrs = {"Kurve": table, "now": now_val}
-            attrs["pv_offset"] = round(self._pv_current_offset, 2)
-            attrs["pv_offset_preview"] = round(self._pv_preview_offset, 2)
             attrs["pv_enabled"] = bool(self._entry.options.get("pv_enabled", False))
-            attrs["pv_offset_pending"] = (
-                round(self._pv_pending_offset, 2)
-                if self._pv_pending_offset is not None
-                else None
-            )
+            attrs["pv_offset"] = round(self._pv_current_offset, 2)
             attrs["pv_offset_hold_remaining_seconds"] = int(round(self._pv_hold_remaining))
-            attrs["pv_power_avg_kw"] = round(self._pv_last_power_avg, 3)
-            attrs["external_offset"] = round(self._external_offset_active, 2)
-            attrs["external_offset_preview"] = round(self._external_offset_preview, 2)
             attrs["external_offset_enabled"] = bool(self._external_offset_enabled)
-            attrs["external_offset_source"] = self._external_offset_source
-            attrs["external_offset_pending"] = (
-                round(self._external_pending_offset, 2)
-                if self._external_pending_offset is not None
-                else None
-            )
+            attrs["external_offset"] = round(self._external_offset_active, 2)
             attrs["external_offset_hold_remaining_seconds"] = int(
                 round(self._external_hold_remaining)
             )
@@ -746,32 +741,3 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         except Exception as e:
             _LOGGER.debug("Error in temperature curve update: %s", e)
             self._state = None
-
-
-    def _average_recent_power(self, sample_kw: float | None, *, record: bool) -> float:
-        hist = self._pv_power_history
-        now = asyncio.get_running_loop().time()
-        cutoff = now - 60.0
-        while hist and hist[0][0] < cutoff:
-            hist.popleft()
-
-        data = list(hist)
-        if sample_kw is not None:
-            sample = float(sample_kw)
-            if record:
-                hist.append((now, sample))
-                data = list(hist)
-            else:
-                data = data + [(now, sample)] if data else [(now, sample)]
-
-        if data:
-            avg = sum(val for _, val in data) / len(data)
-        else:
-            avg = float(sample_kw) if sample_kw is not None else 0.0
-        self._pv_last_power_avg = avg
-        return avg
-
-
-
-
-
