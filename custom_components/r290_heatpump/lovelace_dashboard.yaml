@@ -1,5 +1,5 @@
-﻿# Version: 1.0.1
-# Last modified: 2025-10-24 17:33 by CNC-Buddy
+# Version: 1.0.2
+# Last modified: 2026-05-01 10:48 by CNC-Buddy
 views:
   - type: sections
     max_columns: 3
@@ -1955,6 +1955,7 @@ views:
               - entity: switch.r290_heatpump_heating_pv_optimization
               - entity: number.r290_heatpump_heating_pv_grid_threshold_min_kw
               - entity: number.r290_heatpump_heating_pv_grid_threshold_max_kw
+              - entity: number.r290_heatpump_heating_pv_offset_reset_kw
               - entity: select.r290_heatpump_heating_pv_grid_offset_min
               - entity: select.r290_heatpump_heating_pv_grid_offset_max
               - entity: number.r290_heatpump_heating_pv_hold_minutes
@@ -2010,6 +2011,7 @@ views:
               - entity: switch.r290_heatpump_cooling_pv_optimization
               - entity: number.r290_heatpump_cooling_pv_grid_threshold_min_kw
               - entity: number.r290_heatpump_cooling_pv_grid_threshold_max_kw
+              - entity: number.r290_heatpump_cooling_pv_offset_reset_kw
               - entity: select.r290_heatpump_cooling_pv_grid_offset_min
               - entity: select.r290_heatpump_cooling_pv_grid_offset_max
               - entity: number.r290_heatpump_cooling_pv_hold_minutes
@@ -2065,6 +2067,7 @@ views:
               - entity: switch.r290_heatpump_floor_heating_pv_optimization
               - entity: number.r290_heatpump_floor_heating_pv_grid_threshold_min_kw
               - entity: number.r290_heatpump_floor_heating_pv_grid_threshold_max_kw
+              - entity: number.r290_heatpump_floor_heating_pv_offset_reset_kw
               - entity: select.r290_heatpump_floor_heating_pv_grid_offset_min
               - entity: select.r290_heatpump_floor_heating_pv_grid_offset_max
               - entity: number.r290_heatpump_floor_heating_pv_hold_minutes
@@ -2120,6 +2123,7 @@ views:
               - entity: switch.r290_heatpump_hotwater_pv_optimization
               - entity: number.r290_heatpump_hotwater_pv_grid_threshold_min_kw
               - entity: number.r290_heatpump_hotwater_pv_grid_threshold_max_kw
+              - entity: number.r290_heatpump_hotwater_pv_offset_reset_kw
               - entity: select.r290_heatpump_hotwater_pv_grid_offset_min
               - entity: select.r290_heatpump_hotwater_pv_grid_offset_max
               - entity: number.r290_heatpump_hotwater_pv_hold_minutes
