@@ -1,5 +1,5 @@
-# Version: 1.0.1
-# Last modified: 2025-10-24 17:33 by CNC-Buddy
+# Version: 1.0.2
+# Last modified: 2026-05-01 10:48 by CNC-Buddy
 from typing import Optional
 import logging
 from homeassistant.components.number import NumberEntity, NumberDeviceClass, NumberMode
@@ -205,6 +205,17 @@ async def async_setup_entry(
                 )
             if grid_max_default < grid_min_default:
                 grid_max_default = grid_min_default
+            offset_reset_default = entry.options.get(
+                "pv_offset_reset_kw",
+                entry.data.get(
+                    "pv_offset_reset_kw",
+                    curve_cfg.get("offset_reset_default", 0.25),
+                ),
+            )
+            try:
+                offset_reset_default = float(offset_reset_default)
+            except (TypeError, ValueError):
+                offset_reset_default = float(curve_cfg.get("offset_reset_default", 0.25))
             battery_default = entry.options.get(
                 "pv_battery_threshold_pct",
                 entry.data.get(
@@ -256,6 +267,21 @@ async def async_setup_entry(
                     step=0.1,
                     default_value=float(grid_max_default),
                     legacy_keys=("pv_grid_threshold_kw",),
+                )
+            )
+            entities.append(
+                HeatcurvePvNumber(
+                    entry,
+                    pv_device_info,
+                    key="pv_offset_reset_kw",
+                    prefix=prefix,
+                    name="PV Offset Reset",
+                    unit="kW",
+                    device_class=NumberDeviceClass.POWER,
+                    min_value=0.0,
+                    max_value=50.0,
+                    step=0.1,
+                    default_value=float(offset_reset_default),
                 )
             )
             entities.append(
