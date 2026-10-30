@@ -166,7 +166,7 @@ class R290HeatPumpWaterCirculationSwitch(SwitchEntity):
         self._attr_name = self._name
         self._attr_unique_id = self._unique_id
         self._attr_device_info = device_info
-        self._attr_should_poll = True
+        self._attr_should_poll = batch is None
         self._attr_is_on = False
 
         try:
@@ -181,6 +181,7 @@ class R290HeatPumpWaterCirculationSwitch(SwitchEntity):
                 self._batch.register(self._address, self._scan_interval)
                 if self._duration_address is not None:
                     self._batch.register(self._duration_address, self._scan_interval)
+                self._batch.subscribe(self, self._scan_interval)
         except Exception as err:
             _LOGGER.debug("Failed to register batch addresses for %s: %s", self._name, err)
         self._start_off_enforcer()
@@ -220,6 +221,7 @@ class R290HeatPumpWaterCirculationSwitch(SwitchEntity):
             value = None
             if self._batch:
                 value = self._batch.get_cached(self._address, self._scan_interval)
+            self._attr_available = value is not None
             if value is not None:
                 state = int(value)
                 is_on = state == self._on_value

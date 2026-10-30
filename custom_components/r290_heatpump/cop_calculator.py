@@ -1,17 +1,16 @@
-# Version: 1.0.1
-# Last modified: 2025-10-24 17:33 by CNC-Buddy
+# Version: 1.0.2
+# Last modified: 2025-11-11 14:11 by CNC-Buddy
 import logging
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta, date, timezone
 from typing import Optional
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import EntityCategory
-from homeassistant.const import UnitOfEnergy
+from homeassistant.const import UnitOfEnergy, STATE_ON, STATE_OFF, EVENT_HOMEASSISTANT_STOP
 from homeassistant.util import dt as dt_util
 from homeassistant.helpers.storage import Store
 from homeassistant.helpers.event import async_track_state_change_event
-from homeassistant.const import EVENT_HOMEASSISTANT_STOP
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -29,15 +28,19 @@ class R290HeatPumpCOPSensorBase(SensorEntity):
     # Evaluate every 5 minutes
     SCAN_INTERVAL = timedelta(minutes=5)
 
-    def __init__(self, hass, entry, device_info, name, unique_id_suffix):
+    def __init__(self, hass, entry, device_info, name, unique_id_suffix, segment: Optional[str] = None):
         """Initialize the COP sensor."""
         super().__init__()
         self._hass = hass
         self._entry = entry
         self._attr_name = name
-        self._attr_unique_id = f"r290_heatpump_cop_{unique_id_suffix}"
+        suffix = unique_id_suffix if not segment else f"{unique_id_suffix}_{segment}"
+        self._attr_unique_id = f"r290_heatpump_cop_{suffix}"
         self._attr_device_info = device_info
         self._state = None
+        self._segment = segment
+        self._energy_kind = "energy" if not segment else f"energy_{segment}"
+        self._heat_kind = "heat" if not segment else f"heat_{segment}"
         self._heat_meter = entry.data.get("heat_meter")
         # Allow one or multiple power meters (comma/space separated) from config
         cfg_power = entry.data.get("power_meter")
@@ -74,17 +77,29 @@ def _slugify(src: str) -> str:
 class _EnergyAccumulator:
     """In-memory energy accumulator per source starting now (no SQL/statistics)."""
 
-    def __init__(self, hass, power_entity: str, heat_entity: str):
+    def __init__(self, hass, power_entity: str, heat_entity: str, split_enabled: bool = False, split_sensor: Optional[str] = None):
         self._hass = hass
         self._store: Store = Store(hass, 1, f"{DOMAIN}_cop_accumulator")
         self._sources = {
-            'energy': { 'last': None, 'buckets': {} },
-            'heat':   { 'last': None, 'buckets': {} },
+            'energy': {'last': None, 'last_ts': None, 'buckets': {}},
+            'heat': {'last': None, 'last_ts': None, 'buckets': {}},
         }
-        self._entities = { 'energy': power_entity, 'heat': heat_entity }
+        self._split_buckets = {
+            'energy': {'heating': {}, 'hotwater': {}},
+            'heat': {'heating': {}, 'hotwater': {}},
+        }
+        self._entities = {'energy': power_entity, 'heat': heat_entity}
         self._loaded = False
+        self._split_enabled = False
+        self._split_sensor = None
+        self._heat_window_start: Optional[float] = None
+        self.configure_split(split_enabled, split_sensor)
 
-    def reconfigure(self, power_entity: str, heat_entity: str) -> None:
+    def configure_split(self, enabled: bool, sensor: Optional[str]) -> None:
+        self._split_enabled = bool(enabled and sensor)
+        self._split_sensor = sensor if self._split_enabled else None
+
+    def reconfigure(self, power_entity: str, heat_entity: str, split_enabled: Optional[bool] = None, split_sensor: Optional[str] = None) -> None:
         """Update bound entities without losing accumulated buckets.
 
         If an entity id changes, reset only the corresponding 'last' pointer
@@ -100,18 +115,28 @@ class _EnergyAccumulator:
             self._sources['energy']['last'] = None
         if heat_entity != old_heat:
             self._sources['heat']['last'] = None
-        self._entities = { 'energy': power_entity, 'heat': heat_entity }
+        self._entities = {'energy': power_entity, 'heat': heat_entity}
+        if split_enabled is not None or split_sensor is not None:
+            enabled = self._split_enabled if split_enabled is None else split_enabled
+            sensor = self._split_sensor if split_sensor is None else split_sensor
+            self.configure_split(enabled, sensor)
 
     def _today(self) -> str:
         return dt_util.now().date().isoformat()
 
-    def _add_delta(self, kind: str, delta: float) -> bool:
+    def _bucket_from_ts(self, ts: float) -> str:
+        try:
+            utc_dt = datetime.fromtimestamp(float(ts), tz=timezone.utc)
+            local_dt = dt_util.as_local(utc_dt)
+            return local_dt.date().isoformat()
+        except Exception:
+            return self._today()
+
+    def _add_delta_to_bucket(self, buckets: dict, delta: float, bucket_key: Optional[str] = None) -> bool:
         if delta <= 0:
             return False
-        today = self._today()
-        buckets = self._sources[kind]['buckets']
-        buckets[today] = float(buckets.get(today, 0.0) + delta)
-        # keep buckets bounded (e.g., 500 days)
+        key = bucket_key or self._today()
+        buckets[key] = float(buckets.get(key, 0.0) + delta)
         if len(buckets) > 520:
             try:
                 for d in sorted(buckets.keys())[:-520]:
@@ -119,6 +144,91 @@ class _EnergyAccumulator:
             except Exception:
                 pass
         return True
+
+    def _add_delta(self, kind: str, delta: float, bucket_key: Optional[str] = None) -> bool:
+        return self._add_delta_to_bucket(self._sources[kind]['buckets'], delta, bucket_key)
+
+    def _current_segment(self) -> Optional[str]:
+        if not self._split_enabled or not self._split_sensor:
+            return None
+        st = self._hass.states.get(self._split_sensor)
+        if not st or st.state in (None, 'unknown', 'unavailable'):
+            return None
+        state = str(st.state).lower()
+        if state == STATE_ON:
+            return 'hotwater'
+        if state == STATE_OFF:
+            return 'heating'
+        return None
+
+    def _add_split_delta(self, kind: str, delta: float, bucket_key: Optional[str] = None, mode: Optional[str] = None) -> None:
+        if not self._split_enabled:
+            return
+        if mode is None:
+            mode = self._current_segment()
+        if mode is None:
+            return
+        try:
+            self._add_delta_to_bucket(self._split_buckets[kind][mode], delta, bucket_key)
+        except Exception:
+            pass
+
+    def _distribute_heat_delta(self, delta: float, start_ts: Optional[float], end_ts: float) -> bool:
+        if delta <= 0:
+            return False
+        if start_ts is None or start_ts >= end_ts:
+            bucket = self._bucket_from_ts(end_ts)
+            changed = self._add_delta('heat', delta, bucket)
+            self._add_split_delta('heat', delta, bucket_key=bucket)
+            return changed
+        try:
+            start_utc = datetime.fromtimestamp(float(start_ts), tz=timezone.utc)
+            end_utc = datetime.fromtimestamp(float(end_ts), tz=timezone.utc)
+        except Exception:
+            bucket = self._bucket_from_ts(end_ts)
+            changed = self._add_delta('heat', delta, bucket)
+            self._add_split_delta('heat', delta, bucket_key=bucket)
+            return changed
+        start_local = dt_util.as_local(start_utc)
+        end_local = dt_util.as_local(end_utc)
+        if end_local <= start_local:
+            bucket = self._bucket_from_ts(end_ts)
+            changed = self._add_delta('heat', delta, bucket)
+            self._add_split_delta('heat', delta, bucket_key=bucket)
+            return changed
+        total_seconds = (end_local - start_local).total_seconds()
+        if total_seconds <= 0:
+            bucket = self._bucket_from_ts(end_ts)
+            changed = self._add_delta('heat', delta, bucket)
+            self._add_split_delta('heat', delta, bucket_key=bucket)
+            return changed
+        segments = []
+        cursor = start_local
+        while cursor < end_local:
+            day_end = datetime(
+                cursor.year,
+                cursor.month,
+                cursor.day,
+                tzinfo=cursor.tzinfo,
+            ) + timedelta(days=1)
+            seg_end = min(day_end, end_local)
+            seconds = max(0.0, (seg_end - cursor).total_seconds())
+            segments.append((seconds, cursor.date().isoformat()))
+            cursor = seg_end
+        allocated = 0.0
+        changed = False
+        for idx, (seconds, bucket_key) in enumerate(segments):
+            if idx == len(segments) - 1:
+                share = max(0.0, delta - allocated)
+            else:
+                share = delta * (seconds / total_seconds) if total_seconds > 0 else 0.0
+                allocated += share
+            if share <= 0:
+                continue
+            if self._add_delta('heat', share, bucket_key):
+                changed = True
+            self._add_split_delta('heat', share, bucket_key=bucket_key)
+        return changed
 
     async def async_load(self):
         if self._loaded:
@@ -133,16 +243,31 @@ class _EnergyAccumulator:
                 for kind in ('energy', 'heat'):
                     if kind in srcs:
                         ksrc = srcs[kind]
-                        # restore buckets
                         self._sources[kind]['buckets'] = {str(k): float(v) for k, v in (ksrc.get('buckets') or {}).items()}
-                        # restore last to capture offline delta on next update (monotonic meters)
                         try:
                             self._sources[kind]['last'] = float(ksrc.get('last')) if ksrc.get('last') is not None else None
                         except Exception:
                             self._sources[kind]['last'] = None
-                # If entity ids changed since save, reset last accordingly via reconfigure
+                        try:
+                            self._sources[kind]['last_ts'] = float(ksrc.get('last_ts')) if ksrc.get('last_ts') is not None else None
+                        except Exception:
+                            self._sources[kind]['last_ts'] = None
+                split = data.get('split') or {}
+                buckets = split.get('buckets') or {}
+                for kind in ('energy', 'heat'):
+                    per_kind = buckets.get(kind, {})
+                    for mode in ('heating', 'hotwater'):
+                        kb = per_kind.get(mode, {})
+                        self._split_buckets[kind][mode] = {str(k): float(v) for k, v in kb.items()}
                 ent = data.get('entities') or {}
                 self.reconfigure(ent.get('energy', self._entities['energy']), ent.get('heat', self._entities['heat']))
+                if 'enabled' in split or 'sensor' in split:
+                    self.configure_split(split.get('enabled', False), split.get('sensor'))
+                meta = data.get('meta') or {}
+                try:
+                    self._heat_window_start = float(meta.get('heat_window_start')) if meta.get('heat_window_start') is not None else None
+                except Exception:
+                    self._heat_window_start = None
             except Exception:
                 pass
         self._loaded = True
@@ -154,13 +279,23 @@ class _EnergyAccumulator:
                     'energy': {
                         'buckets': self._sources['energy']['buckets'],
                         'last': self._sources['energy']['last'],
+                        'last_ts': self._sources['energy']['last_ts'],
                     },
                     'heat': {
                         'buckets': self._sources['heat']['buckets'],
                         'last': self._sources['heat']['last'],
+                        'last_ts': self._sources['heat']['last_ts'],
                     },
                 },
                 'entities': dict(self._entities),
+                'split': {
+                    'buckets': self._split_buckets,
+                    'enabled': self._split_enabled,
+                    'sensor': self._split_sensor,
+                },
+                'meta': {
+                    'heat_window_start': self._heat_window_start,
+                },
             }
             await self._store.async_save(payload)
         except Exception:
@@ -180,22 +315,45 @@ class _EnergyAccumulator:
                 current = float(st.state)
             except Exception:
                 continue
+            now_ts = dt_util.utcnow().timestamp()
             last = self._sources[kind]['last']
+            last_ts = self._sources[kind].get('last_ts')
             if last is None:
                 self._sources[kind]['last'] = current
+                self._sources[kind]['last_ts'] = now_ts
+                if kind == 'heat' and self._heat_window_start is None:
+                    self._heat_window_start = now_ts
                 continue
             delta = current - last
             if delta < 0:
-                # For monotonic meters: ignore spurious negative deltas, keep last
+                self._sources[kind]['last'] = current
+                self._sources[kind]['last_ts'] = now_ts
                 continue
-            if self._add_delta(kind, delta):
-                changed = True
+            if kind == 'heat' and delta > 0:
+                if self._distribute_heat_delta(delta, self._heat_window_start or last_ts, now_ts):
+                    changed = True
+                self._heat_window_start = now_ts
+            elif delta > 0:
+                bucket_key = self._today()
+                if self._add_delta(kind, delta, bucket_key):
+                    changed = True
+                    self._add_split_delta(kind, delta, bucket_key=bucket_key)
             self._sources[kind]['last'] = current
+            self._sources[kind]['last_ts'] = now_ts
         if changed:
             await self.async_save()
 
+    def _resolve_buckets(self, kind: str):
+        if kind in self._sources:
+            return self._sources[kind]['buckets']
+        if '_' in kind:
+            base, mode = kind.split('_', 1)
+            if base in self._split_buckets and mode in self._split_buckets[base]:
+                return self._split_buckets[base][mode]
+        return {}
+
     def _sum_days(self, kind: str, days: int) -> float:
-        buckets = self._sources[kind]['buckets']
+        buckets = self._resolve_buckets(kind)
         if not buckets:
             return 0.0
         today = dt_util.now().date()
@@ -210,7 +368,7 @@ class _EnergyAccumulator:
         return total
 
     def get_value(self, kind: str, period: str):
-        buckets = self._sources[kind]['buckets']
+        buckets = self._resolve_buckets(kind)
         if period == 'today':
             return float(buckets.get(self._today(), 0.0))
         if period == 'yesterday':
@@ -234,8 +392,8 @@ class _EnergyAccumulator:
 class R290HeatPumpCOPOverallSensor(R290HeatPumpCOPSensorBase):
     """Sensor for overall COP since beginning."""
 
-    def __init__(self, hass, entry, device_info):
-        super().__init__(hass, entry, device_info, "COP Overall", "overall")
+    def __init__(self, hass, entry, device_info, name="COP Overall", unique_id_suffix="overall", segment: Optional[str] = None):
+        super().__init__(hass, entry, device_info, name, unique_id_suffix, segment)
 
     async def async_update(self):
         """Fetch overall COP using in-memory accumulator (no state dependency)."""
@@ -251,8 +409,8 @@ class R290HeatPumpCOPOverallSensor(R290HeatPumpCOPSensorBase):
                 await acc.async_update()
             except Exception:
                 pass
-            cons = acc.get_value('energy', 'overall')
-            outp = acc.get_value('heat', 'overall')
+            cons = acc.get_value(self._energy_kind, 'overall')
+            outp = acc.get_value(self._heat_kind, 'overall')
             self._state = round(float(outp) / float(cons), 2) if cons and float(cons) > 0 else None
         except Exception:
             self._state = None
@@ -260,8 +418,8 @@ class R290HeatPumpCOPOverallSensor(R290HeatPumpCOPSensorBase):
 class R290HeatPumpCOPTimeRangeSensor(R290HeatPumpCOPSensorBase):
     """Sensor for COP over a specific time range."""
 
-    def __init__(self, hass, entry, device_info, name, unique_id_suffix, days):
-        super().__init__(hass, entry, device_info, name, unique_id_suffix)
+    def __init__(self, hass, entry, device_info, name, unique_id_suffix, days, segment: Optional[str] = None):
+        super().__init__(hass, entry, device_info, name, unique_id_suffix, segment)
         self._days = days
 
     async def async_update(self):
@@ -290,8 +448,8 @@ class R290HeatPumpCOPTimeRangeSensor(R290HeatPumpCOPSensorBase):
                     else:
                         period = None
                     if period:
-                        cons = acc.get_value('energy', period)
-                        outp = acc.get_value('heat', period)
+                        cons = acc.get_value(self._energy_kind, period)
+                        outp = acc.get_value(self._heat_kind, period)
                         if cons and float(cons) > 0:
                             self._state = round(float(outp) / float(cons), 2)
                             return
@@ -306,19 +464,22 @@ class R290HeatPumpCOPTimeRangeSensor(R290HeatPumpCOPSensorBase):
                 self._state = None
                 return
             if self._days == 0:
-                p_id = "sensor.r290_heatpump_energy_today"
-                h_id = "sensor.r290_heatpump_heat_today"
+                base = "today"
             elif self._days == 7:
-                p_id = "sensor.r290_heatpump_energy_7d"
-                h_id = "sensor.r290_heatpump_heat_7d"
+                base = "7d"
             elif self._days == 30:
-                p_id = "sensor.r290_heatpump_energy_30d"
-                h_id = "sensor.r290_heatpump_heat_30d"
+                base = "30d"
             elif self._days == 365:
-                p_id = "sensor.r290_heatpump_energy_365d"
-                h_id = "sensor.r290_heatpump_heat_365d"
+                base = "365d"
             else:
                 raise RuntimeError("no helper sensor for this period")
+            suffix = ""
+            if self._segment == "heating":
+                suffix = "_heating"
+            elif self._segment == "hotwater":
+                suffix = "_hotwater"
+            p_id = f"sensor.r290_heatpump_energy_{base}{suffix}"
+            h_id = f"sensor.r290_heatpump_heat_{base}{suffix}"
 
             ps = self._hass.states.get(p_id)
             hs = self._hass.states.get(h_id)
@@ -351,8 +512,8 @@ class R290HeatPumpCOPYesterdaySensor(R290HeatPumpCOPSensorBase):
                         await acc.async_update()
                     except Exception:
                         pass
-                    cons = acc.get_value('energy', 'yesterday')
-                    outp = acc.get_value('heat', 'yesterday')
+                    cons = acc.get_value(self._energy_kind, 'yesterday')
+                    outp = acc.get_value(self._heat_kind, 'yesterday')
                     if cons and float(cons) > 0:
                         self._state = round(float(outp) / float(cons), 2)
                         return
@@ -361,8 +522,13 @@ class R290HeatPumpCOPYesterdaySensor(R290HeatPumpCOPSensorBase):
             if pslug is None or hslug is None:
                 self._state = None
                 return
-            p_id = "sensor.r290_heatpump_energy_yesterday"
-            h_id = "sensor.r290_heatpump_heat_yesterday"
+            suffix = ""
+            if self._segment == "heating":
+                suffix = "_heating"
+            elif self._segment == "hotwater":
+                suffix = "_hotwater"
+            p_id = f"sensor.r290_heatpump_energy_yesterday{suffix}"
+            h_id = f"sensor.r290_heatpump_heat_yesterday{suffix}"
             ps = self._hass.states.get(p_id)
             hs = self._hass.states.get(h_id)
             if not ps or not hs:
@@ -378,15 +544,32 @@ def setup_cop_sensors(hass, entry, device_info):
     """Set up COP sensors (pure in-memory helpers, no SQL)."""
     heat = entry.data.get("heat_meter")
     power = entry.data.get("power_meter")
-    sensors = [
-        R290HeatPumpCOPOverallSensor(hass, entry, device_info),
-        R290HeatPumpCOPTimeRangeSensor(hass, entry, device_info, "COP Last 365 Days", "last_365_days", 365),
-        R290HeatPumpCOPTimeRangeSensor(hass, entry, device_info, "COP Last 30 Days", "last_30_days", 30),
-        R290HeatPumpCOPTimeRangeSensor(hass, entry, device_info, "COP Last 7 Days", "last_7_days", 7),
-        R290HeatPumpCOPYesterdaySensor(hass, entry, device_info, "COP Yesterday", "yesterday"),
-        R290HeatPumpCOPTimeRangeSensor(hass, entry, device_info, "COP Today", "today", 0),
+    split_sensor = entry.options.get("cop_split_sensor", entry.data.get("cop_split_sensor"))
+    split_flag = bool(entry.options.get("cop_split_enabled", entry.data.get("cop_split_enabled", False)))
+    if not isinstance(split_sensor, str) or not split_sensor:
+        split_sensor = None
+    split_enabled = bool(split_flag and split_sensor)
 
-    ]
+    def _mode_label(segment: Optional[str]) -> str:
+        if segment == "heating":
+            return " (Heating)"
+        if segment == "hotwater":
+            return " (Warm Water)"
+        return ""
+
+    segments = [None]
+    if split_enabled:
+        segments.extend(["heating", "hotwater"])
+
+    sensors = []
+    for segment in segments:
+        label = _mode_label(segment)
+        sensors.append(R290HeatPumpCOPOverallSensor(hass, entry, device_info, f"COP Overall{label}", "overall", segment=segment))
+        sensors.append(R290HeatPumpCOPTimeRangeSensor(hass, entry, device_info, f"COP Last 365 Days{label}", "last_365_days", 365, segment))
+        sensors.append(R290HeatPumpCOPTimeRangeSensor(hass, entry, device_info, f"COP Last 30 Days{label}", "last_30_days", 30, segment))
+        sensors.append(R290HeatPumpCOPTimeRangeSensor(hass, entry, device_info, f"COP Last 7 Days{label}", "last_7_days", 7, segment))
+        sensors.append(R290HeatPumpCOPYesterdaySensor(hass, entry, device_info, f"COP Yesterday{label}", "yesterday", segment=segment))
+        sensors.append(R290HeatPumpCOPTimeRangeSensor(hass, entry, device_info, f"COP Today{label}", "today", 0, segment))
 
     try:
         start_ts = entry.data.get("cop_start_ts")
@@ -431,11 +614,11 @@ def setup_cop_sensors(hass, entry, device_info):
     acc = dstore.get('_cop_acc')
     if isinstance(acc, _EnergyAccumulator):
         try:
-            acc.reconfigure(power, heat)
+            acc.reconfigure(power, heat, split_enabled=split_enabled, split_sensor=split_sensor)
         except Exception:
             pass
     else:
-        acc = _EnergyAccumulator(hass, power, heat)
+        acc = _EnergyAccumulator(hass, power, heat, split_enabled=split_enabled, split_sensor=split_sensor)
         dstore['_cop_acc'] = acc
     # Ensure state is loaded before first use and persist on shutdown
     async def _ensure_loaded():
@@ -463,12 +646,12 @@ def setup_cop_sensors(hass, entry, device_info):
         _attr_entity_category = EntityCategory.DIAGNOSTIC
         _attr_entity_registry_enabled_default = True
         SCAN_INTERVAL = timedelta(minutes=5)
-        def __init__(self, name: str, unique_id: str, entity_id: str, kind: str, period: str):
+        def __init__(self, name: str, unique_id: str, entity_id: str, kind: str, period: str, segment: Optional[str] = None):
             super().__init__()
             self._attr_name = name
             self._attr_unique_id = unique_id
             self.entity_id = entity_id
-            self._kind = kind
+            self._kind = kind if not segment else f"{kind}_{segment}"
             self._period = period
             self._attr_device_info = device_info
             self._state = None
@@ -487,24 +670,55 @@ def setup_cop_sensors(hass, entry, device_info):
             val = acc.get_value(self._kind, self._period)
             self._state = round(float(val), 3) if val is not None else None
 
+    diag_segments = segments
     if isinstance(power, str) and power:
-        sensors.extend([
-            _AccumulatorSensor('Energy Overall', f"r290_heatpump_energy_overall_{_slugify(power)}", 'sensor.r290_heatpump_energy_overall', 'energy', 'overall'),
-            _AccumulatorSensor('Energy Today',   f"r290_heatpump_energy_today_{_slugify(power)}",   'sensor.r290_heatpump_energy_today',   'energy', 'today'),
-            _AccumulatorSensor('Energy Yesterday', f"r290_heatpump_energy_yesterday_{_slugify(power)}", 'sensor.r290_heatpump_energy_yesterday', 'energy', 'yesterday'),
-            _AccumulatorSensor('Energy Last 7 Days', f"r290_heatpump_energy_7d_{_slugify(power)}", 'sensor.r290_heatpump_energy_7d', 'energy', '7d'),
-            _AccumulatorSensor('Energy Last 30 Days', f"r290_heatpump_energy_30d_{_slugify(power)}", 'sensor.r290_heatpump_energy_30d', 'energy', '30d'),
-            _AccumulatorSensor('Energy Last 365 Days', f"r290_heatpump_energy_365d_{_slugify(power)}", 'sensor.r290_heatpump_energy_365d', 'energy', '365d'),
-        ])
+        slug = _slugify(power)
+        energy_defs = [
+            ("Energy Overall", f"r290_heatpump_energy_overall_{slug}", "sensor.r290_heatpump_energy_overall", "overall"),
+            ("Energy Today", f"r290_heatpump_energy_today_{slug}", "sensor.r290_heatpump_energy_today", "today"),
+            ("Energy Yesterday", f"r290_heatpump_energy_yesterday_{slug}", "sensor.r290_heatpump_energy_yesterday", "yesterday"),
+            ("Energy Last 7 Days", f"r290_heatpump_energy_7d_{slug}", "sensor.r290_heatpump_energy_7d", "7d"),
+            ("Energy Last 30 Days", f"r290_heatpump_energy_30d_{slug}", "sensor.r290_heatpump_energy_30d", "30d"),
+            ("Energy Last 365 Days", f"r290_heatpump_energy_365d_{slug}", "sensor.r290_heatpump_energy_365d", "365d"),
+        ]
+        for name, unique_id, entity_id, period in energy_defs:
+            for segment in diag_segments:
+                label = f"{name}{_mode_label(segment)}"
+                suffix = "" if not segment else f"_{segment}"
+                sensors.append(
+                    _AccumulatorSensor(
+                        label,
+                        f"{unique_id}{suffix}",
+                        f"{entity_id}{suffix}",
+                        'energy',
+                        period,
+                        segment,
+                    )
+                )
     if isinstance(heat, str) and heat:
-        sensors.extend([
-            _AccumulatorSensor('Heat Overall', f"r290_heatpump_heat_overall_{_slugify(heat)}", 'sensor.r290_heatpump_heat_overall', 'heat', 'overall'),
-            _AccumulatorSensor('Heat Today',   f"r290_heatpump_heat_today_{_slugify(heat)}",   'sensor.r290_heatpump_heat_today',   'heat', 'today'),
-            _AccumulatorSensor('Heat Yesterday', f"r290_heatpump_heat_yesterday_{_slugify(heat)}", 'sensor.r290_heatpump_heat_yesterday', 'heat', 'yesterday'),
-            _AccumulatorSensor('Heat Last 7 Days', f"r290_heatpump_heat_7d_{_slugify(heat)}", 'sensor.r290_heatpump_heat_7d', 'heat', '7d'),
-            _AccumulatorSensor('Heat Last 30 Days', f"r290_heatpump_heat_30d_{_slugify(heat)}", 'sensor.r290_heatpump_heat_30d', 'heat', '30d'),
-            _AccumulatorSensor('Heat Last 365 Days', f"r290_heatpump_heat_365d_{_slugify(heat)}", 'sensor.r290_heatpump_heat_365d', 'heat', '365d'),
-        ])
+        slug = _slugify(heat)
+        heat_defs = [
+            ("Heat Overall", f"r290_heatpump_heat_overall_{slug}", "sensor.r290_heatpump_heat_overall", "overall"),
+            ("Heat Today", f"r290_heatpump_heat_today_{slug}", "sensor.r290_heatpump_heat_today", "today"),
+            ("Heat Yesterday", f"r290_heatpump_heat_yesterday_{slug}", "sensor.r290_heatpump_heat_yesterday", "yesterday"),
+            ("Heat Last 7 Days", f"r290_heatpump_heat_7d_{slug}", "sensor.r290_heatpump_heat_7d", "7d"),
+            ("Heat Last 30 Days", f"r290_heatpump_heat_30d_{slug}", "sensor.r290_heatpump_heat_30d", "30d"),
+            ("Heat Last 365 Days", f"r290_heatpump_heat_365d_{slug}", "sensor.r290_heatpump_heat_365d", "365d"),
+        ]
+        for name, unique_id, entity_id, period in heat_defs:
+            for segment in diag_segments:
+                label = f"{name}{_mode_label(segment)}"
+                suffix = "" if not segment else f"_{segment}"
+                sensors.append(
+                    _AccumulatorSensor(
+                        label,
+                        f"{unique_id}{suffix}",
+                        f"{entity_id}{suffix}",
+                        'heat',
+                        period,
+                        segment,
+                    )
+                )
     # Configure event-driven triggers based on options
     try:
         trig_heat = bool(entry.options.get("cop_trigger_on_heat", entry.data.get("cop_trigger_on_heat", False)))
@@ -538,15 +752,11 @@ def setup_cop_sensors(hass, entry, device_info):
                 async_track_state_change_event(hass, [heat], _on_source_change)
         except Exception:
             pass
+        try:
+            if split_enabled and split_sensor:
+                async_track_state_change_event(hass, [split_sensor], _on_source_change)
+        except Exception:
+            pass
 
-    _LOGGER.debug(f"Created COP sensors: {[s.name for s in sensors]} (event_triggers heat={trig_heat}, power={trig_power})")
+    _LOGGER.debug(f"Created COP sensors: {[s.name for s in sensors]} (event_triggers heat={trig_heat}, power={trig_power}, split={split_enabled})")
     return sensors
-
-
-
-
-
-
-
-
-

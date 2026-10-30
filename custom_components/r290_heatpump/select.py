@@ -34,7 +34,7 @@ async def async_setup_entry(
             return
         hub = store["hub"]
         batch = store.get("batch")
-        long_interval = entry.options.get("long_scan_interval", entry.data.get("long_scan_interval", 7200))
+        long_interval = entry.options.get("long_scan_interval", entry.data.get("long_scan_interval", 600))
 
         device_info = DeviceInfo(
             identifiers={(DOMAIN, f"r290_heatpump_{slave_id}_user_parameters")},
@@ -125,7 +125,7 @@ class R290HeatPumpModbusSelect(SelectEntity):
         self._attr_name = self._name
         self._attr_unique_id = self._unique_id
         self._attr_device_info = device_info
-        self._attr_should_poll = True
+        self._attr_should_poll = batch is None
         try:
             base = slugify(self._name)
             self.entity_id = f"select.r290_heatpump_{base}_slave_{self._slave}"
@@ -144,6 +144,7 @@ class R290HeatPumpModbusSelect(SelectEntity):
         try:
             if self._batch:
                 self._batch.register(self._address, self._scan_interval)
+                self._batch.subscribe(self, self._scan_interval)
         except Exception:
             pass
 
@@ -159,6 +160,7 @@ class R290HeatPumpModbusSelect(SelectEntity):
             value = None
             if self._batch:
                 value = self._batch.get_cached(self._address, self._scan_interval)
+            self._attr_available = value is not None
             if value is not None:
                 self._current_option = self._reverse.get(int(value), self._current_option)
         except Exception as e:

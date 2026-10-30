@@ -1,5 +1,5 @@
-﻿# Version: 1.0.1
-# Last modified: 2025-10-24 17:33 by CNC-Buddy
+# Version: 1.0.2
+# Last modified: 2025-11-11 14:11 by CNC-Buddy
 import logging
 import voluptuous as vol
 from homeassistant import config_entries
@@ -7,8 +7,10 @@ from homeassistant.const import CONF_SLAVE, CONF_SCAN_INTERVAL
 from homeassistant.helpers.selector import selector
 
 from .hub import R290HeatPumpModbusHub
+from .const import CONNECTION_TYPE_LABELS
 from .dashboard import async_setup_dashboard
 from .pv_optimization import PV_CURVE_CONFIG
+from .connection import BRIDGE_ENTRY_ID, connection_settings, async_update_bridge_connection
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -24,6 +26,19 @@ DEVICE_TYPES = {
     "cooling_curve": "Cooling Curve",
     "hot_water_curve": "Hot Water Curve",
 }
+
+
+def _connection_type_selector():
+    """Show readable labels while retaining existing stored protocol values."""
+    return selector({
+        "select": {
+            "options": [
+                {"value": value, "label": label}
+                for value, label in CONNECTION_TYPE_LABELS.items()
+            ],
+            "mode": "list",
+        }
+    })
 
 
 class R290HeatPumpModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -66,7 +81,7 @@ class R290HeatPumpModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
         schema = vol.Schema(
             {
-                vol.Required("connection_type", default="rtuovertcp"): vol.In(["rtuovertcp", "tcp"]),
+                vol.Required("connection_type", default="rtuovertcp"): _connection_type_selector(),
                 vol.Required("host"): str,
                 vol.Required("port", default=502): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535)),
                 vol.Optional("connect_timeout", default=10.0): vol.All(vol.Coerce(float), vol.Range(min=1.0, max=60.0)),
@@ -139,6 +154,7 @@ class R290HeatPumpModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         title=f"R290 Heat Pump (Slave {slave_id})",
                         data={
                             "device_type": "heat_pump",
+                            BRIDGE_ENTRY_ID: existing.entry_id,
                             "connection_type": existing.data.get("connection_type", "rtuovertcp"),
                             "host": existing.data["host"],
                             "port": existing.data.get("port", 502),
@@ -160,7 +176,7 @@ class R290HeatPumpModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         schema = vol.Schema(
             {
-                vol.Required("connection_type", default="rtuovertcp"): vol.In(["rtuovertcp", "tcp"]),
+                vol.Required("connection_type", default="rtuovertcp"): _connection_type_selector(),
                 vol.Required("host"): str,
                 vol.Required("port", default=502): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535)),
                 vol.Required(CONF_SLAVE, default=1): vol.All(vol.Coerce(int), vol.Range(min=1, max=11)),
@@ -283,6 +299,7 @@ class R290HeatPumpModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                     data = {
                         "device_type": kind,
+                        BRIDGE_ENTRY_ID: existing_bridge.entry_id,
                         "connection_type": existing_bridge.data.get("connection_type", "rtuovertcp"),
                         "host": existing_bridge.data["host"],
                         "port": existing_bridge.data.get("port", 502),
@@ -318,7 +335,7 @@ class R290HeatPumpModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         schema = vol.Schema(
             {
-                vol.Required("connection_type", default="rtuovertcp"): vol.In(["rtuovertcp", "tcp"]),
+                vol.Required("connection_type", default="rtuovertcp"): _connection_type_selector(),
                 vol.Required("host"): str,
                 vol.Required("port", default=502): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535)),
                 vol.Required("outdoor_sensor"): selector({"entity": {"domain": "sensor"}}),
@@ -395,8 +412,7 @@ class R290HeatPumpOptionsFlow(config_entries.OptionsFlow):
         device_type = data.get("device_type")
         default_fast = opts.get(CONF_SCAN_INTERVAL, data.get(CONF_SCAN_INTERVAL, 60))
         default_long = opts.get("long_scan_interval", data.get("long_scan_interval", 600))
-        domain_store = self.hass.data.get(DOMAIN, {})
-        conn = domain_store.get("connection", {})
+        conn = connection_settings(data) if device_type == "modbus_bridge" else {}
         default_mode = conn.get("connection_type", data.get("connection_type", "rtuovertcp"))
         default_host = conn.get("host", data.get("host", ""))
         default_port = conn.get("port", data.get("port", 502))
@@ -404,7 +420,7 @@ class R290HeatPumpOptionsFlow(config_entries.OptionsFlow):
         if device_type == "modbus_bridge":
             schema = vol.Schema(
                 {
-                    vol.Required("connection_type", default=default_mode): vol.In(["rtuovertcp", "tcp"]),
+                    vol.Required("connection_type", default=default_mode): _connection_type_selector(),
                     vol.Required("host", default=default_host): str,
                     vol.Required("port", default=default_port): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535)),
                     vol.Optional("connect_timeout", default=conn.get("connect_timeout", 8.0)): vol.All(vol.Coerce(float), vol.Range(min=1.0, max=60.0)),
@@ -426,12 +442,18 @@ class R290HeatPumpOptionsFlow(config_entries.OptionsFlow):
                 p_default = ""
             trig_heat_def = bool(opts.get("cop_trigger_on_heat", data.get("cop_trigger_on_heat", True)))
             trig_power_def = bool(opts.get("cop_trigger_on_power", data.get("cop_trigger_on_power", True)))
+            split_def = bool(opts.get("cop_split_enabled", data.get("cop_split_enabled", False)))
+            split_sensor_def = opts.get("cop_split_sensor", data.get("cop_split_sensor", ""))
+            if not isinstance(split_sensor_def, str):
+                split_sensor_def = ""
             schema = vol.Schema(
                 {
                     vol.Required("heat_meter", default=cur_heat): selector({"entity": {"domain": "sensor"}}),
                     vol.Required("power_meter", default=p_default): selector({"entity": {"domain": "sensor"}}),
                     vol.Optional("cop_trigger_on_heat", default=trig_heat_def): bool,
                     vol.Optional("cop_trigger_on_power", default=trig_power_def): bool,
+                    vol.Optional("cop_split_enabled", default=split_def): bool,
+                    vol.Optional("cop_split_sensor", default=split_sensor_def): selector({"entity": {"domain": "binary_sensor"}}),
                 }
             )
         elif device_type in PV_CURVE_CONFIG:
@@ -456,64 +478,9 @@ class R290HeatPumpOptionsFlow(config_entries.OptionsFlow):
         if user_input is not None:
             try:
                 if device_type == "modbus_bridge":
-                    mode = user_input["connection_type"]
-                    host = user_input["host"]
-                    port = int(user_input["port"])
-                    test_hub = R290HeatPumpModbusHub(host=host, port=port, mode=mode, connect_timeout=float(user_input.get("connect_timeout", 8.0)), connect_retries=int(user_input.get("connect_retries", 2)), request_timeout=float(user_input.get("request_timeout", 5.0)))
-                    await test_hub.async_connect()
-                    try:
-                        await test_hub.async_close()
-                    except Exception:
-                        pass
-
-                    domain_store = self.hass.data.setdefault(DOMAIN, {})
-                    old_hub = domain_store.get("hub")
-                    new_hub = R290HeatPumpModbusHub(host=host, port=port, mode=mode, connect_timeout=float(user_input.get("connect_timeout", 8.0)), connect_retries=int(user_input.get("connect_retries", 2)), request_timeout=float(user_input.get("request_timeout", 5.0)))
-                    await new_hub.async_connect()
-                    domain_store["hub"] = new_hub
-                    domain_store["connection"] = {
-                        "host": host,
-                        "port": port,
-                        "connection_type": mode,
-                        "connect_timeout": float(user_input.get("connect_timeout", 8.0)),
-                        "connect_retries": int(user_input.get("connect_retries", 2)),
-                        "request_timeout": float(user_input.get("request_timeout", 5.0)),
-                        "block_size": int(user_input.get("block_size", 49)),
-                        "block_pause": float(user_input.get("block_pause", 0.05)),
-                    }
-                    # Update all batch managers with new hub and parameters
-                    batch_managers = domain_store.get("_batch_managers", {})
-                    for unit, batch in batch_managers.items():
-                        batch.replace_hub(new_hub)
-                        batch.update_batch_params(
-                            block_size=int(domain_store["connection"].get("block_size", 49)),
-                            block_pause=float(domain_store["connection"].get("block_pause", 0.05)),
-                        )
-                    
-                    # Update store references for all entries
-                    for key, store in list(domain_store.items()):
-                        if not isinstance(store, dict) or "entry" not in store:
-                            continue
-                        store["hub"] = new_hub
-                    
-                    if old_hub is not None:
-                        try:
-                            await old_hub.async_close()
-                        except Exception:
-                            pass
-
-                    current = dict(self._entry.data)
-                    current.update({
-                        "connection_type": mode,
-                        "host": host,
-                        "port": port,
-                        "connect_timeout": float(user_input.get("connect_timeout", 8.0)),
-                        "connect_retries": int(user_input.get("connect_retries", 2)),
-                        "request_timeout": float(user_input.get("request_timeout", 5.0)),
-                        "block_size": int(user_input.get("block_size", 49)),
-                        "block_pause": float(user_input.get("block_pause", 0.05)),
-                    })
-                    self.hass.config_entries.async_update_entry(self._entry, data=current)
+                    await async_update_bridge_connection(
+                        self.hass, self._entry, {**self._entry.data, **user_input}, validate=True
+                    )
                     # Recreate dashboard if requested
                     try:
                         if bool(user_input.get("recreate_dashboard", False)):
@@ -533,6 +500,15 @@ class R290HeatPumpOptionsFlow(config_entries.OptionsFlow):
                     power_sel = user_input["power_meter"]
                     trig_heat = bool(user_input.get("cop_trigger_on_heat", True))
                     trig_power = bool(user_input.get("cop_trigger_on_power", True))
+                    split_enabled = bool(user_input.get("cop_split_enabled", False))
+                    split_sensor = user_input.get("cop_split_sensor") or ""
+                    if split_enabled:
+                        if not isinstance(split_sensor, str) or not split_sensor.startswith("binary_sensor."):
+                            errors["cop_split_sensor"] = "invalid_sensor"
+                            return self.async_show_form(step_id="init", data_schema=schema, errors=errors)
+                        if not self.hass.states.get(split_sensor):
+                            errors["cop_split_sensor"] = "invalid_sensor"
+                            return self.async_show_form(step_id="init", data_schema=schema, errors=errors)
                     current = dict(self._entry.data)
                     # Remove any legacy db_url
                     current.pop("db_url", None)
@@ -541,6 +517,11 @@ class R290HeatPumpOptionsFlow(config_entries.OptionsFlow):
                     new_opts = dict(self._entry.options)
                     new_opts["cop_trigger_on_heat"] = trig_heat
                     new_opts["cop_trigger_on_power"] = trig_power
+                    new_opts["cop_split_enabled"] = split_enabled
+                    if split_enabled and split_sensor:
+                        new_opts["cop_split_sensor"] = split_sensor
+                    else:
+                        new_opts.pop("cop_split_sensor", None)
                     return self.async_create_entry(title="Options", data=new_opts)
                 elif device_type in PV_CURVE_CONFIG:
                     new_opts = dict(self._entry.options)

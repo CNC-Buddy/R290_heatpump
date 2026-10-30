@@ -1,0 +1,44 @@
+{
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "cop_split_enabled": "Split mit externem WW Status",
+          "cop_split_sensor": "Warmwasser Status Sensor",
+          "connection_type": "Verbindungsart"
+        },
+        "data_description": {
+          "connection_type": "RTU over TCP: direkt zum RTU-Netzwerk-Gateway. Modbus TCP: zu einem Modbus-TCP-Server. ModbusProxy: zum Modbus-Proxy-Add-on mit RTU-Gateway als Ziel."
+        }
+      }
+    }
+  },
+  "config": {
+    "step": {
+      "modbus_bridge": {
+        "data": {
+          "connection_type": "Verbindungsart"
+        },
+        "data_description": {
+          "connection_type": "RTU over TCP: direkt zum RTU-Netzwerk-Gateway. Modbus TCP: zu einem Modbus-TCP-Server. ModbusProxy: zum Modbus-Proxy-Add-on mit RTU-Gateway als Ziel."
+        }
+      },
+      "heat_pump": {
+        "data": {
+          "connection_type": "Verbindungsart"
+        },
+        "data_description": {
+          "connection_type": "RTU over TCP: direkt zum RTU-Netzwerk-Gateway. Modbus TCP: zu einem Modbus-TCP-Server. ModbusProxy: zum Modbus-Proxy-Add-on mit RTU-Gateway als Ziel."
+        }
+      },
+      "temperature_curve": {
+        "data": {
+          "connection_type": "Verbindungsart"
+        },
+        "data_description": {
+          "connection_type": "RTU over TCP: direkt zum RTU-Netzwerk-Gateway. Modbus TCP: zu einem Modbus-TCP-Server. ModbusProxy: zum Modbus-Proxy-Add-on mit RTU-Gateway als Ziel."
+        }
+      }
+    }
+  }
+}

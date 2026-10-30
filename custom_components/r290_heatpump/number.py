@@ -392,7 +392,7 @@ class R290HeatPumpModbusNumber(NumberEntity):
         self._attr_device_class = self._device_class
         self._attr_unique_id = self._unique_id
         self._attr_device_info = device_info
-        self._attr_should_poll = True
+        self._attr_should_poll = batch_manager is None
         self._attr_native_min_value = self._min_value
         self._attr_native_max_value = self._max_value
         self._attr_native_step = self._step
@@ -413,14 +413,10 @@ class R290HeatPumpModbusNumber(NumberEntity):
                 interval = int(self._scan_interval)
                 try:
                     self._batch.register(self._address, interval)
+                    self._batch.subscribe(self, interval)
                     self._registered = True
                 except Exception:
                     pass
-                if hasattr(self._batch, "request_refresh"):
-                    try:
-                        await self._batch.request_refresh(interval)
-                    except Exception:
-                        pass
         except Exception as e:
             _LOGGER.debug("Initial number register failed for %s: %s", self._name, e)
 
@@ -451,12 +447,14 @@ class R290HeatPumpModbusNumber(NumberEntity):
                 try:
                     interval = int(self._scan_interval)
                     self._batch.register(self._address, interval)
+                    self._batch.subscribe(self, interval)
                     self._registered = True
                 except Exception as e:
                     _LOGGER.debug("Initial number register failed for %s: %s", self._name, e)
             value = None
             if self._batch:
                 value = self._batch.get_cached(self._address, int(self._scan_interval))
+            self._attr_available = value is not None
             if value is not None:
                 raw = int(value)
                 if str(self._data_type).lower() == "int16":

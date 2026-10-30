@@ -6,4 +6,11 @@ from homeassistant.const import Platform
 
 DOMAIN = "r290_heatpump"
 
+# Display names are separate from persisted connection values.
+CONNECTION_TYPE_LABELS = {
+    "rtuovertcp": "RTU over TCP",
+    "tcp": "Modbus TCP",
+    "tcp_proxy": "ModbusProxy",
+}
+
 PLATFORMS = [Platform.SENSOR, Platform.NUMBER, Platform.SELECT, Platform.BUTTON, Platform.SWITCH]

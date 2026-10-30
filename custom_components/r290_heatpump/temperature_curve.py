@@ -42,6 +42,9 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         self._last_cmd: Optional[float] = None
         self._last_ts: Optional[float] = None
         self._last_written: Optional[float] = None
+        self._removed = False
+        self._write_lock = asyncio.Lock()
+        self._listeners = []
 
         self._attr_unique_id = custom_entity_id or "r290_heatpump_temperature_curve_now"
         self._attr_name = display_name or "Temperature Curve Now"
@@ -592,6 +595,11 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
 
     async def async_added_to_hass(self):
         async def _maybe_write_target(_evt=None):
+            async with self._write_lock:
+                if not self._removed:
+                    await _write_target()
+
+        async def _write_target():
             try:
                 if not bool(self._entry.options.get("heatcurve_active", False)):
                     return
@@ -650,11 +658,11 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
                 _LOGGER.debug("Temperature curve immediate write failed: %s", e)
 
         if self._outdoor_sensor:
-            async_track_state_change_event(
+            self._listeners.append(async_track_state_change_event(
                 self._hass,
                 [self._outdoor_sensor],
                 _maybe_write_target,
-            )
+            ))
         # Update on helper number changes (per curve type)
         curve_prefix = {
             "heating_curve": "heating",
@@ -672,19 +680,19 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         )
         for name in curve_number_suffixes:
             ent_id = f"number.r290_heatpump_{curve_prefix}_{name}"
-            async_track_state_change_event(self._hass, [ent_id], _maybe_write_target)
+            self._listeners.append(async_track_state_change_event(self._hass, [ent_id], _maybe_write_target))
 
         for ent_id in self._pv_control_entity_ids(curve_prefix):
-            async_track_state_change_event(self._hass, [ent_id], _maybe_write_target)
+            self._listeners.append(async_track_state_change_event(self._hass, [ent_id], _maybe_write_target))
 
         external_entities = set(self._external_switch_ids + [self._external_number_id])
         for ent_id in external_entities:
-            async_track_state_change_event(self._hass, [ent_id], _maybe_write_target)
+            self._listeners.append(async_track_state_change_event(self._hass, [ent_id], _maybe_write_target))
 
         # React to switch toggles as well
         try:
             sw_id = f"switch.r290_heatpump_{curve_prefix}_curve_active"
-            async_track_state_change_event(self._hass, [sw_id], _maybe_write_target)
+            self._listeners.append(async_track_state_change_event(self._hass, [sw_id], _maybe_write_target))
         except Exception:
             pass
 
@@ -704,11 +712,19 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         async def _periodic_write(_now=None):
             await _maybe_write_target()
 
-        async_track_time_interval(
+        self._listeners.append(async_track_time_interval(
             self._hass, _periodic_write, timedelta(seconds=long_iv)
-        )
+        ))
 
     async def async_will_remove_from_hass(self) -> None:
+        self._removed = True
+        for unsub in self._listeners:
+            unsub()
+        self._listeners.clear()
+        # An already-running write may finish, but no queued callback can start
+        # another one after removal. Wait before releasing the shared hub.
+        async with self._write_lock:
+            pass
         if self._pv_power_listener is not None:
             self._pv_power_listener()
             self._pv_power_listener = None

@@ -35,7 +35,7 @@ from .cop_calculator import setup_cop_sensors
 
 from .temperature_curve import R290HeatPumpTemperatureCurveSensor
 
-from .const import DOMAIN
+from .const import CONNECTION_TYPE_LABELS, DOMAIN
 
 
 
@@ -243,7 +243,7 @@ async def async_setup_entry(
 
         bridge_device_info = DeviceInfo(
 
-            identifiers={(DOMAIN, "r290_heatpump_bridge")},
+            identifiers={(DOMAIN, store["bridge_device_identifier"])},
 
             name="R290 Heat Pump Modbus Bridge",
 
@@ -445,7 +445,7 @@ class R290HeatPumpModbusSensor(SensorEntity):
 
         self._attr_device_info = device_info
 
-        self._attr_should_poll = True
+        self._attr_should_poll = batch_manager is None
 
         # Optional: default enabled flag and bit label mapping for bitfield sensors
 
@@ -563,9 +563,7 @@ class R290HeatPumpModbusSensor(SensorEntity):
 
                 self._batch.register(self._address, interval)
 
-                if hasattr(self._batch, "request_refresh"):
-
-                    await self._batch.request_refresh(interval)
+                self._batch.subscribe(self, interval)
 
         except Exception as e:
 
@@ -582,6 +580,8 @@ class R290HeatPumpModbusSensor(SensorEntity):
             if self._batch:
 
                 value = self._batch.get_cached(self._address, int(self._scan_interval))
+
+            self._attr_available = value is not None
 
             if value is not None:
 
@@ -711,9 +711,7 @@ class R290HeatPumpModbusStatusSensor(SensorEntity):
 
         try:
 
-            domain_store = self._hass.data.get(DOMAIN, {})
-
-            conn = domain_store.get("connection", {})
+            conn = self._entry.data
 
             host = conn.get("host")
 
@@ -733,6 +731,8 @@ class R290HeatPumpModbusStatusSensor(SensorEntity):
 
                 "connected": connected,
 
+                **self._hub.diagnostics,
+
             }
 
         except Exception:
@@ -745,9 +745,7 @@ class R290HeatPumpModbusStatusSensor(SensorEntity):
 
         try:
 
-            connected = bool(getattr(getattr(self._hub, "_client", None), "connected", False))
-
-            self._state = "Connected" if connected else "Disconnected"
+            self._state = self._hub.communication_status
 
         except Exception:
 
@@ -819,11 +817,12 @@ class R290HeatPumpModbusBridgeInfoSensor(SensorEntity):
 
         try:
 
-            domain_store = self._hass.data.get(DOMAIN, {})
-
-            conn = domain_store.get("connection", {})
+            conn = self._entry.data
 
             value = conn.get(self._key)
+
+            if self._key == "connection_type":
+                value = CONNECTION_TYPE_LABELS.get(value, value)
 
             self._state = value
 

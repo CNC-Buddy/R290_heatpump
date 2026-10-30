@@ -1,0 +1,44 @@
+{
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "cop_split_enabled": "Split with external WW status",
+          "cop_split_sensor": "Warm water status sensor",
+          "connection_type": "Connection type"
+        },
+        "data_description": {
+          "connection_type": "RTU over TCP: connect directly to an RTU network gateway. Modbus TCP: connect to a Modbus TCP server. ModbusProxy: connect to the Modbus Proxy add-on with an RTU gateway upstream."
+        }
+      }
+    }
+  },
+  "config": {
+    "step": {
+      "modbus_bridge": {
+        "data": {
+          "connection_type": "Connection type"
+        },
+        "data_description": {
+          "connection_type": "RTU over TCP: connect directly to an RTU network gateway. Modbus TCP: connect to a Modbus TCP server. ModbusProxy: connect to the Modbus Proxy add-on with an RTU gateway upstream."
+        }
+      },
+      "heat_pump": {
+        "data": {
+          "connection_type": "Connection type"
+        },
+        "data_description": {
+          "connection_type": "RTU over TCP: connect directly to an RTU network gateway. Modbus TCP: connect to a Modbus TCP server. ModbusProxy: connect to the Modbus Proxy add-on with an RTU gateway upstream."
+        }
+      },
+      "temperature_curve": {
+        "data": {
+          "connection_type": "Connection type"
+        },
+        "data_description": {
+          "connection_type": "RTU over TCP: connect directly to an RTU network gateway. Modbus TCP: connect to a Modbus TCP server. ModbusProxy: connect to the Modbus Proxy add-on with an RTU gateway upstream."
+        }
+      }
+    }
+  }
+}
