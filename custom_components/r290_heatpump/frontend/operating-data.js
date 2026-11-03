@@ -1,8 +1,8 @@
-import {esc,fmt,numeric,energyFactor} from './model.js?v=1.1.0';
-import {renderChart,periodLabel} from './chart-ui.js?v=1.1.0';
-import {hydraulicState,booleanSignal} from './overview.js?v=1.1.0';
-import {plantModel} from './plant.js?v=1.1.0';
-import {sourcesEnergy} from './heat-sources.js?v=1.1.0';
+import {esc,fmt,numeric,energyFactor} from './model.js?v=1.1.1';
+import {renderChart,periodLabel} from './chart-ui.js?v=1.1.1';
+import {hydraulicState,booleanSignal} from './overview.js?v=1.1.1';
+import {plantModel} from './plant.js?v=1.1.1';
+import {sourcesEnergy} from './heat-sources.js?v=1.1.1';
 
 const t=(p,de,en)=>p.language==='en'?en:de;
 const keys={temperature:'operation-temperature',frequency:'operation-frequency',power:'analysis-power'};

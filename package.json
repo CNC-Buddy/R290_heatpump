@@ -1,7 +1,7 @@
 {
   "name": "r290-nextgen",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "scripts": {
     "test:electric": "node tests/frontend-electric.mjs",
     "test:theme": "node tests/frontend-theme.mjs",

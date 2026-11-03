@@ -1,21 +1,21 @@
-import {electricForm,readElectricForm,configureElectricPicker,refreshElectricLanguage,refreshElectricFlows,stopElectricFlows} from './electric-overview.js?v=1.1.0';
-import {renderOperating,chart as operatingChart,operatingIds} from './operating-data.js?v=1.1.0';
-import {recordFor,renderDiagnostics, renderFaults, loadFaults, stopDiagnostics, diagnosticAction, showRawHistory} from './data-browser.js?v=1.1.0';
-import {patchHTML, patchElement, preserveScroll} from './dom.js?v=1.1.0';
-import {esc, numeric, fmt, setLocale, ageLabel, phaseNames, modeNames, reasons} from "./model.js?v=1.1.0";
+import {electricForm,readElectricForm,configureElectricPicker,refreshElectricLanguage,refreshElectricFlows,stopElectricFlows} from './electric-overview.js?v=1.1.1';
+import {renderOperating,chart as operatingChart,operatingIds} from './operating-data.js?v=1.1.1';
+import {recordFor,renderDiagnostics, renderFaults, loadFaults, stopDiagnostics, diagnosticAction, showRawHistory} from './data-browser.js?v=1.1.1';
+import {patchHTML, patchElement, preserveScroll} from './dom.js?v=1.1.1';
+import {esc, numeric, fmt, setLocale, ageLabel, phaseNames, modeNames, reasons} from "./model.js?v=1.1.1";
 
-import "./entity-picker.js?v=1.1.0";
-import {icon} from "./visuals.js?v=1.1.0";
-import {brandLogo} from "./branding.js?v=1.1.0";
-import {renderOverview, loadOverviewHistory, overviewNeedsHistory} from "./overview.js?v=1.1.0";
-import {renderParameters, renderDevices, parameterClick, curveInput, hasCurveDraft, curveKey, curvePointer, curveHover} from "./parameters.js?v=1.1.0";
-import {tr, translateTree} from './i18n.js?v=1.1.0';
-import {plantModel, plantForm, readPlantForm, refreshPlantLanguage} from './plant.js?v=1.1.0';
-import {renderService, serviceClick, serviceChange, serviceBanner} from './service.js?v=1.1.0';
-import {sourcesForm,readSourcesForm,configureSourcePicker,refreshSourcesLanguage,suggestSources,sourceHistoryIds} from './heat-sources.js?v=1.1.0';
-import {schematicView,configureSchematics} from './schematic-editor.js?v=1.1.0';
+import "./entity-picker.js?v=1.1.1";
+import {icon} from "./visuals.js?v=1.1.1";
+import {brandLogo} from "./branding.js?v=1.1.1";
+import {renderOverview, loadOverviewHistory, overviewNeedsHistory} from "./overview.js?v=1.1.1";
+import {renderParameters, renderDevices, parameterClick, curveInput, hasCurveDraft, curveKey, curvePointer, curveHover} from "./parameters.js?v=1.1.1";
+import {tr, translateTree} from './i18n.js?v=1.1.1';
+import {plantModel, plantForm, readPlantForm, refreshPlantLanguage} from './plant.js?v=1.1.1';
+import {renderService, serviceClick, serviceChange, serviceBanner} from './service.js?v=1.1.1';
+import {sourcesForm,readSourcesForm,configureSourcePicker,refreshSourcesLanguage,suggestSources,sourceHistoryIds} from './heat-sources.js?v=1.1.1';
+import {schematicView,configureSchematics} from './schematic-editor.js?v=1.1.1';
 
-import {chartClick,chartHover,chartLeave,chartSearch,chartStyles,refreshChartHover} from './chart-ui.js?v=1.1.0';
+import {chartClick,chartHover,chartLeave,chartSearch,chartStyles,refreshChartHover} from './chart-ui.js?v=1.1.1';
 
 const NAV = [["overview","◈","Anlage"],["operating","↗","Betriebsdaten"],["parameters","≡","Parameter"],["service","⚒","Service"],["settings","⚙","Einstellungen"]];
 const SUBNAV={settings:[['settings','Einrichtung'],['schematic','Schaubild'],['pump','Zusatzpumpe']],service:[['service','Geräteinfo'],['machine','Maschineninfo'],['factory','Werkstestmodus'],['diagnostics','Diagnose'],['faults','Fehlerspeicher'],['system','Systemparameter']]};
@@ -44,7 +44,7 @@ class R290ControlPanel extends HTMLElement {
     this.language='de';try{this.language=localStorage.getItem('r290.control.language')==='en'?'en':'de';}catch{}
     // Keep styles mounted across state updates, avoiding unstyled intermediate
     // frames and repeated stylesheet loads when the panel refreshes.
-    this.shadowRoot.innerHTML='<link rel="stylesheet" href="/r290_heatpump_static/panel.css?v=1.1.0"><link rel="stylesheet" href="/r290_heatpump_static/overview.css?v=1.1.0"><link rel="stylesheet" href="/r290_heatpump_static/parameters.css?v=1.1.0"><link rel="stylesheet" href="/r290_heatpump_static/theme.css?v=1.1.0"><link rel="stylesheet" href="/r290_heatpump_static/electric-overview.css?v=1.1.0"><div id="panel-root"></div>';
+    this.shadowRoot.innerHTML='<link rel="stylesheet" href="/r290_heatpump_static/panel.css?v=1.1.1"><link rel="stylesheet" href="/r290_heatpump_static/overview.css?v=1.1.1"><link rel="stylesheet" href="/r290_heatpump_static/parameters.css?v=1.1.1"><link rel="stylesheet" href="/r290_heatpump_static/theme.css?v=1.1.1"><link rel="stylesheet" href="/r290_heatpump_static/electric-overview.css?v=1.1.1"><div id="panel-root"></div>';
     const chartStyle=document.createElement('style');chartStyle.textContent=chartStyles;this.shadowRoot.append(chartStyle);
     this.shadowRoot.addEventListener('pointermove',e=>{chartHover(this,e);curveHover(this,e);});
     this.shadowRoot.addEventListener('pointerout',e=>{const svg=e.target.closest?.('.curve-chart');if(svg&&!svg.contains(e.relatedTarget)){delete svg._curvePointer;this.shadowRoot.querySelector('.curve-hover-tooltip')?.setAttribute('hidden','');}});this.shadowRoot.addEventListener('pointerout',chartLeave);
@@ -89,8 +89,8 @@ class R290ControlPanel extends HTMLElement {
     if(this._loading || !this._hass || !this.isConnected) return;
     this._loading=true;
     try {this.data=await this.ws("panel");this.error="";this._loadedAt=Date.now();
-      if(!this._registerCatalog){try{const response=await fetch('/r290_heatpump_static/register-catalog.json?v=1.1.0');if(!response.ok)throw new Error('Registerkatalog konnte nicht geladen werden.');this._registerCatalog=await response.json();this._catalogError='';}catch(err){this._catalogError=err.message;}}
-      if(!this._schematicCatalog){try{const response=await fetch('/r290_heatpump_static/schematic-catalog.json?v=1.1.0');if(!response.ok)throw new Error('Bauteilkatalog nicht verfügbar / Component catalogue unavailable');this._schematicCatalog=await response.json();this._schematicCatalogError='';}catch(err){this._schematicCatalogError=err.message;}}
+      if(!this._registerCatalog){try{const response=await fetch('/r290_heatpump_static/register-catalog.json?v=1.1.1');if(!response.ok)throw new Error('Registerkatalog konnte nicht geladen werden.');this._registerCatalog=await response.json();this._catalogError='';}catch(err){this._catalogError=err.message;}}
+      if(!this._schematicCatalog){try{const response=await fetch('/r290_heatpump_static/schematic-catalog.json?v=1.1.1');if(!response.ok)throw new Error('Bauteilkatalog nicht verfügbar / Component catalogue unavailable');this._schematicCatalog=await response.json();this._schematicCatalogError='';}catch(err){this._schematicCatalogError=err.message;}}
     }
     catch(err){this.error=err.message||String(err);}
     finally{this._loading=false;this.render();}
@@ -149,7 +149,7 @@ class R290ControlPanel extends HTMLElement {
       <header class="app-header"><div class="header-brand"><button class="icon-button menu-ha" data-action="ha-menu" aria-label="Home Assistant Menü öffnen">${icon('menu')}</button></div>
       <nav aria-label="Anlagenbereiche">${NAV.map(([id,_,name])=>`<button class="nav ${mainView(this.view)===id?"active":""}" data-view="${id}" ${mainView(this.view)===id?'aria-current="page"':""}>${name}</button>`).join("")}</nav>
       <div class="header-meta"><div class="language-switch" role="group" aria-label="Sprache"><button data-language="de" aria-pressed="${this.language==='de'}" lang="de">DE</button><button data-language="en" aria-pressed="${this.language==='en'}" lang="en">EN</button></div><span class="connection-indicator ${disconnected?'offline':''}" title="${disconnected?'Verbindung getrennt':'Verbunden mit Home Assistant'}"><span class="dot"></span><span>${disconnected?'Offline':'Lokal verbunden'}</span></span><button class="icon-button" data-action="refresh" aria-label="Daten aktualisieren">${icon('refresh')}</button></div><div class="brand">${brandLogo()}</div></header>
-      <main class="content" data-key="view-${this.view}"><div class="site-context"><span>${esc(this.data?.settings.name||"Heizungsanlage")}</span><span>R290 NextGen <span class="muted">/</span> v${esc(this.data?.version||"1.1.0")}</span></div>
+      <main class="content" data-key="view-${this.view}"><div class="site-context"><span>${esc(this.data?.settings.name||"Heizungsanlage")}</span><span>R290 NextGen <span class="muted">/</span> v${esc(this.data?.version||"1.1.1")}</span></div>
       ${this.error?`<div role="alert" class="notice error">${esc(this.error)}</div>`:""}${serviceBanner(this)}
       ${disconnected?'<div data-key="connection-notice" role="alert" class="notice error">Die Verbindung ist getrennt. Angezeigte Werte können veraltet sein. Änderungen sind nicht verfügbar.</div>':""}${SUBNAV[mainView(this.view)]?`<nav class="section-tabs" aria-label="${this.language==='en'?'Subpages':'Unterseiten'}">${SUBNAV[mainView(this.view)].map(([id,label])=>`<button data-view="${id}" class="${this.view===id?'active':''}" ${this.view===id?'aria-current="page"':''}>${label}</button>`).join('')}</nav>`:''}${body}</main></div>`);
     if(toast)this.shadowRoot.append(toast);

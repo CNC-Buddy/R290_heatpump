@@ -1,5 +1,5 @@
-import {esc,numeric,fmt,energyFactor} from './model.js?v=1.1.0';
-import {patchElement} from './dom.js?v=1.1.0';
+import {esc,numeric,fmt,energyFactor} from './model.js?v=1.1.1';
+import {patchElement} from './dom.js?v=1.1.1';
 
 const t=(p,de,en)=>p.language==='en'?en:de;
 const TITLES={dhw_heater:['Heizstab · Warmwasser','DHW immersion heater'],buffer_heater:['Elektrische Zusatzheizung · Heizung','Electric auxiliary heating'],secondary:['Zweiter Wärmeerzeuger','Additional heat source']};

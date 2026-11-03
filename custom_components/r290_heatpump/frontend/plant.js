@@ -1,5 +1,5 @@
-import {esc} from './model.js?v=1.1.0';
-import {patchElement} from './dom.js?v=1.1.0';
+import {esc} from './model.js?v=1.1.1';
+import {patchElement} from './dom.js?v=1.1.1';
 
 export const OPTIONS={
  mode:[['single','Einzelgerät','Single unit'],['cascade','Parallele Kaskade','Parallel cascade']],

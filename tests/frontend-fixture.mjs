@@ -68,7 +68,7 @@ add('sensor.user_temp',42,'°C','Heating set temperature','hp1','r290_heatpump_h
 add('sensor.disabled',3,null,'Disabled raw status','hp1','r290_heatpump_unmapped_status_slave_1');entities.at(-1).disabled=true;
 add('sensor.extra','ready',null,'Unmapped status','hp1','r290_heatpump_extra_slave_1',{diagnostic_detail:'available attribute'});
 const polling=[{entry_id:"bridge",title:"Modbus Bridge",profile:"auto",running:true,queue_depth:1,overdue_registers:0,verified_writes:2,transport:{transactions_last_minute:20,errors_last_minute:0,latency_p95:.12,transport_time_fraction:.15},settings:{poll_fast:10,poll_normal:30,poll_slow:120,poll_config:600,poll_budget:.6},slaves:{1:{requests:20,errors:0,latency_ewma:.1,backoff_remaining:0,block_limit:20}}}];
-const data={polling,version:"1.1.0",settings,entries,entities,curves,controllers:[controller],audit:[],recorder:true};
+const data={polling,version:"1.1.1",settings,entries,entities,curves,controllers:[controller],audit:[],recorder:true};
 data.service={tests:{},snapshots:{}};data.system_access={};
 config.flow_entities=[1,2].map(n=>`sensor.water_flow_${n}`);
 window.fixture={data,states,calls:[],writes:[],failNext:false};

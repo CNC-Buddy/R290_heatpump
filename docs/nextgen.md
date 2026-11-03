@@ -1,4 +1,4 @@
-# R290-NextGen · 1.1.0
+# R290-NextGen · 1.1.1
 
 Stand: 03.11.2026. Eigenständiger Entwicklungsordner auf Basis von 1.4.0.
 Die Integration behält `r290_heatpump` als Domain. Sie ist ein Upgrade der
@@ -879,7 +879,7 @@ dadurch ihre vorhandenen Fehler- und Ersatzwertregeln anwenden.
 2. Aus dem GitHub-Release-Quellarchiv den enthaltenen Ordner
    `custom_components/r290_heatpump` in das HA-Konfigurationsverzeichnis kopieren.
    Die bestehende Integration nicht löschen oder als neues Gerät neu anlegen.
-3. Home Assistant neu starten. Die Versionsanzeige im Panel muss v1.1.0 zeigen.
+3. Home Assistant neu starten. Die Versionsanzeige im Panel muss v1.1.1 zeigen.
    Ein Hard-Reload aktualisiert gegebenenfalls noch geöffnete Browserseiten.
 4. Die Integration startet mit dem gespeicherten Profil; bei Erst-Migration
    zunächst mit Legacy. Unter **Einstellungen → Geräte & Dienste → R290 NextGen

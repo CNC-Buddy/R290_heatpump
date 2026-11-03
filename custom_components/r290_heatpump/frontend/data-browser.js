@@ -1,7 +1,7 @@
-import {renderBusHealth} from './bus-health.js?v=1.1.0';
-import {esc, numeric, fmt} from './model.js?v=1.1.0';
-import {patchHTML} from './dom.js?v=1.1.0';
-import {tr, translateTree} from './i18n.js?v=1.1.0';
+import {renderBusHealth} from './bus-health.js?v=1.1.1';
+import {esc, numeric, fmt} from './model.js?v=1.1.1';
+import {patchHTML} from './dom.js?v=1.1.1';
+import {tr, translateTree} from './i18n.js?v=1.1.1';
 
 export const sections={main:'Maschineninfo',realtime:'Echtzeitwerte',user:'Benutzerparameter',devices:'Systemparameter',user2:'Benutzerparameter 2',all:'Alle Entitäten'};
 const HELP={P099:['Ziel-Temperaturdifferenz für die interne Pumpendrehzahlregelung der Wärmepumpe. Dieser Parameter regelt nicht die separate Zusatzpumpe.','Target temperature difference for the internal pump-speed control. This parameter does not control the separate auxiliary pump.'],P100:['Untere PWM-Grenze der internen Wasserpumpe. Die separate Zusatzpumpe hat eigene Betriebsgrenzen.','Lower PWM limit for the internal water pump. The separate auxiliary pump has its own operating limits.']};

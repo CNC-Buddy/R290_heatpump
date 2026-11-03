@@ -1,5 +1,5 @@
 // Display graph only. Catalogue is shared with the Python validator.
-import {validRoute} from './schematic-routing.js?v=1.1.0';
+import {validRoute} from './schematic-routing.js?v=1.1.1';
 export const copy = value => structuredClone(value);
 export const emptyGraph = () => ({version:1,nodes:[],edges:[]});
 export const circuits = {wp:['Wärmepumpenkreis','Heat-pump circuit'],heating:['Heizungswasser','Heating water'],we2:['Wärmeerzeuger 2','Heat source 2'],warmwater:['Warmwasser','Hot water'],electric:['Elektrisch','Electric']};

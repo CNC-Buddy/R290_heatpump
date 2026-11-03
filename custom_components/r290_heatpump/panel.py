@@ -29,7 +29,7 @@ from .electric_overview import validate as validate_electric, migrate as migrate
 from .schematic import validate_graph, completeness, history_entities as schematic_entities, catalogue as schematic_catalogue
 
 PANEL_URL = "r290-control"
-VERSION = "1.1.0"
+VERSION = "1.1.1"
 STATUS_MAPPING_KEYS = ("dhw_entity", "buffer_charge_entity", "radiator_pump_entity", "dhw_charge_entity")
 MAPPING_KEYS = ("pump_power_entity", "heat_energy_entity", "electric_energy_entity",
                 "tank_entity", "buffer_entity", "outdoor_entity",

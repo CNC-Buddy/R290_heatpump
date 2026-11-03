@@ -28,7 +28,7 @@ try{
  page.on('pageerror',e=>errors.push(e.message));
  await page.route('**/*',r=>r.request().url().startsWith(base)?r.continue():r.abort());
  await page.goto(base);await page.getByRole('heading',{name:'Anlagenübersicht'}).waitFor();
- assert.match(await page.locator('.site-context').innerText(), /v1\.1\.0/);
+ assert.match(await page.locator('.site-context').innerText(), /v1\.1\.1/);
  await page.evaluate(()=>panel.navigate('parameters'));
  // The master alone supplies the control mode and target spread.
  assert.equal(await page.locator('.curve-estimate').count(),1);

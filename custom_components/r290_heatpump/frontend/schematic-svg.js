@@ -1,10 +1,10 @@
-import {esc,fmt} from './model.js?v=1.1.0';
-import {nodePorts,colors,activeEdges,freshValue,isOn} from './schematic-model.js?v=1.1.0';
-import {presentationArt,presentationDefs} from './schematic-art.js?v=1.1.0';
+import {esc,fmt} from './model.js?v=1.1.1';
+import {nodePorts,colors,activeEdges,freshValue,isOn} from './schematic-model.js?v=1.1.1';
+import {presentationArt,presentationDefs} from './schematic-art.js?v=1.1.1';
 
-import {orthogonal,autoRoute,viaPoints,simplify,equal,validRoute} from './schematic-routing.js?v=1.1.0';
-import {bindingsFor} from './schematic-bindings.js?v=1.1.0';
-import {tankLayers,tankReadings,heaterArt} from './schematic-tanks.js?v=1.1.0';
+import {orthogonal,autoRoute,viaPoints,simplify,equal,validRoute} from './schematic-routing.js?v=1.1.1';
+import {bindingsFor} from './schematic-bindings.js?v=1.1.1';
+import {tankLayers,tankReadings,heaterArt} from './schematic-tanks.js?v=1.1.1';
 
 const direction={left:[-1,0],right:[1,0],top:[0,-1],bottom:[0,1]};
 const labelTranslations={'Zapfstelle 1':'Outlet 1','Zapfstelle 2':'Outlet 2','Zusatzpumpe':'Auxiliary pump','Pufferladepumpe':'Buffer charging pump','Heizkreispumpe':'Heating circuit pump','Zirkulationspumpe':'Circulation pump','Warmwasser':'Hot water','Umschaltventil WP':'HP diverter valve','Umschaltventil WE2':'Source 2 diverter valve'};

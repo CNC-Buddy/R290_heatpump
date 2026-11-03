@@ -1,8 +1,8 @@
-import {sections, renderCatalogTable} from './data-browser.js?v=1.1.0';
-import {translateTree} from './i18n.js?v=1.1.0';
-import {esc, numeric, fmt} from './model.js?v=1.1.0';
-import {curveValue, pointsOf, pointError, insertPoint, ENDPOINT_KEYS} from './curve-model.js?v=1.1.0';
-export {curveValue} from './curve-model.js?v=1.1.0';
+import {sections, renderCatalogTable} from './data-browser.js?v=1.1.1';
+import {translateTree} from './i18n.js?v=1.1.1';
+import {esc, numeric, fmt} from './model.js?v=1.1.1';
+import {curveValue, pointsOf, pointError, insertPoint, ENDPOINT_KEYS} from './curve-model.js?v=1.1.1';
+export {curveValue} from './curve-model.js?v=1.1.1';
 
 export const CURVES = {heating_curve:'Heizkörper',hot_water_curve:'Warmwasser',floor_heating_curve:'Fußbodenheizung',cooling_curve:'Kühlung'};
 const TABS = {basis:'Basis',pv:'PV & Anhebung',fine:'Feinabstimmung'};

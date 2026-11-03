@@ -1,5 +1,5 @@
-import {esc,fmt} from './model.js?v=1.1.0';
-import {freshValue} from './schematic-model.js?v=1.1.0';
+import {esc,fmt} from './model.js?v=1.1.1';
+import {freshValue} from './schematic-model.js?v=1.1.1';
 
 export const isTank=n=>['buffer','dhw_tank'].includes(n?.type);
 export const zoneHeights={1:[50],2:[20,80],3:[15,50,85],4:[15,38,62,85]};

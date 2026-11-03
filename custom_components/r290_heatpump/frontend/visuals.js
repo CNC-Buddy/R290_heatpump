@@ -1,5 +1,5 @@
 // Native SVG artwork. All readings are supplied by the panel; no external assets.
-import {esc, fmt} from './model.js?v=1.1.0';
+import {esc, fmt} from './model.js?v=1.1.1';
 
 export function icon(name, className='') {
   const paths={

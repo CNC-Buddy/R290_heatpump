@@ -1,6 +1,6 @@
-import {esc} from './model.js?v=1.1.0';
-import {outdoorUnit,tank} from './visuals.js?v=1.1.0';
-import {choiceLabel} from './plant.js?v=1.1.0';
+import {esc} from './model.js?v=1.1.1';
+import {outdoorUnit,tank} from './visuals.js?v=1.1.1';
+import {choiceLabel} from './plant.js?v=1.1.1';
 
 // Every loop is drawn from explicit ports; animation reuses the same path.
 export function plantSchematic(p,m,units,state,readings){

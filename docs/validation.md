@@ -1,4 +1,4 @@
-# Lokale Validierung · R290-NextGen 1.1.0
+# Lokale Validierung · R290-NextGen 1.1.1
 
 Stand: 03.11.2026. Sämtliche Prüfungen sind von der realen Anlage getrennt.
 

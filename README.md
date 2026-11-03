@@ -41,13 +41,13 @@ R290 NextGen verbindet kompatible R290-Wärmepumpen über Modbus mit Home Assist
 2. **R290 NextGen** installieren oder aktualisieren und Home Assistant neu starten.
 3. Die Integration unter **Einstellungen → Geräte & Dienste** hinzufügen beziehungsweise vorhandene Einträge weiterverwenden.
 
-Version v1.1.0 muss zuerst in diesem Repository veröffentlicht werden, bevor sie dort über HACS verfügbar ist.
+Version v1.1.1 muss zuerst in diesem Repository veröffentlicht werden, bevor sie dort über HACS verfügbar ist.
 
 ### Manuell
 
 1. Die Home-Assistant-Konfiguration und bei einem Update den bisherigen Integrationsordner sichern.
 2. Das Release-Quellarchiv entpacken und den enthaltenen Ordner `custom_components/r290_heatpump` in das gleichnamige Verzeichnis unter der Home-Assistant-Konfiguration kopieren. Den bestehenden Integrationsordner vollständig ersetzen.
-3. Home Assistant neu starten. Die Oberfläche zeigt **v1.1.0**.
+3. Home Assistant neu starten. Die Oberfläche zeigt **v1.1.1**.
 
 Die Domain `r290_heatpump` bleibt erhalten. Dies ist ein Update der Home-Assistant-Integration und keine Wärmepumpen-Firmware.
 
@@ -75,4 +75,4 @@ Bei einer Fehlermeldung helfen Modell, Firmware, Gateway und eine Beschreibung d
 
 **R290 NextGen is a local Home Assistant integration for compatible Modbus-connected R290 heat pumps.** Monitor temperatures and operating states, explore historical data, build a hydraulic overview and adjust heating or cooling curves. The interface is available in English and German. Features depend on the device, firmware and available Home Assistant entities.
 
-Install the integration through HACS using this repository as a custom integration, or copy `custom_components/r290_heatpump` from a release source archive into your Home Assistant configuration and restart. Version 1.1.0 becomes available through HACS after it is published. Existing integration entries use the same `r290_heatpump` domain. See the [documentation](docs/nextgen.md) and [license](license.txt) for details.
+Install the integration through HACS using this repository as a custom integration, or copy `custom_components/r290_heatpump` from a release source archive into your Home Assistant configuration and restart. Version 1.1.1 becomes available through HACS after it is published. Existing integration entries use the same `r290_heatpump` domain. See the [documentation](docs/nextgen.md) and [license](license.txt) for details.

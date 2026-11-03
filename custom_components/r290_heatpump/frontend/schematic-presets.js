@@ -1,4 +1,4 @@
-import {createNode,emptyGraph} from './schematic-model.js?v=1.1.0';
+import {createNode,emptyGraph} from './schematic-model.js?v=1.1.1';
 
 // These are explicit graph connections, not coordinates masquerading as pipes.
 // Both coils, exchanger sides and the circulation return have distinct ports.

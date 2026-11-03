@@ -1,13 +1,13 @@
-import {esc} from './model.js?v=1.1.0';
-import {patchHTML} from './dom.js?v=1.1.0';
-import {copy,emptyGraph,createNode,nodePorts,connection,inspect,circuits,colors} from './schematic-model.js?v=1.1.0';
-import {preset} from './schematic-presets.js?v=1.1.0';
-import {renderGraph,paths,nodeLabel,dimensions} from './schematic-svg.js?v=1.1.0';
-import {moveSegment,retainRoutes} from './schematic-routing.js?v=1.1.0';
-import {bindingsFor,bindingHelp} from './schematic-bindings.js?v=1.1.0';
-import {isTank,zoneHeights,zoneName,attachHeater,moveNode} from './schematic-tanks.js?v=1.1.0';
-import {renderChart,chartClick,chartHover,chartLeave,chartStyles,refreshChartHover} from './chart-ui.js?v=1.1.0';
-import './entity-picker.js?v=1.1.0';
+import {esc} from './model.js?v=1.1.1';
+import {patchHTML} from './dom.js?v=1.1.1';
+import {copy,emptyGraph,createNode,nodePorts,connection,inspect,circuits,colors} from './schematic-model.js?v=1.1.1';
+import {preset} from './schematic-presets.js?v=1.1.1';
+import {renderGraph,paths,nodeLabel,dimensions} from './schematic-svg.js?v=1.1.1';
+import {moveSegment,retainRoutes} from './schematic-routing.js?v=1.1.1';
+import {bindingsFor,bindingHelp} from './schematic-bindings.js?v=1.1.1';
+import {isTank,zoneHeights,zoneName,attachHeater,moveNode} from './schematic-tanks.js?v=1.1.1';
+import {renderChart,chartClick,chartHover,chartLeave,chartStyles,refreshChartHover} from './chart-ui.js?v=1.1.1';
+import './entity-picker.js?v=1.1.1';
 
 const texts={same_node:['Zwei verschiedene Bauteile wählen.','Choose two different components.'],occupied:['Anschluss belegt. Für Abzweige ein T-Stück einsetzen.','Port occupied. Insert a T junction for branches.'],incompatible:['Kreis, Vor-/Rücklauf oder Flussrichtung passen nicht zusammen.','Circuit, supply/return or direction do not match.'],port:['Anschluss unbekannt.','Unknown port.'],format:['Ungültiges Dateiformat oder zu große Anlage.','Invalid file format or plant too large.'],component:['Ungültiges Bauteil oder Messquelle.','Invalid component or source.'],pipe:['Ungültige Leitung oder Knickpunkte.','Invalid pipe or waypoints.'],empty:['Bauteile hinzufügen oder eine Vorlage laden.','Add components or load a template.'],open:['Anschlusspaar unvollständig','Incomplete port group'],isolated:['Bauteil nicht verbunden','Component disconnected'],required:['Pflichtanschlüsse fehlen','Required ports missing'],loop:['Geschlossener Rücklauf fehlt','Closed return path missing']};
 const styles=`
@@ -17,7 +17,7 @@ ${chartStyles}
 
 class SchematicEditor extends HTMLElement {
  constructor(){
-   super();this.attachShadow({mode:'open'});this.shadowRoot.innerHTML=`<style>${styles}</style><link rel="stylesheet" href="/r290_heatpump_static/theme.css?v=1.1.0"><div id="root"></div>`;this.zoom=100;this.message='';this.geometryKey='';
+   super();this.attachShadow({mode:'open'});this.shadowRoot.innerHTML=`<style>${styles}</style><link rel="stylesheet" href="/r290_heatpump_static/theme.css?v=1.1.1"><div id="root"></div>`;this.zoom=100;this.message='';this.geometryKey='';
    this.shadowRoot.addEventListener('click',e=>{e.stopPropagation();this.click(e).catch(err=>this.fail(err));});
    this.shadowRoot.addEventListener('change',e=>{e.stopPropagation();this.change(e).catch(err=>this.fail(err));});
    this.shadowRoot.addEventListener('keydown',e=>this.key(e));

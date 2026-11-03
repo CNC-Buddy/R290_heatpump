@@ -1,11 +1,11 @@
-import {electricOverview} from './electric-overview.js?v=1.1.0';
-import {esc, numeric, fmt, ageLabel, phaseNames, modeNames, chartPaths} from './model.js?v=1.1.0';
-import {icon, pumpIcon, schematic} from './visuals.js?v=1.1.0';
-import {plantModel,plantDescription} from './plant.js?v=1.1.0';
-import {plantSchematic} from './plant-schematic.js?v=1.1.0';
-import {sourcesOverview} from './heat-sources.js?v=1.1.0';
+import {electricOverview} from './electric-overview.js?v=1.1.1';
+import {esc, numeric, fmt, ageLabel, phaseNames, modeNames, chartPaths} from './model.js?v=1.1.1';
+import {icon, pumpIcon, schematic} from './visuals.js?v=1.1.1';
+import {plantModel,plantDescription} from './plant.js?v=1.1.1';
+import {plantSchematic} from './plant-schematic.js?v=1.1.1';
+import {sourcesOverview} from './heat-sources.js?v=1.1.1';
 
-import {renderChart} from './chart-ui.js?v=1.1.0';
+import {renderChart} from './chart-ui.js?v=1.1.1';
 
 export function overviewSeries(p) {
   const chosen=p.data?.settings?.charts?.['overview-temperature']?.entity_ids;if(chosen)return chosen.map((id,i)=>({id,label:p.name(id),color:`var(--plot-${i%6+1})`}));

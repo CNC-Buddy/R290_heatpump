@@ -1,4 +1,4 @@
-import {esc} from './model.js?v=1.1.0';
+import {esc} from './model.js?v=1.1.1';
 
 const COMPONENTS={compressor:['Verdichter 1','Compressor 1',0x332,120,'Hz'],fan:['Lüfter','Fan',0x33e,80,'Hz'],eev:['Expansionsventil EEV 1','Expansion valve EEV 1',0x336,500,'steps'],evi:['Einspritzventil EVI 1','Injection valve EVI 1',0x33a,500,'steps'],pump:['Interne Wasserpumpe','Internal water pump',0x344,100,'raw %']};
 const t=(p,de,en)=>p.language==='en'?en:de;

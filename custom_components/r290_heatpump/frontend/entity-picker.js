@@ -1,5 +1,5 @@
-import {esc} from './model.js?v=1.1.0';
-import {tr, translateTree} from './i18n.js?v=1.1.0';
+import {esc} from './model.js?v=1.1.1';
+import {tr, translateTree} from './i18n.js?v=1.1.1';
 
 const normalize=value=>String(value??'').trim().toLocaleLowerCase('de-DE').replace(/[äöüß]/g,c=>({ä:'ae',ö:'oe',ü:'ue',ß:'ss'}[c]));
 
