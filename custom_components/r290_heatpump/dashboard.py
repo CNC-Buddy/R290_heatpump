@@ -28,10 +28,10 @@ _DASHBOARD_TITLE = "R290 Heat Pump"
 _DASHBOARD_ICON = "mdi:heat-wave"
 
 
-async def async_setup_dashboard(hass: HomeAssistant) -> None:
+async def async_setup_dashboard(hass: HomeAssistant, *, force: bool = False) -> None:
     """Ensure the packaged Lovelace dashboard is available in Home Assistant."""
     domain_data = hass.data.setdefault(DOMAIN, {})
-    if domain_data.get("_dashboard_ready"):
+    if domain_data.get("_dashboard_ready") and not force:
         return
 
     template_text = await _read_template(hass)
@@ -49,6 +49,11 @@ async def async_setup_dashboard(hass: HomeAssistant) -> None:
         success = await _register_storage_dashboard(hass, template_config)
         if success:
             domain_data["_dashboard_ready"] = True
+            from .sidebar import apply_sidebar_visibility
+            bridges = [e for e in hass.config_entries.async_entries(DOMAIN)
+                       if e.data.get("device_type") == "modbus_bridge"]
+            if bridges:
+                apply_sidebar_visibility(hass, bridges[0].options)
 
     if lovelace_const.DOMAIN in hass.config.components:
         await _finalize_setup()

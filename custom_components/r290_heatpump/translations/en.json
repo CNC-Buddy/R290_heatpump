@@ -5,22 +5,105 @@
         "data": {
           "cop_split_enabled": "Split with external WW status",
           "cop_split_sensor": "Warm water status sensor",
-          "connection_type": "Connection type"
+          "connection_type": "Connection type",
+          "polling_profile": "Polling profile",
+          "poll_fast": "Fast target interval (s)",
+          "poll_normal": "Normal target interval (s)",
+          "poll_slow": "Slow target interval (s)",
+          "poll_config": "Configuration interval (s)",
+          "poll_budget": "Transport time budget (0.1–0.9)",
+          "show_nextgen_sidebar": "Show R290 NextGen in sidebar",
+          "show_lovelace_sidebar": "Show R290 Lovelace dashboard in sidebar",
+          "recreate_dashboard": "Recreate Lovelace dashboard"
         },
         "data_description": {
-          "connection_type": "RTU over TCP: connect directly to an RTU network gateway. Modbus TCP: connect to a Modbus TCP server. ModbusProxy: connect to the Modbus Proxy add-on with an RTU gateway upstream."
+          "connection_type": "RTU over TCP: connect directly to an RTU network gateway. Modbus TCP: connect to a Modbus TCP server. ModbusProxy: connect to the Modbus Proxy add-on with an RTU gateway upstream.",
+          "polling_profile": "Legacy retains saved polling intervals. Auto enables the shared adaptive scheduler with write verification. Existing entities are preserved.",
+          "poll_budget": "Fraction of measured transport time including gateway responses; not electrical RS485 bus utilization.",
+          "show_nextgen_sidebar": "Applies to the entire integration. The panel remains accessible via its URL.",
+          "show_lovelace_sidebar": "Applies to the entire integration. The dashboard layout and URL are preserved.",
+          "recreate_dashboard": "Replaces the saved dashboard layout with the template."
+        }
+      },
+      "auxiliary_pump": {
+        "title": "Auxiliary pump controller",
+        "description": "Matching R290 measurement sources and pump/defrost signals for every unit are suggested and can be changed. Saved mappings are preserved. Ambiguous or incomplete mappings remain empty. All four numeric sensor lists must contain the same heat pumps in the same order. Status inputs must report on/off, true/false or 1/0. The controller always starts in observe mode.",
+        "data": {
+          "name": "Name",
+          "speed_entity": "Speed output (Number, dimmable Light or Fan)",
+          "enable_entity": "Auxiliary pump enable switch (required for Number)",
+          "demand_entity": "Heat pump circulation demands (OR)",
+          "dhw_entity": "DHW operation (on/off)",
+          "defrost_entities": "Defrost signals of all heat pumps (on/off)",
+          "frequency_entities": "Compressor frequencies in Hz (HP1, HP2, …)",
+          "flow_entities": "Water flows (same order)",
+          "supply_entities": "Supply temperatures (same order)",
+          "return_entities": "Return temperatures (same order)",
+          "legacy_automations": "Existing pump automations (checked for conflicts)",
+          "pump_power_entity": "Auxiliary pump electrical power",
+          "heat_energy_entity": "Cumulative heat energy meter",
+          "electric_energy_entity": "Cumulative electrical energy meter",
+          "tank_entity": "DHW tank temperature",
+          "buffer_entity": "Buffer temperature",
+          "outdoor_entity": "Outdoor temperature"
+        },
+        "data_description": {
+          "speed_entity": "Select the actuator of the separate auxiliary pump. Internal heat-pump PWM parameters are not the actuator for this pump.",
+          "demand_entity": "Internal pump status sensors for every unit are suggested and combined with OR: any running internal pump requests circulation, even with its compressor stopped. No extra helper is needed. A common signal covering frost-protection circulation can also be used.",
+          "dhw_entity": "An existing enabled COP hot-water split signal is suggested. Otherwise choose the appropriate binary operating signal.",
+          "defrost_entities": "Defrost status sensors for every unit are suggested. Any active signal selects defrost operation. Pump and defrost sensors are enabled by default from this update; sensors explicitly disabled by you remain disabled. Only complete lists are suggested.",
+          "frequency_entities": "Automatically sorted by slave number. Keep the same unit order in all four measurement lists when changing selections.",
+          "heat_energy_entity": "An existing cumulative energy meter mapped in the dashboard or COP entry is suggested.",
+          "electric_energy_entity": "Cumulative energy only (e.g. kWh). Instantaneous power in W or kW is not suggested as an energy meter.",
+          "enable_entity": "The controllable output that actually switches the separate auxiliary pump on and off. Required for a Number actuator; leave empty for Light/Fan without a separate enable output."
+        }
+      },
+      "pump_limits": {
+        "title": "Limits and commissioning",
+        "description": "Verify limits for the actual plant before active control. Minimum flow is an operating limit, not merely the fault threshold. Calibrate Number output for voltage, PWM or percent. Commissioning confirmation does not arm the controller. {detail}",
+        "data": {
+          "min_speed": "Minimum output (%)",
+          "max_speed": "Maximum output (%)",
+          "safe_speed": "Fallback / startup output (%)",
+          "defrost_speed": "Defrost output (%)",
+          "manual_speed": "Fixed output (%)",
+          "heating_delta": "Heating target temperature difference (K)",
+          "dhw_delta": "DHW target temperature difference (K)",
+          "deadband": "Temperature difference deadband (K)",
+          "min_flow": "Minimum water flow per active heat pump (L/min)",
+          "max_step": "Maximum normal control step (percentage points)",
+          "interval": "Control interval (seconds)",
+          "startup_seconds": "Startup settling time (seconds)",
+          "postrun_seconds": "Postrun time (seconds)",
+          "max_age": "Maximum numeric sample age (seconds)",
+          "output_min": "Number output corresponding to 0%",
+          "output_max": "Number output corresponding to 100%",
+          "commissioned": "Hydraulic limits, output calibration, frost/defrost signals and exclusive control ownership verified"
         }
       }
+    },
+    "error": {
+      "invalid_pump_config": "Invalid mapping or operating limits. Check the details above.",
+      "invalid_polling_settings": "Require fast ≤ normal ≤ slow ≤ configuration intervals.",
+      "duplicate_bridge": "A bridge already exists for this host and port. Add further devices as slaves of that bridge."
     }
   },
   "config": {
     "step": {
       "modbus_bridge": {
         "data": {
-          "connection_type": "Connection type"
+          "connection_type": "Connection type",
+          "polling_profile": "Polling profile",
+          "poll_fast": "Fast target interval (s)",
+          "poll_normal": "Normal target interval (s)",
+          "poll_slow": "Slow target interval (s)",
+          "poll_config": "Configuration interval (s)",
+          "poll_budget": "Transport time budget (0.1–0.9)"
         },
         "data_description": {
-          "connection_type": "RTU over TCP: connect directly to an RTU network gateway. Modbus TCP: connect to a Modbus TCP server. ModbusProxy: connect to the Modbus Proxy add-on with an RTU gateway upstream."
+          "connection_type": "RTU over TCP: connect directly to an RTU network gateway. Modbus TCP: connect to a Modbus TCP server. ModbusProxy: connect to the Modbus Proxy add-on with an RTU gateway upstream.",
+          "polling_profile": "Legacy retains saved polling intervals. Auto enables the shared adaptive scheduler with write verification. Existing entities are preserved.",
+          "poll_budget": "Fraction of measured transport time including gateway responses; not electrical RS485 bus utilization."
         }
       },
       "heat_pump": {
@@ -38,6 +121,75 @@
         "data_description": {
           "connection_type": "RTU over TCP: connect directly to an RTU network gateway. Modbus TCP: connect to a Modbus TCP server. ModbusProxy: connect to the Modbus Proxy add-on with an RTU gateway upstream."
         }
+      },
+      "auxiliary_pump": {
+        "title": "Auxiliary pump controller",
+        "description": "Matching R290 measurement sources and pump/defrost signals for every unit are suggested and can be changed. Saved mappings are preserved. Ambiguous or incomplete mappings remain empty. All four numeric sensor lists must contain the same heat pumps in the same order. Status inputs must report on/off, true/false or 1/0. The controller always starts in observe mode.",
+        "data": {
+          "name": "Name",
+          "speed_entity": "Speed output (Number, dimmable Light or Fan)",
+          "enable_entity": "Auxiliary pump enable switch (required for Number)",
+          "demand_entity": "Heat pump circulation demands (OR)",
+          "dhw_entity": "DHW operation (on/off)",
+          "defrost_entities": "Defrost signals of all heat pumps (on/off)",
+          "frequency_entities": "Compressor frequencies in Hz (HP1, HP2, …)",
+          "flow_entities": "Water flows (same order)",
+          "supply_entities": "Supply temperatures (same order)",
+          "return_entities": "Return temperatures (same order)",
+          "legacy_automations": "Existing pump automations (checked for conflicts)",
+          "pump_power_entity": "Auxiliary pump electrical power",
+          "heat_energy_entity": "Cumulative heat energy meter",
+          "electric_energy_entity": "Cumulative electrical energy meter",
+          "tank_entity": "DHW tank temperature",
+          "buffer_entity": "Buffer temperature",
+          "outdoor_entity": "Outdoor temperature"
+        },
+        "data_description": {
+          "speed_entity": "Select the actuator of the separate auxiliary pump. Internal heat-pump PWM parameters are not the actuator for this pump.",
+          "demand_entity": "Internal pump status sensors for every unit are suggested and combined with OR: any running internal pump requests circulation, even with its compressor stopped. No extra helper is needed. A common signal covering frost-protection circulation can also be used.",
+          "dhw_entity": "An existing enabled COP hot-water split signal is suggested. Otherwise choose the appropriate binary operating signal.",
+          "defrost_entities": "Defrost status sensors for every unit are suggested. Any active signal selects defrost operation. Pump and defrost sensors are enabled by default from this update; sensors explicitly disabled by you remain disabled. Only complete lists are suggested.",
+          "frequency_entities": "Automatically sorted by slave number. Keep the same unit order in all four measurement lists when changing selections.",
+          "heat_energy_entity": "An existing cumulative energy meter mapped in the dashboard or COP entry is suggested.",
+          "electric_energy_entity": "Cumulative energy only (e.g. kWh). Instantaneous power in W or kW is not suggested as an energy meter.",
+          "enable_entity": "The controllable output that actually switches the separate auxiliary pump on and off. Required for a Number actuator; leave empty for Light/Fan without a separate enable output."
+        }
+      },
+      "pump_limits": {
+        "title": "Limits and commissioning",
+        "description": "Verify limits for the actual plant before active control. Minimum flow is an operating limit, not merely the fault threshold. Calibrate Number output for voltage, PWM or percent. Commissioning confirmation does not arm the controller. {detail}",
+        "data": {
+          "min_speed": "Minimum output (%)",
+          "max_speed": "Maximum output (%)",
+          "safe_speed": "Fallback / startup output (%)",
+          "defrost_speed": "Defrost output (%)",
+          "manual_speed": "Fixed output (%)",
+          "heating_delta": "Heating target temperature difference (K)",
+          "dhw_delta": "DHW target temperature difference (K)",
+          "deadband": "Temperature difference deadband (K)",
+          "min_flow": "Minimum water flow per active heat pump (L/min)",
+          "max_step": "Maximum normal control step (percentage points)",
+          "interval": "Control interval (seconds)",
+          "startup_seconds": "Startup settling time (seconds)",
+          "postrun_seconds": "Postrun time (seconds)",
+          "max_age": "Maximum numeric sample age (seconds)",
+          "output_min": "Number output corresponding to 0%",
+          "output_max": "Number output corresponding to 100%",
+          "commissioned": "Hydraulic limits, output calibration, frost/defrost signals and exclusive control ownership verified"
+        }
+      }
+    },
+    "error": {
+      "invalid_pump_config": "Invalid mapping or operating limits. Check the details above.",
+      "invalid_polling_settings": "Require fast ≤ normal ≤ slow ≤ configuration intervals.",
+      "duplicate_bridge": "A bridge already exists for this host and port. Add further devices as slaves of that bridge."
+    }
+  },
+  "selector": {
+    "polling_profile": {
+      "options": {
+        "legacy": "Compatibility (legacy)",
+        "auto": "Automatic (NextGen beta)"
       }
     }
   }

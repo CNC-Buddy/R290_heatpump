@@ -5,6 +5,7 @@ from typing import List
 from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.util import slugify
+from .pump_sources import PUMP_STATUS_SOURCES
 
 # Bit label mappings for bitfield registers (from main.xlsx), English labels
 RUNNING_STATUS_1_BITS = {
@@ -704,7 +705,10 @@ for _base_sensor in list(MAIN_SENSORS):
 
         _label_slug = slugify(str(_bit_label))
         _diag_slug = f"{_base_slug}_{_label_slug}_status"
-        enabled_by_default = _diag_slug == "relay_output_status_2_compressor_1_status"
+        enabled_by_default = (
+            _diag_slug == "relay_output_status_2_compressor_1_status"
+            or _diag_slug in PUMP_STATUS_SOURCES.values()
+        )
         BITFIELD_DIAGNOSTIC_SENSORS.append(
             {
                 "name": f"{_base_name} {_bit_label} status",

@@ -24,6 +24,10 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     device_type = entry.data.get("device_type", "heat_pump")
+    if device_type == "auxiliary_pump":
+        from .pump_entities import PumpMode
+        async_add_entities([PumpMode(hass.data[DOMAIN][entry.entry_id]["controller"])])
+        return
     entities = []
 
     if device_type == "heat_pump":
@@ -152,7 +156,7 @@ class R290HeatPumpModbusSelect(SelectEntity):
         if option not in self._options:
             raise ValueError("Invalid option")
         value = self._options[option]
-        await self._hub.async_pb_write_register(self._slave, self._address, int(value))
+        await self._hub.async_pb_write_register(self._slave, self._address, int(value), **({"owner":self._batch._owner} if getattr(self._hub,"scheduler",None) and self._batch else {}))
         self._current_option = option
 
     async def async_update(self):

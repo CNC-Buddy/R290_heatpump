@@ -5,22 +5,105 @@
         "data": {
           "cop_split_enabled": "Split mit externem WW Status",
           "cop_split_sensor": "Warmwasser Status Sensor",
-          "connection_type": "Verbindungsart"
+          "connection_type": "Verbindungsart",
+          "polling_profile": "Abfrageprofil",
+          "poll_fast": "Schnelles Zielintervall (s)",
+          "poll_normal": "Normales Zielintervall (s)",
+          "poll_slow": "Langsames Zielintervall (s)",
+          "poll_config": "Konfigurationsintervall (s)",
+          "poll_budget": "Transport-Zeitbudget (0,1–0,9)",
+          "show_nextgen_sidebar": "R290 NextGen in Seitenleiste anzeigen",
+          "show_lovelace_sidebar": "R290-Lovelace-Dashboard in Seitenleiste anzeigen",
+          "recreate_dashboard": "Lovelace-Dashboard neu erstellen"
         },
         "data_description": {
-          "connection_type": "RTU over TCP: direkt zum RTU-Netzwerk-Gateway. Modbus TCP: zu einem Modbus-TCP-Server. ModbusProxy: zum Modbus-Proxy-Add-on mit RTU-Gateway als Ziel."
+          "connection_type": "RTU over TCP: direkt zum RTU-Netzwerk-Gateway. Modbus TCP: zu einem Modbus-TCP-Server. ModbusProxy: zum Modbus-Proxy-Add-on mit RTU-Gateway als Ziel.",
+          "polling_profile": "Legacy erhält die gespeicherten Abfrageintervalle. Auto aktiviert den gemeinsamen adaptiven Scheduler mit Schreibverifikation. Bestehende Entitäten bleiben erhalten.",
+          "poll_budget": "Anteil der gemessenen Transportzeit einschließlich Gateway-Antworten; keine elektrische RS485-Auslastung.",
+          "show_nextgen_sidebar": "Gilt für die gesamte Integration. Das Panel bleibt über seine URL erreichbar.",
+          "show_lovelace_sidebar": "Gilt für die gesamte Integration. Layout und URL des Dashboards bleiben erhalten.",
+          "recreate_dashboard": "Ersetzt das gespeicherte Dashboard-Layout durch die Vorlage."
+        }
+      },
+      "auxiliary_pump": {
+        "title": "Zusatzpumpenregelung",
+        "description": "Passende R290-Messquellen sowie Pumpen- und Abtausignale aller Geräte werden vorgeschlagen und können geändert werden. Gespeicherte Zuordnungen bleiben erhalten. Nicht eindeutige oder unvollständige Zuordnungen bleiben offen. Alle vier Messwertlisten müssen dieselben Wärmepumpen in derselben Reihenfolge enthalten. Statusquellen müssen on/off, true/false oder 1/0 liefern. Die Regelung beginnt immer im Beobachtungsmodus.",
+        "data": {
+          "name": "Bezeichnung",
+          "speed_entity": "Stellglied (Number, dimmbares Light oder Fan)",
+          "enable_entity": "Freigabeschalter der Zusatzpumpe (bei Number erforderlich)",
+          "demand_entity": "Umwälzanforderungen der Wärmepumpen (ODER)",
+          "dhw_entity": "Warmwasserbetrieb (on/off)",
+          "defrost_entities": "Abtausignale aller Wärmepumpen (on/off)",
+          "frequency_entities": "Verdichterfrequenzen in Hz (WP1, WP2, …)",
+          "flow_entities": "Volumenströme (gleiche Reihenfolge)",
+          "supply_entities": "Vorlauftemperaturen (gleiche Reihenfolge)",
+          "return_entities": "Rücklauftemperaturen (gleiche Reihenfolge)",
+          "legacy_automations": "Bisherige Pumpenautomationen (werden auf Konflikte geprüft)",
+          "pump_power_entity": "Stromaufnahme der Zusatzpumpe",
+          "heat_energy_entity": "Kumulierter Wärmemengenzähler",
+          "electric_energy_entity": "Kumulierter Stromzähler der Wärmepumpen",
+          "tank_entity": "Warmwasserspeichertemperatur",
+          "buffer_entity": "Pufferspeichertemperatur",
+          "outdoor_entity": "Außentemperatur"
+        },
+        "data_description": {
+          "speed_entity": "Stellglied der separaten Zusatzpumpe auswählen. Interne PWM-Parameter der Wärmepumpen sind dafür nicht vorgesehen.",
+          "demand_entity": "Die internen Pumpenstatussensoren aller Geräte werden vorgeschlagen und mit ODER verknüpft: Sobald eine interne Pumpe läuft, besteht Umwälzbedarf, auch bei stehendem Verdichter. Kein zusätzlicher Helfer nötig. Alternativ ist ein gemeinsames Signal möglich, das auch Frostschutzumwälzung abdeckt.",
+          "dhw_entity": "Ein bereits konfiguriertes, aktives COP-Warmwassersignal wird vorgeschlagen. Sonst das passende binäre Betriebssignal wählen.",
+          "defrost_entities": "Die Abtaustatussensoren aller Geräte werden vorgeschlagen. Ein aktives Signal genügt für Abtaubetrieb. Pumpen- und Abtausensoren sind ab diesem Update standardmäßig aktiviert; bewusst von dir deaktivierte Sensoren bleiben deaktiviert. Es werden nur vollständige Listen vorgeschlagen.",
+          "frequency_entities": "Automatisch nach Slave-Nummer sortiert. Bei manuellen Änderungen dieselbe Geräte-Reihenfolge in allen vier Messwertlisten beibehalten.",
+          "heat_energy_entity": "Ein bereits zugeordneter kumulierter Energiezähler aus Dashboard oder COP-Eintrag wird vorgeschlagen.",
+          "electric_energy_entity": "Nur kumulierte Energie (z. B. kWh). Eine momentane Leistung in W oder kW wird nicht als Energiezähler vorgeschlagen.",
+          "enable_entity": "Der schaltbare Ausgang, der die separate Zusatzpumpe tatsächlich ein- und ausschaltet. Bei einem Number-Stellglied erforderlich; bei Light/Fan ohne separate Freigabe leer lassen."
+        }
+      },
+      "pump_limits": {
+        "title": "Betriebsgrenzen & Inbetriebnahme",
+        "description": "Vorgaben vor aktiver Steuerung an die Anlage anpassen. Der Mindestdurchfluss ist ein Betriebswert, nicht lediglich die Störschwelle. Number-Ausgang passend zu 0–10 V, PWM oder Prozent kalibrieren. Die Inbetriebnahmebestätigung schaltet noch keine aktive Regelung ein. {detail}",
+        "data": {
+          "min_speed": "Minimaler Stellwert (%)",
+          "max_speed": "Maximaler Stellwert (%)",
+          "safe_speed": "Ersatzstellwert / Anlauf (%)",
+          "defrost_speed": "Stellwert bei Abtauung (%)",
+          "manual_speed": "Fester Stellwert (%)",
+          "heating_delta": "Zielspreizung Heizen (K)",
+          "dhw_delta": "Zielspreizung Warmwasser (K)",
+          "deadband": "Toleranz um die Zielspreizung (K)",
+          "min_flow": "Mindestdurchfluss je aktiver Wärmepumpe (L/min)",
+          "max_step": "Maximaler normaler Regelschritt (Prozentpunkte)",
+          "interval": "Regelintervall (Sekunden)",
+          "startup_seconds": "Beruhigungszeit bei Anlauf (Sekunden)",
+          "postrun_seconds": "Nachlaufzeit (Sekunden)",
+          "max_age": "Maximales Alter numerischer Messwerte (Sekunden)",
+          "output_min": "Number-Ausgangswert entsprechend 0 %",
+          "output_max": "Number-Ausgangswert entsprechend 100 %",
+          "commissioned": "Hydraulische Grenzen, Ausgangskalibrierung, Frost-/Abtausignale und alleinige Steuerungsverantwortung geprüft"
         }
       }
+    },
+    "error": {
+      "invalid_pump_config": "Zuordnung oder Betriebsgrenzen ungültig. Hinweis oben prüfen.",
+      "invalid_polling_settings": "Intervalle müssen schnell ≤ normal ≤ langsam ≤ Konfiguration erfüllen.",
+      "duplicate_bridge": "Für diesen Host und Port ist bereits eine Bridge vorhanden. Weitere Geräte als Slaves dieser Bridge hinzufügen."
     }
   },
   "config": {
     "step": {
       "modbus_bridge": {
         "data": {
-          "connection_type": "Verbindungsart"
+          "connection_type": "Verbindungsart",
+          "polling_profile": "Abfrageprofil",
+          "poll_fast": "Schnelles Zielintervall (s)",
+          "poll_normal": "Normales Zielintervall (s)",
+          "poll_slow": "Langsames Zielintervall (s)",
+          "poll_config": "Konfigurationsintervall (s)",
+          "poll_budget": "Transport-Zeitbudget (0,1–0,9)"
         },
         "data_description": {
-          "connection_type": "RTU over TCP: direkt zum RTU-Netzwerk-Gateway. Modbus TCP: zu einem Modbus-TCP-Server. ModbusProxy: zum Modbus-Proxy-Add-on mit RTU-Gateway als Ziel."
+          "connection_type": "RTU over TCP: direkt zum RTU-Netzwerk-Gateway. Modbus TCP: zu einem Modbus-TCP-Server. ModbusProxy: zum Modbus-Proxy-Add-on mit RTU-Gateway als Ziel.",
+          "polling_profile": "Legacy erhält die gespeicherten Abfrageintervalle. Auto aktiviert den gemeinsamen adaptiven Scheduler mit Schreibverifikation. Bestehende Entitäten bleiben erhalten.",
+          "poll_budget": "Anteil der gemessenen Transportzeit einschließlich Gateway-Antworten; keine elektrische RS485-Auslastung."
         }
       },
       "heat_pump": {
@@ -38,6 +121,75 @@
         "data_description": {
           "connection_type": "RTU over TCP: direkt zum RTU-Netzwerk-Gateway. Modbus TCP: zu einem Modbus-TCP-Server. ModbusProxy: zum Modbus-Proxy-Add-on mit RTU-Gateway als Ziel."
         }
+      },
+      "auxiliary_pump": {
+        "title": "Zusatzpumpenregelung",
+        "description": "Passende R290-Messquellen sowie Pumpen- und Abtausignale aller Geräte werden vorgeschlagen und können geändert werden. Gespeicherte Zuordnungen bleiben erhalten. Nicht eindeutige oder unvollständige Zuordnungen bleiben offen. Alle vier Messwertlisten müssen dieselben Wärmepumpen in derselben Reihenfolge enthalten. Statusquellen müssen on/off, true/false oder 1/0 liefern. Die Regelung beginnt immer im Beobachtungsmodus.",
+        "data": {
+          "name": "Bezeichnung",
+          "speed_entity": "Stellglied (Number, dimmbares Light oder Fan)",
+          "enable_entity": "Freigabeschalter der Zusatzpumpe (bei Number erforderlich)",
+          "demand_entity": "Umwälzanforderungen der Wärmepumpen (ODER)",
+          "dhw_entity": "Warmwasserbetrieb (on/off)",
+          "defrost_entities": "Abtausignale aller Wärmepumpen (on/off)",
+          "frequency_entities": "Verdichterfrequenzen in Hz (WP1, WP2, …)",
+          "flow_entities": "Volumenströme (gleiche Reihenfolge)",
+          "supply_entities": "Vorlauftemperaturen (gleiche Reihenfolge)",
+          "return_entities": "Rücklauftemperaturen (gleiche Reihenfolge)",
+          "legacy_automations": "Bisherige Pumpenautomationen (werden auf Konflikte geprüft)",
+          "pump_power_entity": "Stromaufnahme der Zusatzpumpe",
+          "heat_energy_entity": "Kumulierter Wärmemengenzähler",
+          "electric_energy_entity": "Kumulierter Stromzähler der Wärmepumpen",
+          "tank_entity": "Warmwasserspeichertemperatur",
+          "buffer_entity": "Pufferspeichertemperatur",
+          "outdoor_entity": "Außentemperatur"
+        },
+        "data_description": {
+          "speed_entity": "Stellglied der separaten Zusatzpumpe auswählen. Interne PWM-Parameter der Wärmepumpen sind dafür nicht vorgesehen.",
+          "demand_entity": "Die internen Pumpenstatussensoren aller Geräte werden vorgeschlagen und mit ODER verknüpft: Sobald eine interne Pumpe läuft, besteht Umwälzbedarf, auch bei stehendem Verdichter. Kein zusätzlicher Helfer nötig. Alternativ ist ein gemeinsames Signal möglich, das auch Frostschutzumwälzung abdeckt.",
+          "dhw_entity": "Ein bereits konfiguriertes, aktives COP-Warmwassersignal wird vorgeschlagen. Sonst das passende binäre Betriebssignal wählen.",
+          "defrost_entities": "Die Abtaustatussensoren aller Geräte werden vorgeschlagen. Ein aktives Signal genügt für Abtaubetrieb. Pumpen- und Abtausensoren sind ab diesem Update standardmäßig aktiviert; bewusst von dir deaktivierte Sensoren bleiben deaktiviert. Es werden nur vollständige Listen vorgeschlagen.",
+          "frequency_entities": "Automatisch nach Slave-Nummer sortiert. Bei manuellen Änderungen dieselbe Geräte-Reihenfolge in allen vier Messwertlisten beibehalten.",
+          "heat_energy_entity": "Ein bereits zugeordneter kumulierter Energiezähler aus Dashboard oder COP-Eintrag wird vorgeschlagen.",
+          "electric_energy_entity": "Nur kumulierte Energie (z. B. kWh). Eine momentane Leistung in W oder kW wird nicht als Energiezähler vorgeschlagen.",
+          "enable_entity": "Der schaltbare Ausgang, der die separate Zusatzpumpe tatsächlich ein- und ausschaltet. Bei einem Number-Stellglied erforderlich; bei Light/Fan ohne separate Freigabe leer lassen."
+        }
+      },
+      "pump_limits": {
+        "title": "Betriebsgrenzen & Inbetriebnahme",
+        "description": "Vorgaben vor aktiver Steuerung an die Anlage anpassen. Der Mindestdurchfluss ist ein Betriebswert, nicht lediglich die Störschwelle. Number-Ausgang passend zu 0–10 V, PWM oder Prozent kalibrieren. Die Inbetriebnahmebestätigung schaltet noch keine aktive Regelung ein. {detail}",
+        "data": {
+          "min_speed": "Minimaler Stellwert (%)",
+          "max_speed": "Maximaler Stellwert (%)",
+          "safe_speed": "Ersatzstellwert / Anlauf (%)",
+          "defrost_speed": "Stellwert bei Abtauung (%)",
+          "manual_speed": "Fester Stellwert (%)",
+          "heating_delta": "Zielspreizung Heizen (K)",
+          "dhw_delta": "Zielspreizung Warmwasser (K)",
+          "deadband": "Toleranz um die Zielspreizung (K)",
+          "min_flow": "Mindestdurchfluss je aktiver Wärmepumpe (L/min)",
+          "max_step": "Maximaler normaler Regelschritt (Prozentpunkte)",
+          "interval": "Regelintervall (Sekunden)",
+          "startup_seconds": "Beruhigungszeit bei Anlauf (Sekunden)",
+          "postrun_seconds": "Nachlaufzeit (Sekunden)",
+          "max_age": "Maximales Alter numerischer Messwerte (Sekunden)",
+          "output_min": "Number-Ausgangswert entsprechend 0 %",
+          "output_max": "Number-Ausgangswert entsprechend 100 %",
+          "commissioned": "Hydraulische Grenzen, Ausgangskalibrierung, Frost-/Abtausignale und alleinige Steuerungsverantwortung geprüft"
+        }
+      }
+    },
+    "error": {
+      "invalid_pump_config": "Zuordnung oder Betriebsgrenzen ungültig. Hinweis oben prüfen.",
+      "invalid_polling_settings": "Intervalle müssen schnell ≤ normal ≤ langsam ≤ Konfiguration erfüllen.",
+      "duplicate_bridge": "Für diesen Host und Port ist bereits eine Bridge vorhanden. Weitere Geräte als Slaves dieser Bridge hinzufügen."
+    }
+  },
+  "selector": {
+    "polling_profile": {
+      "options": {
+        "legacy": "Kompatibilität (Legacy)",
+        "auto": "Automatisch (NextGen Beta)"
       }
     }
   }

@@ -59,6 +59,12 @@ async def async_setup_entry(
 
     device_type = entry.data.get("device_type", "heat_pump")
 
+    if device_type == "auxiliary_pump":
+        from .pump_entities import PumpStatus, PumpSpeed, PumpActualSpeed, PumpTargetDelta
+        controller = hass.data[DOMAIN][entry.entry_id]["controller"]
+        async_add_entities([PumpStatus(controller), PumpSpeed(controller), PumpActualSpeed(controller), PumpTargetDelta(controller)])
+        return
+
     entities = []
 
 
@@ -66,6 +72,9 @@ async def async_setup_entry(
     if device_type == "heat_pump":
 
         slave_id = entry.data[CONF_SLAVE]
+
+        from .pump_sources import async_enable_default_pump_sources
+        async_enable_default_pump_sources(hass, entry, slave_id)
 
         fast_interval = entry.options.get(CONF_SCAN_INTERVAL, entry.data.get(CONF_SCAN_INTERVAL, 60))
 
@@ -278,6 +287,8 @@ async def async_setup_entry(
         }
 
         entities.append(R290HeatPumpModbusStatusSensor(hass, entry, status_info, 1, 0, hub, bridge_device_info, batch))
+        from .polling.entities import PollingSensor, FIELDS
+        entities.extend(PollingSensor(entry,hub,bridge_device_info,key) for key in FIELDS)
 
 
 
@@ -390,6 +401,10 @@ class R290HeatPumpModbusSensor(SensorEntity):
         self._address = sensor_info["address"]
 
         self._scale = sensor_info["scale"]
+
+        self._data_type = str(sensor_info.get("data_type", "uint16")).lower()
+        self._offset = sensor_info.get("offset", 0)
+        self._valid_raw_range = sensor_info.get("valid_raw_range")
 
         self._unit = sensor_info["unit"]
 
@@ -641,7 +656,19 @@ class R290HeatPumpModbusSensor(SensorEntity):
 
                 else:
 
-                    self._state = round(value * self._scale, self._precision)
+                    # The shared cache retains the unsigned Modbus register.
+                    # Decode signed numeric values before scaling; bit sensors
+                    # above deliberately continue to use the raw bit pattern.
+                    raw = int(value)
+                    if self._data_type == "int16" and raw >= 0x8000:
+                        raw -= 0x10000
+                    if self._valid_raw_range is not None and not (
+                        self._valid_raw_range[0] <= raw <= self._valid_raw_range[1]
+                    ):
+                        self._state = None
+                        self._attr_available = False
+                    else:
+                        self._state = round(raw * self._scale + self._offset, self._precision)
 
             # else: keep last state until batch provides a value
 

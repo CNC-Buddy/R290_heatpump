@@ -14,12 +14,13 @@ from homeassistant.helpers.event import (
 from homeassistant.core import HomeAssistant
 
 from .pv_optimization import PV_CURVE_CONFIG
+from .curve_math import DEFAULTS, LIMITS, finite, points_from_options, interpolate
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class R290HeatPumpTemperatureCurveSensor(SensorEntity):
-    """Linear temperature curve based on number helpers and an outdoor sensor."""
+    """Piecewise-linear curve; legacy two-point options remain supported."""
 
     def __init__(
         self,
@@ -35,13 +36,16 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         self._entry = entry
         self._outdoor_sensor = entry.data["outdoor_sensor"]
         self._modbus_address = int(modbus_address) if modbus_address is not None else 0x0301
-        self._slave_id = 1
+        self._slave_id = int(entry.data.get(CONF_SLAVE, 1))
         self._hub = hub
         self._state: int | None = None
         # Exponential moving average inertia and step-size tracking
         self._last_cmd: Optional[float] = None
         self._last_ts: Optional[float] = None
         self._last_written: Optional[float] = None
+        self._write_failed = False
+        self._control_error: str | None = None
+        self._limited = False
         self._removed = False
         self._write_lock = asyncio.Lock()
         self._listeners = []
@@ -55,12 +59,7 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         self._attr_should_poll = True
         self.entity_id = custom_entity_id or "sensor.r290_heatpump_temperature_curve_now"
 
-        self._defaults = {
-            "t_out_min": -15.0,
-            "t_out_max": 20.0,
-            "t_flow_min": 25.0,
-            "t_flow_max": 50.0,
-        }
+        self._defaults = DEFAULTS
 
         curve_cfg = PV_CURVE_CONFIG.get(self._entry.data.get("device_type"), {})
         self._curve_prefix = curve_cfg.get("prefix", "heating")
@@ -109,8 +108,34 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
     def state(self):
         return self._state
 
+    @property
+    def available(self):
+        return self._state is not None
+
+    def _points(self):
+        return points_from_options({**self._entry.data, **self._entry.options})
+
+    def _base_target(self, outdoor):
+        return interpolate(self._points(), outdoor)
+
+    def _limit_target(self, value):
+        """Respect register limits and any tighter limits exposed by its entity."""
+        lo, hi = float(LIMITS["target_min"]), float(LIMITS["target_max"])
+        state = self._hass.states.get(self._set_temp_entity_id)
+        if state is not None:
+            attrs = state.attributes
+            if attrs.get("min") is not None:
+                lo = max(lo, finite(attrs["min"]))
+            if attrs.get("max") is not None:
+                hi = min(hi, finite(attrs["max"]))
+        if lo > hi:
+            raise ValueError("Ungültige Sollwertgrenzen")
+        limited = max(lo, min(hi, finite(value)))
+        self._limited = limited != value
+        return limited
+
     def _num(self, key: str) -> float:
-        val = self._entry.options.get(key)
+        val = self._entry.options.get(key, self._entry.data.get(key))
         if val is None:
             return float(self._defaults.get(key, 0.0))
         try:
@@ -140,7 +165,7 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         val = fmin + ((fmax - fmin) / denom) * (t_out - tmax)
         return float(val)
 
-    def _apply_inertia(self, raw: float) -> float:
+    def _apply_inertia(self, raw: float, *, commit: bool = True) -> float:
         try:
             inertia = float(self._entry.options.get("inertia_hours", 0.0))
         except Exception:
@@ -148,8 +173,9 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         inertia = max(0.0, min(24.0, inertia))
         now = asyncio.get_running_loop().time()
         if inertia <= 0.0:
-            self._last_cmd = float(raw)
-            self._last_ts = now
+            if commit:
+                self._last_cmd = float(raw)
+                self._last_ts = now
             return float(raw)
         prev = self._last_cmd if self._last_cmd is not None else float(raw)
         prev_ts = self._last_ts
@@ -159,8 +185,9 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         tau = inertia * 3600.0
         alpha = 1.0 - math.exp(-dt / tau) if dt > 0 else 0.0
         cmd = float(prev + alpha * (float(raw) - prev))
-        self._last_cmd = cmd
-        self._last_ts = now
+        if commit:
+            self._last_cmd = cmd
+            self._last_ts = now
         return cmd
 
     def _pv_control_entity_ids(self, prefix: str) -> list[str]:
@@ -561,26 +588,25 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
     @property
     def extra_state_attributes(self):
         try:
-            tmin = self._num("t_out_min")
-            tmax = self._num("t_out_max")
-            fmin = self._num("t_flow_min")
-            fmax = self._num("t_flow_max")
+            curve_points = self._points()
             points = list(range(-15, 31, 5))
             table: dict[str, int] = {}
             for idx, t in enumerate(points, start=1):
                 key = f"point{idx:02d}_{t}C"
-                table[key] = int(self._calc(float(t), tmin, tmax, fmin, fmax))
+                table[key] = int(round(interpolate(curve_points, float(t))))
             now_val = None
             try:
                 out_state = self._hass.states.get(self._outdoor_sensor)
                 if out_state and out_state.state not in (None, "unknown", "unavailable"):
                     # Show current (smoothed) target value
-                    raw = self._calc_float(float(out_state.state), tmin, tmax, fmin, fmax)
-                    cmd = self._apply_inertia(raw)
+                    raw = self._base_target(out_state.state)
+                    cmd = self._apply_inertia(raw, commit=False)
                     now_val = int(round(cmd))
             except Exception:
                 pass
-            attrs = {"Kurve": table, "now": now_val}
+            attrs = {"Kurve": table, "now": now_val, "curve_points": curve_points,
+                     "control_error": self._control_error, "target_limited": self._limited,
+                     "last_written_target": self._last_written}
             attrs["pv_enabled"] = bool(self._entry.options.get("pv_enabled", False))
             attrs["pv_offset"] = round(self._pv_current_offset, 2)
             attrs["pv_offset_hold_remaining_seconds"] = int(round(self._pv_hold_remaining))
@@ -590,8 +616,8 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
                 round(self._external_hold_remaining)
             )
             return attrs
-        except Exception:
-            return None
+        except Exception as err:
+            return {"control_error": str(err)}
 
     async def async_added_to_hass(self):
         async def _maybe_write_target(_evt=None):
@@ -606,24 +632,24 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
                 self._ensure_pv_sensor_listeners(_maybe_write_target)
                 out_state = self._hass.states.get(self._outdoor_sensor)
                 if not out_state or out_state.state in (None, "unknown", "unavailable"):
+                    self._state = None
+                    self._control_error = "Außentemperatur nicht verfügbar; kein neuer Sollwert"
                     return
-                t_out = float(out_state.state)
-                tmin = self._num("t_out_min")
-                tmax = self._num("t_out_max")
+                t_out = finite(out_state.state)
                 fmin = self._num("t_flow_min")
                 fmax = self._num("t_flow_max")
-                raw = self._calc_float(t_out, tmin, tmax, fmin, fmax)
+                raw = self._base_target(t_out)
                 cmd = self._apply_inertia(raw)
                 pv_offset = self._compute_pv_offset(cmd, fmin, fmax, commit=True)
                 external_offset = self._compute_external_offset(commit=True)
                 self._external_offset_active = external_offset
-                final_cmd = cmd + pv_offset + external_offset
+                final_cmd = self._limit_target(cmd + pv_offset + external_offset)
                 rounded_final = int(round(final_cmd))
                 rounded_last = (
                     int(round(self._last_written)) if self._last_written is not None else None
                 )
                 write_needed = False
-                if self._last_written is None:
+                if self._last_written is None or self._write_failed:
                     write_needed = True
                 else:
                     last_pv, last_external = self._last_written_offsets
@@ -631,18 +657,22 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
                         round(float(pv_offset), 3) != round(float(last_pv), 3)
                         or round(float(external_offset), 3) != round(float(last_external), 3)
                     )
-                    value_changed = not math.isclose(
-                        float(final_cmd), float(self._last_written), abs_tol=0.05
-                    )
+                    minimum = max(0.0, min(2.0, finite(self._entry.options.get(
+                        "stepsize_c", self._entry.options.get("deadband_c", 0.5)))))
+                    value_changed = abs(final_cmd - self._last_written) + 1e-9 >= minimum
                     rounded_changed = rounded_last != rounded_final
-                    write_needed = offsets_changed or value_changed or rounded_changed
+                    write_needed = rounded_changed and (offsets_changed or value_changed)
                 if not write_needed:
-                    self._state = rounded_final
+                    self._state = rounded_last
+                    self._control_error = None
                     return
                 await self._hub.async_pb_write_register(
-                    self._slave_id, self._modbus_address, int(round(final_cmd)), "holding"
+                    self._slave_id, self._modbus_address, rounded_final & 0xFFFF, "holding",
+                    **({"owner":self._entry.entry_id} if getattr(self._hub,"scheduler",None) else {})
                 )
                 self._last_written = float(final_cmd)
+                self._write_failed = False
+                self._control_error = None
                 self._last_written_offsets = (float(pv_offset), float(external_offset))
                 self._state = rounded_final
                 self._schedule_post_write_timer(60.0, _maybe_write_target)
@@ -655,6 +685,9 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
                         )
                     )
             except Exception as e:
+                self._write_failed = True
+                self._state = None
+                self._control_error = str(e)
                 _LOGGER.debug("Temperature curve immediate write failed: %s", e)
 
         if self._outdoor_sensor:
@@ -742,18 +775,21 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
             if not out or out.state in (None, "unknown", "unavailable"):
                 self._state = None
                 return
-            t_out = float(out.state)
-            tmin = self._num("t_out_min")
-            tmax = self._num("t_out_max")
+            t_out = finite(out.state)
             fmin = self._num("t_flow_min")
             fmax = self._num("t_flow_max")
-            raw = self._calc_float(t_out, tmin, tmax, fmin, fmax)
-            cmd = self._apply_inertia(raw)
-            pv_offset = self._compute_pv_offset(cmd, fmin, fmax, commit=False)
+            raw = self._base_target(t_out)
+            cmd = self._apply_inertia(raw, commit=False)
+            self._compute_pv_offset(cmd, fmin, fmax, commit=False)
             self._compute_external_offset(commit=False)
             self._external_offset_active = self._external_current_offset
-            final_cmd = cmd + pv_offset + self._external_offset_active
-            self._state = int(round(final_cmd))
+            final_cmd = self._limit_target(cmd + self._pv_current_offset + self._external_offset_active)
+            active = bool(self._entry.options.get("heatcurve_active", False))
+            if active and self._write_failed:
+                self._state = None
+            else:
+                self._state = int(round(self._last_written if active and self._last_written is not None else final_cmd))
         except Exception as e:
             _LOGGER.debug("Error in temperature curve update: %s", e)
             self._state = None
+            self._control_error = str(e)

@@ -1,0 +1,921 @@
+{
+  "heat_pump": {
+    "label": [
+      "Wärmepumpe",
+      "Heat pump"
+    ],
+    "width": 180,
+    "height": 120,
+    "ports": {
+      "supply": {
+        "x": 180,
+        "y": 30,
+        "side": "right",
+        "direction": "out",
+        "leg": "supply",
+        "circuit": "$",
+        "label": [
+          "Vorlauf",
+          "Supply"
+        ]
+      },
+      "return": {
+        "x": 180,
+        "y": 90,
+        "side": "right",
+        "direction": "in",
+        "leg": "return",
+        "circuit": "$",
+        "label": [
+          "Rücklauf",
+          "Return"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "return",
+        "supply"
+      ]
+    ],
+    "circuits": [
+      "wp"
+    ],
+    "legs": [
+      "supply"
+    ],
+    "closed_loop": true,
+    "require_all": true
+  },
+  "heat_source": {
+    "label": [
+      "Wärmeerzeuger 2",
+      "Heat source 2"
+    ],
+    "width": 180,
+    "height": 120,
+    "ports": {
+      "supply": {
+        "x": 180,
+        "y": 30,
+        "side": "right",
+        "direction": "out",
+        "leg": "supply",
+        "circuit": "$",
+        "label": [
+          "Vorlauf",
+          "Supply"
+        ]
+      },
+      "return": {
+        "x": 180,
+        "y": 90,
+        "side": "right",
+        "direction": "in",
+        "leg": "return",
+        "circuit": "$",
+        "label": [
+          "Rücklauf",
+          "Return"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "return",
+        "supply"
+      ]
+    ],
+    "circuits": [
+      "we2"
+    ],
+    "legs": [
+      "supply"
+    ],
+    "closed_loop": true,
+    "require_all": true
+  },
+  "pump": {
+    "label": [
+      "Umwälzpumpe",
+      "Circulation pump"
+    ],
+    "width": 100,
+    "height": 80,
+    "ports": {
+      "in": {
+        "x": 0,
+        "y": 40,
+        "side": "left",
+        "direction": "in",
+        "leg": "$",
+        "circuit": "$",
+        "label": [
+          "Ein",
+          "In"
+        ]
+      },
+      "out": {
+        "x": 100,
+        "y": 40,
+        "side": "right",
+        "direction": "out",
+        "leg": "$",
+        "circuit": "$",
+        "label": [
+          "Aus",
+          "Out"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "in",
+        "out"
+      ]
+    ],
+    "circuits": [
+      "wp",
+      "heating",
+      "we2",
+      "warmwater"
+    ],
+    "legs": [
+      "supply",
+      "return"
+    ],
+    "closed_loop": true,
+    "require_all": true
+  },
+  "heat_meter": {
+    "label": [
+      "Wärmemengenzähler",
+      "Heat meter"
+    ],
+    "width": 100,
+    "height": 80,
+    "ports": {
+      "in": {
+        "x": 0,
+        "y": 40,
+        "side": "left",
+        "direction": "in",
+        "leg": "$",
+        "circuit": "$",
+        "label": [
+          "Ein",
+          "In"
+        ]
+      },
+      "out": {
+        "x": 100,
+        "y": 40,
+        "side": "right",
+        "direction": "out",
+        "leg": "$",
+        "circuit": "$",
+        "label": [
+          "Aus",
+          "Out"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "in",
+        "out"
+      ]
+    ],
+    "circuits": [
+      "wp",
+      "heating"
+    ],
+    "legs": [
+      "return"
+    ],
+    "closed_loop": false,
+    "require_all": true
+  },
+  "valve": {
+    "label": [
+      "3/2-Wege-Ventil",
+      "3/2-way valve"
+    ],
+    "width": 100,
+    "height": 100,
+    "ports": {
+      "common": {
+        "x": 0,
+        "y": 50,
+        "side": "left",
+        "direction": "in",
+        "leg": "supply",
+        "circuit": "$",
+        "label": [
+          "AB · Vorlauf",
+          "AB · Supply"
+        ]
+      },
+      "a": {
+        "x": 100,
+        "y": 20,
+        "side": "right",
+        "direction": "out",
+        "leg": "supply",
+        "circuit": "$",
+        "label": [
+          "A · Warmwasser",
+          "A · Hot water"
+        ]
+      },
+      "b": {
+        "x": 100,
+        "y": 80,
+        "side": "right",
+        "direction": "out",
+        "leg": "supply",
+        "circuit": "$",
+        "label": [
+          "B · Heizen",
+          "B · Heating"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "common",
+        "a",
+        "b"
+      ]
+    ],
+    "circuits": [
+      "wp",
+      "heating",
+      "we2"
+    ],
+    "legs": [
+      "supply"
+    ],
+    "closed_loop": false,
+    "require_all": true
+  },
+  "plate": {
+    "label": [
+      "Plattenwärmetauscher",
+      "Plate heat exchanger"
+    ],
+    "width": 100,
+    "height": 140,
+    "ports": {
+      "primary_in": {
+        "x": 0,
+        "y": 30,
+        "side": "left",
+        "direction": "in",
+        "leg": "supply",
+        "circuit": "wp",
+        "label": [
+          "Primär · VL",
+          "Primary · supply"
+        ]
+      },
+      "primary_out": {
+        "x": 0,
+        "y": 110,
+        "side": "left",
+        "direction": "out",
+        "leg": "return",
+        "circuit": "wp",
+        "label": [
+          "Primär · RL",
+          "Primary · return"
+        ]
+      },
+      "secondary_out": {
+        "x": 100,
+        "y": 30,
+        "side": "right",
+        "direction": "out",
+        "leg": "supply",
+        "circuit": "heating",
+        "label": [
+          "Sekundär · VL",
+          "Secondary · supply"
+        ]
+      },
+      "secondary_in": {
+        "x": 100,
+        "y": 110,
+        "side": "right",
+        "direction": "in",
+        "leg": "return",
+        "circuit": "heating",
+        "label": [
+          "Sekundär · RL",
+          "Secondary · return"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "primary_in",
+        "primary_out"
+      ],
+      [
+        "secondary_in",
+        "secondary_out"
+      ]
+    ],
+    "circuits": [
+      "wp"
+    ],
+    "legs": [
+      "supply"
+    ],
+    "closed_loop": false,
+    "require_all": true
+  },
+  "dhw_tank": {
+    "label": [
+      "Warmwasserspeicher",
+      "Hot-water tank"
+    ],
+    "width": 160,
+    "height": 280,
+    "ports": {
+      "wp_in": {
+        "x": 0,
+        "y": 60,
+        "side": "left",
+        "direction": "in",
+        "leg": "supply",
+        "circuit": "wp",
+        "label": [
+          "WP-Wendel · VL",
+          "HP coil · supply"
+        ]
+      },
+      "wp_out": {
+        "x": 0,
+        "y": 110,
+        "side": "left",
+        "direction": "out",
+        "leg": "return",
+        "circuit": "wp",
+        "label": [
+          "WP-Wendel · RL",
+          "HP coil · return"
+        ]
+      },
+      "we2_in": {
+        "x": 0,
+        "y": 180,
+        "side": "left",
+        "direction": "in",
+        "leg": "supply",
+        "circuit": "we2",
+        "label": [
+          "WE2-Wendel · VL",
+          "Source 2 coil · supply"
+        ]
+      },
+      "we2_out": {
+        "x": 0,
+        "y": 230,
+        "side": "left",
+        "direction": "out",
+        "leg": "return",
+        "circuit": "we2",
+        "label": [
+          "WE2-Wendel · RL",
+          "Source 2 coil · return"
+        ]
+      },
+      "hot": {
+        "x": 160,
+        "y": 60,
+        "side": "right",
+        "direction": "out",
+        "leg": "supply",
+        "circuit": "warmwater",
+        "label": [
+          "Warmwasser",
+          "Hot water"
+        ]
+      },
+      "circulation": {
+        "x": 160,
+        "y": 230,
+        "side": "right",
+        "direction": "in",
+        "leg": "return",
+        "circuit": "warmwater",
+        "label": [
+          "Zirkulation zurück",
+          "Circulation return"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "wp_in",
+        "wp_out"
+      ],
+      [
+        "we2_in",
+        "we2_out"
+      ],
+      [
+        "circulation",
+        "hot"
+      ]
+    ],
+    "circuits": [
+      "wp"
+    ],
+    "legs": [
+      "supply"
+    ],
+    "closed_loop": false,
+    "require_all": false
+  },
+  "buffer": {
+    "label": [
+      "Heizungspuffer",
+      "Heating buffer"
+    ],
+    "width": 160,
+    "height": 280,
+    "ports": {
+      "charge_in": {
+        "x": 0,
+        "y": 50,
+        "side": "left",
+        "direction": "in",
+        "leg": "supply",
+        "circuit": "$",
+        "label": [
+          "Ladung · VL",
+          "Charge · supply"
+        ]
+      },
+      "charge_out": {
+        "x": 0,
+        "y": 110,
+        "side": "left",
+        "direction": "out",
+        "leg": "return",
+        "circuit": "$",
+        "label": [
+          "Ladung · RL",
+          "Charge · return"
+        ]
+      },
+      "heating_out": {
+        "x": 160,
+        "y": 50,
+        "side": "right",
+        "direction": "out",
+        "leg": "supply",
+        "circuit": "$",
+        "label": [
+          "Heizkreis · VL",
+          "Heating · supply"
+        ]
+      },
+      "heating_in": {
+        "x": 160,
+        "y": 110,
+        "side": "right",
+        "direction": "in",
+        "leg": "return",
+        "circuit": "$",
+        "label": [
+          "Heizkreis · RL",
+          "Heating · return"
+        ]
+      },
+      "we2_in": {
+        "x": 0,
+        "y": 190,
+        "side": "left",
+        "direction": "in",
+        "leg": "supply",
+        "circuit": "we2",
+        "label": [
+          "WE2-Wendel · VL",
+          "Source 2 coil · supply"
+        ]
+      },
+      "we2_out": {
+        "x": 0,
+        "y": 240,
+        "side": "left",
+        "direction": "out",
+        "leg": "return",
+        "circuit": "we2",
+        "label": [
+          "WE2-Wendel · RL",
+          "Source 2 coil · return"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "charge_in",
+        "charge_out"
+      ],
+      [
+        "heating_in",
+        "heating_out"
+      ],
+      [
+        "we2_in",
+        "we2_out"
+      ]
+    ],
+    "circuits": [
+      "wp",
+      "heating"
+    ],
+    "legs": [
+      "supply"
+    ],
+    "closed_loop": false,
+    "require_all": false
+  },
+  "radiator": {
+    "label": [
+      "Heizkreis",
+      "Heating circuit"
+    ],
+    "width": 160,
+    "height": 120,
+    "ports": {
+      "in": {
+        "x": 0,
+        "y": 30,
+        "side": "left",
+        "direction": "in",
+        "leg": "supply",
+        "circuit": "$",
+        "label": [
+          "Vorlauf",
+          "Supply"
+        ]
+      },
+      "out": {
+        "x": 0,
+        "y": 90,
+        "side": "left",
+        "direction": "out",
+        "leg": "return",
+        "circuit": "$",
+        "label": [
+          "Rücklauf",
+          "Return"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "in",
+        "out"
+      ]
+    ],
+    "circuits": [
+      "wp",
+      "heating"
+    ],
+    "legs": [
+      "supply"
+    ],
+    "closed_loop": false,
+    "require_all": true
+  },
+  "junction": {
+    "label": [
+      "T-Stück",
+      "T junction"
+    ],
+    "width": 40,
+    "height": 40,
+    "ports": {
+      "a": {
+        "x": 0,
+        "y": 20,
+        "side": "left",
+        "direction": "any",
+        "leg": "$",
+        "circuit": "$",
+        "label": [
+          "A",
+          "A"
+        ]
+      },
+      "b": {
+        "x": 40,
+        "y": 20,
+        "side": "right",
+        "direction": "any",
+        "leg": "$",
+        "circuit": "$",
+        "label": [
+          "B",
+          "B"
+        ]
+      },
+      "c": {
+        "x": 20,
+        "y": 40,
+        "side": "bottom",
+        "direction": "any",
+        "leg": "$",
+        "circuit": "$",
+        "label": [
+          "C",
+          "C"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "a",
+        "b",
+        "c"
+      ]
+    ],
+    "circuits": [
+      "wp",
+      "heating",
+      "we2",
+      "warmwater",
+      "electric"
+    ],
+    "legs": [
+      "supply",
+      "return",
+      "power"
+    ],
+    "closed_loop": false,
+    "require_all": true
+  },
+  "circulation_end": {
+    "label": [
+      "Zirkulationsumkehr",
+      "Circulation turnaround"
+    ],
+    "width": 60,
+    "height": 120,
+    "ports": {
+      "hot": {
+        "x": 0,
+        "y": 20,
+        "side": "left",
+        "direction": "in",
+        "leg": "supply",
+        "circuit": "warmwater",
+        "label": [
+          "Warmwasser",
+          "Hot water"
+        ]
+      },
+      "return": {
+        "x": 0,
+        "y": 100,
+        "side": "left",
+        "direction": "out",
+        "leg": "return",
+        "circuit": "warmwater",
+        "label": [
+          "Zirkulation",
+          "Circulation"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "hot",
+        "return"
+      ]
+    ],
+    "circuits": [
+      "warmwater"
+    ],
+    "legs": [
+      "supply"
+    ],
+    "closed_loop": false,
+    "require_all": true
+  },
+  "tap": {
+    "label": [
+      "Warmwasser-Zapfstelle",
+      "Hot-water outlet"
+    ],
+    "width": 120,
+    "height": 80,
+    "ports": {
+      "in": {
+        "x": 60,
+        "y": 80,
+        "side": "bottom",
+        "direction": "in",
+        "leg": "supply",
+        "circuit": "warmwater",
+        "label": [
+          "Abzweig Warmwasser",
+          "Hot-water branch"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "in"
+      ]
+    ],
+    "circuits": [
+      "warmwater"
+    ],
+    "legs": [
+      "supply"
+    ],
+    "closed_loop": false,
+    "require_all": true
+  },
+  "pv": {
+    "label": [
+      "Photovoltaik",
+      "Photovoltaics"
+    ],
+    "width": 140,
+    "height": 100,
+    "ports": {
+      "power": {
+        "x": 70,
+        "y": 100,
+        "side": "bottom",
+        "direction": "any",
+        "leg": "power",
+        "circuit": "electric",
+        "label": [
+          "Elektrisch",
+          "Electric"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "power"
+      ]
+    ],
+    "circuits": [
+      "electric"
+    ],
+    "legs": [
+      "power"
+    ],
+    "closed_loop": false,
+    "require_all": false
+  },
+  "battery": {
+    "label": [
+      "Batteriespeicher",
+      "Battery"
+    ],
+    "width": 140,
+    "height": 100,
+    "ports": {
+      "power": {
+        "x": 70,
+        "y": 100,
+        "side": "bottom",
+        "direction": "any",
+        "leg": "power",
+        "circuit": "electric",
+        "label": [
+          "Elektrisch",
+          "Electric"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "power"
+      ]
+    ],
+    "circuits": [
+      "electric"
+    ],
+    "legs": [
+      "power"
+    ],
+    "closed_loop": false,
+    "require_all": false
+  },
+  "grid": {
+    "label": [
+      "Stromnetz",
+      "Grid"
+    ],
+    "width": 140,
+    "height": 100,
+    "ports": {
+      "power": {
+        "x": 70,
+        "y": 100,
+        "side": "bottom",
+        "direction": "any",
+        "leg": "power",
+        "circuit": "electric",
+        "label": [
+          "Elektrisch",
+          "Electric"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "power"
+      ]
+    ],
+    "circuits": [
+      "electric"
+    ],
+    "legs": [
+      "power"
+    ],
+    "closed_loop": false,
+    "require_all": false
+  },
+  "house": {
+    "label": [
+      "Hausverbrauch",
+      "Home consumption"
+    ],
+    "width": 140,
+    "height": 100,
+    "ports": {
+      "power": {
+        "x": 70,
+        "y": 100,
+        "side": "bottom",
+        "direction": "any",
+        "leg": "power",
+        "circuit": "electric",
+        "label": [
+          "Elektrisch",
+          "Electric"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "power"
+      ]
+    ],
+    "circuits": [
+      "electric"
+    ],
+    "legs": [
+      "power"
+    ],
+    "closed_loop": false,
+    "require_all": false
+  },
+  "heater": {
+    "label": [
+      "Heizstab",
+      "Immersion heater"
+    ],
+    "width": 140,
+    "height": 100,
+    "ports": {
+      "power": {
+        "x": 70,
+        "y": 100,
+        "side": "bottom",
+        "direction": "any",
+        "leg": "power",
+        "circuit": "electric",
+        "label": [
+          "Elektrisch",
+          "Electric"
+        ]
+      }
+    },
+    "groups": [
+      [
+        "power"
+      ]
+    ],
+    "circuits": [
+      "electric"
+    ],
+    "legs": [
+      "power"
+    ],
+    "closed_loop": false,
+    "require_all": false
+  }
+}

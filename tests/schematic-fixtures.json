@@ -1,0 +1,2569 @@
+{
+  "direct": {
+    "version": 1,
+    "nodes": [
+      {
+        "id": "wp1",
+        "type": "heat_pump",
+        "label": "WP 1",
+        "x": 80,
+        "y": 160,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "heating",
+        "type": "radiator",
+        "label": "",
+        "x": 720,
+        "y": 160,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "wmz",
+        "type": "heat_meter",
+        "label": "",
+        "x": 420,
+        "y": 340,
+        "circuit": "wp",
+        "leg": "return",
+        "bindings": {
+          "value": ""
+        },
+        "flip": true
+      }
+    ],
+    "edges": [
+      {
+        "id": "pipe_1",
+        "from": {
+          "node": "wp1",
+          "port": "supply"
+        },
+        "to": {
+          "node": "heating",
+          "port": "in"
+        },
+        "points": [
+          [
+            300,
+            190
+          ],
+          [
+            680,
+            190
+          ]
+        ]
+      },
+      {
+        "id": "pipe_2",
+        "from": {
+          "node": "heating",
+          "port": "out"
+        },
+        "to": {
+          "node": "wmz",
+          "port": "in"
+        },
+        "points": [
+          [
+            680,
+            250
+          ],
+          [
+            680,
+            380
+          ]
+        ]
+      },
+      {
+        "id": "pipe_3",
+        "from": {
+          "node": "wmz",
+          "port": "out"
+        },
+        "to": {
+          "node": "wp1",
+          "port": "return"
+        },
+        "points": [
+          [
+            300,
+            380
+          ],
+          [
+            300,
+            250
+          ]
+        ]
+      }
+    ]
+  },
+  "cascade": {
+    "version": 1,
+    "nodes": [
+      {
+        "id": "wp1",
+        "type": "heat_pump",
+        "label": "WP 1",
+        "x": 40,
+        "y": 240,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "wp2",
+        "type": "heat_pump",
+        "label": "WP 2",
+        "x": 40,
+        "y": 520,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "wp_supply",
+        "type": "junction",
+        "label": "",
+        "x": 300,
+        "y": 390,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "wp_return",
+        "type": "junction",
+        "label": "",
+        "x": 300,
+        "y": 600,
+        "circuit": "wp",
+        "leg": "return",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "aux",
+        "type": "pump",
+        "label": "Zusatzpumpe",
+        "x": 420,
+        "y": 370,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {
+          "value": "",
+          "status": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "wp_valve",
+        "type": "valve",
+        "label": "Umschaltventil WP",
+        "x": 620,
+        "y": 360,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {
+          "phase": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "ww",
+        "type": "dhw_tank",
+        "label": "Warmwasser",
+        "x": 1280,
+        "y": 280,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {
+          "value": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "plate",
+        "type": "plate",
+        "label": "",
+        "x": 900,
+        "y": 690,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "wmz",
+        "type": "heat_meter",
+        "label": "",
+        "x": 500,
+        "y": 600,
+        "circuit": "wp",
+        "leg": "return",
+        "bindings": {
+          "value": ""
+        },
+        "flip": true
+      },
+      {
+        "id": "wp_merge",
+        "type": "junction",
+        "label": "",
+        "x": 740,
+        "y": 620,
+        "circuit": "wp",
+        "leg": "return",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "charge",
+        "type": "pump",
+        "label": "Pufferladepumpe",
+        "x": 1100,
+        "y": 680,
+        "circuit": "heating",
+        "leg": "supply",
+        "bindings": {
+          "status": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "buffer",
+        "type": "buffer",
+        "label": "",
+        "x": 1280,
+        "y": 670,
+        "circuit": "heating",
+        "leg": "supply",
+        "bindings": {
+          "value": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "heating_pump",
+        "type": "pump",
+        "label": "Heizkreispumpe",
+        "x": 1560,
+        "y": 680,
+        "circuit": "heating",
+        "leg": "supply",
+        "bindings": {
+          "status": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "heating",
+        "type": "radiator",
+        "label": "",
+        "x": 1800,
+        "y": 690,
+        "circuit": "heating",
+        "leg": "supply",
+        "bindings": {
+          "supply": "",
+          "return": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "ww_branch1",
+        "type": "junction",
+        "label": "",
+        "x": 1600,
+        "y": 320,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false,
+        "flip_y": true
+      },
+      {
+        "id": "ww_branch2",
+        "type": "junction",
+        "label": "",
+        "x": 1800,
+        "y": 320,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false,
+        "flip_y": true
+      },
+      {
+        "id": "tap1",
+        "type": "tap",
+        "label": "Zapfstelle 1",
+        "x": 1560,
+        "y": 140,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "tap2",
+        "type": "tap",
+        "label": "Zapfstelle 2",
+        "x": 1760,
+        "y": 140,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "turn",
+        "type": "circulation_end",
+        "label": "",
+        "x": 1940,
+        "y": 320,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "circulation",
+        "type": "pump",
+        "label": "Zirkulationspumpe",
+        "x": 1600,
+        "y": 470,
+        "circuit": "warmwater",
+        "leg": "return",
+        "bindings": {},
+        "flip": true
+      }
+    ],
+    "edges": [
+      {
+        "id": "pipe_1",
+        "from": {
+          "node": "wp1",
+          "port": "supply"
+        },
+        "to": {
+          "node": "wp_supply",
+          "port": "a"
+        },
+        "points": [
+          [
+            260,
+            270
+          ],
+          [
+            260,
+            410
+          ]
+        ]
+      },
+      {
+        "id": "pipe_2",
+        "from": {
+          "node": "wp2",
+          "port": "supply"
+        },
+        "to": {
+          "node": "wp_supply",
+          "port": "c"
+        },
+        "points": [
+          [
+            260,
+            550
+          ],
+          [
+            320,
+            550
+          ]
+        ]
+      },
+      {
+        "id": "pipe_3",
+        "from": {
+          "node": "wp_supply",
+          "port": "b"
+        },
+        "to": {
+          "node": "aux",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_4",
+        "from": {
+          "node": "aux",
+          "port": "out"
+        },
+        "to": {
+          "node": "wp_valve",
+          "port": "common"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_5",
+        "from": {
+          "node": "wp_valve",
+          "port": "a"
+        },
+        "to": {
+          "node": "ww",
+          "port": "wp_in"
+        },
+        "points": [
+          [
+            800,
+            380
+          ],
+          [
+            800,
+            340
+          ],
+          [
+            1220,
+            340
+          ]
+        ]
+      },
+      {
+        "id": "pipe_6",
+        "from": {
+          "node": "wp_valve",
+          "port": "b"
+        },
+        "to": {
+          "node": "plate",
+          "port": "primary_in"
+        },
+        "points": [
+          [
+            820,
+            440
+          ],
+          [
+            820,
+            720
+          ]
+        ]
+      },
+      {
+        "id": "pipe_7",
+        "from": {
+          "node": "ww",
+          "port": "wp_out"
+        },
+        "to": {
+          "node": "wp_merge",
+          "port": "b"
+        },
+        "points": [
+          [
+            1160,
+            390
+          ],
+          [
+            1160,
+            600
+          ],
+          [
+            840,
+            600
+          ],
+          [
+            840,
+            640
+          ]
+        ]
+      },
+      {
+        "id": "pipe_8",
+        "from": {
+          "node": "plate",
+          "port": "primary_out"
+        },
+        "to": {
+          "node": "wp_merge",
+          "port": "c"
+        },
+        "points": [
+          [
+            760,
+            800
+          ]
+        ]
+      },
+      {
+        "id": "pipe_9",
+        "from": {
+          "node": "wp_merge",
+          "port": "a"
+        },
+        "to": {
+          "node": "wmz",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_10",
+        "from": {
+          "node": "wmz",
+          "port": "out"
+        },
+        "to": {
+          "node": "wp_return",
+          "port": "b"
+        },
+        "points": [
+          [
+            400,
+            640
+          ],
+          [
+            400,
+            620
+          ]
+        ]
+      },
+      {
+        "id": "pipe_11",
+        "from": {
+          "node": "wp_return",
+          "port": "a"
+        },
+        "to": {
+          "node": "wp1",
+          "port": "return"
+        },
+        "points": [
+          [
+            280,
+            620
+          ],
+          [
+            280,
+            330
+          ]
+        ]
+      },
+      {
+        "id": "pipe_12",
+        "from": {
+          "node": "wp_return",
+          "port": "c"
+        },
+        "to": {
+          "node": "wp2",
+          "port": "return"
+        },
+        "points": [
+          [
+            320,
+            680
+          ],
+          [
+            240,
+            680
+          ],
+          [
+            240,
+            610
+          ]
+        ]
+      },
+      {
+        "id": "pipe_13",
+        "from": {
+          "node": "plate",
+          "port": "secondary_out"
+        },
+        "to": {
+          "node": "charge",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_14",
+        "from": {
+          "node": "charge",
+          "port": "out"
+        },
+        "to": {
+          "node": "buffer",
+          "port": "charge_in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_15",
+        "from": {
+          "node": "buffer",
+          "port": "charge_out"
+        },
+        "to": {
+          "node": "plate",
+          "port": "secondary_in"
+        },
+        "points": [
+          [
+            1240,
+            780
+          ],
+          [
+            1240,
+            800
+          ]
+        ]
+      },
+      {
+        "id": "pipe_16",
+        "from": {
+          "node": "buffer",
+          "port": "heating_out"
+        },
+        "to": {
+          "node": "heating_pump",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_17",
+        "from": {
+          "node": "heating_pump",
+          "port": "out"
+        },
+        "to": {
+          "node": "heating",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_18",
+        "from": {
+          "node": "heating",
+          "port": "out"
+        },
+        "to": {
+          "node": "buffer",
+          "port": "heating_in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_19",
+        "from": {
+          "node": "ww",
+          "port": "hot"
+        },
+        "to": {
+          "node": "ww_branch1",
+          "port": "a"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_20",
+        "from": {
+          "node": "ww_branch1",
+          "port": "b"
+        },
+        "to": {
+          "node": "ww_branch2",
+          "port": "a"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_21",
+        "from": {
+          "node": "ww_branch1",
+          "port": "c"
+        },
+        "to": {
+          "node": "tap1",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_22",
+        "from": {
+          "node": "ww_branch2",
+          "port": "c"
+        },
+        "to": {
+          "node": "tap2",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_23",
+        "from": {
+          "node": "ww_branch2",
+          "port": "b"
+        },
+        "to": {
+          "node": "turn",
+          "port": "hot"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_24",
+        "from": {
+          "node": "turn",
+          "port": "return"
+        },
+        "to": {
+          "node": "circulation",
+          "port": "in"
+        },
+        "points": [
+          [
+            1880,
+            420
+          ],
+          [
+            1880,
+            510
+          ]
+        ]
+      },
+      {
+        "id": "pipe_25",
+        "from": {
+          "node": "circulation",
+          "port": "out"
+        },
+        "to": {
+          "node": "ww",
+          "port": "circulation"
+        },
+        "points": []
+      }
+    ]
+  },
+  "full": {
+    "version": 1,
+    "nodes": [
+      {
+        "id": "wp1",
+        "type": "heat_pump",
+        "label": "WP 1",
+        "x": 40,
+        "y": 240,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {
+          "status": "binary_sensor.wp1"
+        },
+        "flip": false
+      },
+      {
+        "id": "wp2",
+        "type": "heat_pump",
+        "label": "WP 2",
+        "x": 40,
+        "y": 520,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {
+          "status": "binary_sensor.wp2"
+        },
+        "flip": false
+      },
+      {
+        "id": "wp_supply",
+        "type": "junction",
+        "label": "",
+        "x": 300,
+        "y": 390,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "wp_return",
+        "type": "junction",
+        "label": "",
+        "x": 300,
+        "y": 600,
+        "circuit": "wp",
+        "leg": "return",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "aux",
+        "type": "pump",
+        "label": "Zusatzpumpe",
+        "x": 420,
+        "y": 370,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {
+          "value": "",
+          "status": "binary_sensor.aux"
+        },
+        "flip": false
+      },
+      {
+        "id": "wp_valve",
+        "type": "valve",
+        "label": "Umschaltventil WP",
+        "x": 620,
+        "y": 360,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {
+          "phase": "binary_sensor.wp_valve"
+        },
+        "flip": false
+      },
+      {
+        "id": "ww",
+        "type": "dhw_tank",
+        "label": "Warmwasser",
+        "x": 1280,
+        "y": 280,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {
+          "value": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "plate",
+        "type": "plate",
+        "label": "",
+        "x": 900,
+        "y": 690,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "wmz",
+        "type": "heat_meter",
+        "label": "",
+        "x": 500,
+        "y": 600,
+        "circuit": "wp",
+        "leg": "return",
+        "bindings": {
+          "value": ""
+        },
+        "flip": true
+      },
+      {
+        "id": "wp_merge",
+        "type": "junction",
+        "label": "",
+        "x": 740,
+        "y": 620,
+        "circuit": "wp",
+        "leg": "return",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "charge",
+        "type": "pump",
+        "label": "Pufferladepumpe",
+        "x": 1100,
+        "y": 680,
+        "circuit": "heating",
+        "leg": "supply",
+        "bindings": {
+          "status": "binary_sensor.charge"
+        },
+        "flip": false
+      },
+      {
+        "id": "buffer",
+        "type": "buffer",
+        "label": "",
+        "x": 1280,
+        "y": 670,
+        "circuit": "heating",
+        "leg": "supply",
+        "bindings": {
+          "value": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "heating_pump",
+        "type": "pump",
+        "label": "Heizkreispumpe",
+        "x": 1560,
+        "y": 680,
+        "circuit": "heating",
+        "leg": "supply",
+        "bindings": {
+          "status": "binary_sensor.heating_pump"
+        },
+        "flip": false
+      },
+      {
+        "id": "heating",
+        "type": "radiator",
+        "label": "",
+        "x": 1800,
+        "y": 690,
+        "circuit": "heating",
+        "leg": "supply",
+        "bindings": {
+          "supply": "",
+          "return": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "ww_branch1",
+        "type": "junction",
+        "label": "",
+        "x": 1600,
+        "y": 320,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false,
+        "flip_y": true
+      },
+      {
+        "id": "ww_branch2",
+        "type": "junction",
+        "label": "",
+        "x": 1800,
+        "y": 320,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false,
+        "flip_y": true
+      },
+      {
+        "id": "tap1",
+        "type": "tap",
+        "label": "Zapfstelle 1",
+        "x": 1560,
+        "y": 140,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "tap2",
+        "type": "tap",
+        "label": "Zapfstelle 2",
+        "x": 1760,
+        "y": 140,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "turn",
+        "type": "circulation_end",
+        "label": "",
+        "x": 1940,
+        "y": 320,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "circulation",
+        "type": "pump",
+        "label": "Zirkulationspumpe",
+        "x": 1600,
+        "y": 470,
+        "circuit": "warmwater",
+        "leg": "return",
+        "bindings": {
+          "status": "binary_sensor.circulation"
+        },
+        "flip": true
+      },
+      {
+        "id": "we2",
+        "type": "heat_source",
+        "label": "",
+        "x": 40,
+        "y": 900,
+        "circuit": "we2",
+        "leg": "supply",
+        "bindings": {
+          "status": "binary_sensor.we2"
+        },
+        "flip": false
+      },
+      {
+        "id": "we2_valve",
+        "type": "valve",
+        "label": "Umschaltventil WE2",
+        "x": 520,
+        "y": 880,
+        "circuit": "we2",
+        "leg": "supply",
+        "bindings": {
+          "phase": "binary_sensor.we2_valve"
+        },
+        "flip": false
+      },
+      {
+        "id": "we2_merge",
+        "type": "junction",
+        "label": "",
+        "x": 760,
+        "y": 1030,
+        "circuit": "we2",
+        "leg": "return",
+        "bindings": {},
+        "flip": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "pipe_1",
+        "from": {
+          "node": "wp1",
+          "port": "supply"
+        },
+        "to": {
+          "node": "wp_supply",
+          "port": "a"
+        },
+        "points": [
+          [
+            260,
+            270
+          ],
+          [
+            260,
+            410
+          ]
+        ]
+      },
+      {
+        "id": "pipe_2",
+        "from": {
+          "node": "wp2",
+          "port": "supply"
+        },
+        "to": {
+          "node": "wp_supply",
+          "port": "c"
+        },
+        "points": [
+          [
+            260,
+            550
+          ],
+          [
+            320,
+            550
+          ]
+        ]
+      },
+      {
+        "id": "pipe_3",
+        "from": {
+          "node": "wp_supply",
+          "port": "b"
+        },
+        "to": {
+          "node": "aux",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_4",
+        "from": {
+          "node": "aux",
+          "port": "out"
+        },
+        "to": {
+          "node": "wp_valve",
+          "port": "common"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_5",
+        "from": {
+          "node": "wp_valve",
+          "port": "a"
+        },
+        "to": {
+          "node": "ww",
+          "port": "wp_in"
+        },
+        "points": [
+          [
+            800,
+            380
+          ],
+          [
+            800,
+            340
+          ],
+          [
+            1220,
+            340
+          ]
+        ]
+      },
+      {
+        "id": "pipe_6",
+        "from": {
+          "node": "wp_valve",
+          "port": "b"
+        },
+        "to": {
+          "node": "plate",
+          "port": "primary_in"
+        },
+        "points": [
+          [
+            820,
+            440
+          ],
+          [
+            820,
+            720
+          ]
+        ]
+      },
+      {
+        "id": "pipe_7",
+        "from": {
+          "node": "ww",
+          "port": "wp_out"
+        },
+        "to": {
+          "node": "wp_merge",
+          "port": "b"
+        },
+        "points": [
+          [
+            1160,
+            390
+          ],
+          [
+            1160,
+            600
+          ],
+          [
+            840,
+            600
+          ],
+          [
+            840,
+            640
+          ]
+        ]
+      },
+      {
+        "id": "pipe_8",
+        "from": {
+          "node": "plate",
+          "port": "primary_out"
+        },
+        "to": {
+          "node": "wp_merge",
+          "port": "c"
+        },
+        "points": [
+          [
+            760,
+            800
+          ]
+        ]
+      },
+      {
+        "id": "pipe_9",
+        "from": {
+          "node": "wp_merge",
+          "port": "a"
+        },
+        "to": {
+          "node": "wmz",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_10",
+        "from": {
+          "node": "wmz",
+          "port": "out"
+        },
+        "to": {
+          "node": "wp_return",
+          "port": "b"
+        },
+        "points": [
+          [
+            400,
+            640
+          ],
+          [
+            400,
+            620
+          ]
+        ]
+      },
+      {
+        "id": "pipe_11",
+        "from": {
+          "node": "wp_return",
+          "port": "a"
+        },
+        "to": {
+          "node": "wp1",
+          "port": "return"
+        },
+        "points": [
+          [
+            280,
+            620
+          ],
+          [
+            280,
+            330
+          ]
+        ]
+      },
+      {
+        "id": "pipe_12",
+        "from": {
+          "node": "wp_return",
+          "port": "c"
+        },
+        "to": {
+          "node": "wp2",
+          "port": "return"
+        },
+        "points": [
+          [
+            320,
+            680
+          ],
+          [
+            240,
+            680
+          ],
+          [
+            240,
+            610
+          ]
+        ]
+      },
+      {
+        "id": "pipe_13",
+        "from": {
+          "node": "plate",
+          "port": "secondary_out"
+        },
+        "to": {
+          "node": "charge",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_14",
+        "from": {
+          "node": "charge",
+          "port": "out"
+        },
+        "to": {
+          "node": "buffer",
+          "port": "charge_in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_15",
+        "from": {
+          "node": "buffer",
+          "port": "charge_out"
+        },
+        "to": {
+          "node": "plate",
+          "port": "secondary_in"
+        },
+        "points": [
+          [
+            1240,
+            780
+          ],
+          [
+            1240,
+            800
+          ]
+        ]
+      },
+      {
+        "id": "pipe_16",
+        "from": {
+          "node": "buffer",
+          "port": "heating_out"
+        },
+        "to": {
+          "node": "heating_pump",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_17",
+        "from": {
+          "node": "heating_pump",
+          "port": "out"
+        },
+        "to": {
+          "node": "heating",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_18",
+        "from": {
+          "node": "heating",
+          "port": "out"
+        },
+        "to": {
+          "node": "buffer",
+          "port": "heating_in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_19",
+        "from": {
+          "node": "ww",
+          "port": "hot"
+        },
+        "to": {
+          "node": "ww_branch1",
+          "port": "a"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_20",
+        "from": {
+          "node": "ww_branch1",
+          "port": "b"
+        },
+        "to": {
+          "node": "ww_branch2",
+          "port": "a"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_21",
+        "from": {
+          "node": "ww_branch1",
+          "port": "c"
+        },
+        "to": {
+          "node": "tap1",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_22",
+        "from": {
+          "node": "ww_branch2",
+          "port": "c"
+        },
+        "to": {
+          "node": "tap2",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_23",
+        "from": {
+          "node": "ww_branch2",
+          "port": "b"
+        },
+        "to": {
+          "node": "turn",
+          "port": "hot"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_24",
+        "from": {
+          "node": "turn",
+          "port": "return"
+        },
+        "to": {
+          "node": "circulation",
+          "port": "in"
+        },
+        "points": [
+          [
+            1880,
+            420
+          ],
+          [
+            1880,
+            510
+          ]
+        ]
+      },
+      {
+        "id": "pipe_25",
+        "from": {
+          "node": "circulation",
+          "port": "out"
+        },
+        "to": {
+          "node": "ww",
+          "port": "circulation"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_26",
+        "from": {
+          "node": "we2",
+          "port": "supply"
+        },
+        "to": {
+          "node": "we2_valve",
+          "port": "common"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_27",
+        "from": {
+          "node": "we2_valve",
+          "port": "a"
+        },
+        "to": {
+          "node": "ww",
+          "port": "we2_in"
+        },
+        "points": [
+          [
+            680,
+            900
+          ],
+          [
+            680,
+            560
+          ],
+          [
+            1220,
+            560
+          ],
+          [
+            1220,
+            460
+          ]
+        ]
+      },
+      {
+        "id": "pipe_28",
+        "from": {
+          "node": "we2_valve",
+          "port": "b"
+        },
+        "to": {
+          "node": "buffer",
+          "port": "we2_in"
+        },
+        "points": [
+          [
+            1180,
+            960
+          ],
+          [
+            1180,
+            860
+          ]
+        ]
+      },
+      {
+        "id": "pipe_29",
+        "from": {
+          "node": "ww",
+          "port": "we2_out"
+        },
+        "to": {
+          "node": "we2_merge",
+          "port": "b"
+        },
+        "points": [
+          [
+            1240,
+            510
+          ],
+          [
+            1240,
+            1050
+          ]
+        ]
+      },
+      {
+        "id": "pipe_30",
+        "from": {
+          "node": "buffer",
+          "port": "we2_out"
+        },
+        "to": {
+          "node": "we2_merge",
+          "port": "c"
+        },
+        "points": [
+          [
+            1200,
+            910
+          ],
+          [
+            1200,
+            1090
+          ],
+          [
+            780,
+            1090
+          ]
+        ]
+      },
+      {
+        "id": "pipe_31",
+        "from": {
+          "node": "we2_merge",
+          "port": "a"
+        },
+        "to": {
+          "node": "we2",
+          "port": "return"
+        },
+        "points": [
+          [
+            380,
+            1050
+          ],
+          [
+            380,
+            990
+          ]
+        ]
+      }
+    ]
+  },
+  "full_pv": {
+    "version": 1,
+    "nodes": [
+      {
+        "id": "wp1",
+        "type": "heat_pump",
+        "label": "WP 1",
+        "x": 40,
+        "y": 240,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "wp2",
+        "type": "heat_pump",
+        "label": "WP 2",
+        "x": 40,
+        "y": 520,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "wp_supply",
+        "type": "junction",
+        "label": "",
+        "x": 300,
+        "y": 390,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "wp_return",
+        "type": "junction",
+        "label": "",
+        "x": 300,
+        "y": 600,
+        "circuit": "wp",
+        "leg": "return",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "aux",
+        "type": "pump",
+        "label": "Zusatzpumpe",
+        "x": 420,
+        "y": 370,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {
+          "value": "",
+          "status": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "wp_valve",
+        "type": "valve",
+        "label": "Umschaltventil WP",
+        "x": 620,
+        "y": 360,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {
+          "phase": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "ww",
+        "type": "dhw_tank",
+        "label": "Warmwasser",
+        "x": 1280,
+        "y": 280,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {
+          "value": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "plate",
+        "type": "plate",
+        "label": "",
+        "x": 900,
+        "y": 690,
+        "circuit": "wp",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "wmz",
+        "type": "heat_meter",
+        "label": "",
+        "x": 500,
+        "y": 600,
+        "circuit": "wp",
+        "leg": "return",
+        "bindings": {
+          "value": ""
+        },
+        "flip": true
+      },
+      {
+        "id": "wp_merge",
+        "type": "junction",
+        "label": "",
+        "x": 740,
+        "y": 620,
+        "circuit": "wp",
+        "leg": "return",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "charge",
+        "type": "pump",
+        "label": "Pufferladepumpe",
+        "x": 1100,
+        "y": 680,
+        "circuit": "heating",
+        "leg": "supply",
+        "bindings": {
+          "status": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "buffer",
+        "type": "buffer",
+        "label": "",
+        "x": 1280,
+        "y": 670,
+        "circuit": "heating",
+        "leg": "supply",
+        "bindings": {
+          "value": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "heating_pump",
+        "type": "pump",
+        "label": "Heizkreispumpe",
+        "x": 1560,
+        "y": 680,
+        "circuit": "heating",
+        "leg": "supply",
+        "bindings": {
+          "status": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "heating",
+        "type": "radiator",
+        "label": "",
+        "x": 1800,
+        "y": 690,
+        "circuit": "heating",
+        "leg": "supply",
+        "bindings": {
+          "supply": "",
+          "return": ""
+        },
+        "flip": false
+      },
+      {
+        "id": "ww_branch1",
+        "type": "junction",
+        "label": "",
+        "x": 1600,
+        "y": 320,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false,
+        "flip_y": true
+      },
+      {
+        "id": "ww_branch2",
+        "type": "junction",
+        "label": "",
+        "x": 1800,
+        "y": 320,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false,
+        "flip_y": true
+      },
+      {
+        "id": "tap1",
+        "type": "tap",
+        "label": "Zapfstelle 1",
+        "x": 1560,
+        "y": 140,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "tap2",
+        "type": "tap",
+        "label": "Zapfstelle 2",
+        "x": 1760,
+        "y": 140,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "turn",
+        "type": "circulation_end",
+        "label": "",
+        "x": 1940,
+        "y": 320,
+        "circuit": "warmwater",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "circulation",
+        "type": "pump",
+        "label": "Zirkulationspumpe",
+        "x": 1600,
+        "y": 470,
+        "circuit": "warmwater",
+        "leg": "return",
+        "bindings": {},
+        "flip": true
+      },
+      {
+        "id": "we2",
+        "type": "heat_source",
+        "label": "",
+        "x": 40,
+        "y": 900,
+        "circuit": "we2",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "we2_valve",
+        "type": "valve",
+        "label": "Umschaltventil WE2",
+        "x": 520,
+        "y": 880,
+        "circuit": "we2",
+        "leg": "supply",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "we2_merge",
+        "type": "junction",
+        "label": "",
+        "x": 760,
+        "y": 1030,
+        "circuit": "we2",
+        "leg": "return",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "pv",
+        "type": "pv",
+        "label": "",
+        "x": 80,
+        "y": 60,
+        "circuit": "electric",
+        "leg": "power",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "house",
+        "type": "house",
+        "label": "",
+        "x": 440,
+        "y": 60,
+        "circuit": "electric",
+        "leg": "power",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "battery",
+        "type": "battery",
+        "label": "",
+        "x": 800,
+        "y": 60,
+        "circuit": "electric",
+        "leg": "power",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "grid",
+        "type": "grid",
+        "label": "",
+        "x": 1160,
+        "y": 60,
+        "circuit": "electric",
+        "leg": "power",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "electric1",
+        "type": "junction",
+        "label": "",
+        "x": 360,
+        "y": 160,
+        "circuit": "electric",
+        "leg": "power",
+        "bindings": {},
+        "flip": false
+      },
+      {
+        "id": "electric2",
+        "type": "junction",
+        "label": "",
+        "x": 720,
+        "y": 160,
+        "circuit": "electric",
+        "leg": "power",
+        "bindings": {},
+        "flip": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "pipe_1",
+        "from": {
+          "node": "wp1",
+          "port": "supply"
+        },
+        "to": {
+          "node": "wp_supply",
+          "port": "a"
+        },
+        "points": [
+          [
+            260,
+            270
+          ],
+          [
+            260,
+            410
+          ]
+        ]
+      },
+      {
+        "id": "pipe_2",
+        "from": {
+          "node": "wp2",
+          "port": "supply"
+        },
+        "to": {
+          "node": "wp_supply",
+          "port": "c"
+        },
+        "points": [
+          [
+            260,
+            550
+          ],
+          [
+            320,
+            550
+          ]
+        ]
+      },
+      {
+        "id": "pipe_3",
+        "from": {
+          "node": "wp_supply",
+          "port": "b"
+        },
+        "to": {
+          "node": "aux",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_4",
+        "from": {
+          "node": "aux",
+          "port": "out"
+        },
+        "to": {
+          "node": "wp_valve",
+          "port": "common"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_5",
+        "from": {
+          "node": "wp_valve",
+          "port": "a"
+        },
+        "to": {
+          "node": "ww",
+          "port": "wp_in"
+        },
+        "points": [
+          [
+            800,
+            380
+          ],
+          [
+            800,
+            340
+          ],
+          [
+            1220,
+            340
+          ]
+        ]
+      },
+      {
+        "id": "pipe_6",
+        "from": {
+          "node": "wp_valve",
+          "port": "b"
+        },
+        "to": {
+          "node": "plate",
+          "port": "primary_in"
+        },
+        "points": [
+          [
+            820,
+            440
+          ],
+          [
+            820,
+            720
+          ]
+        ]
+      },
+      {
+        "id": "pipe_7",
+        "from": {
+          "node": "ww",
+          "port": "wp_out"
+        },
+        "to": {
+          "node": "wp_merge",
+          "port": "b"
+        },
+        "points": [
+          [
+            1160,
+            390
+          ],
+          [
+            1160,
+            600
+          ],
+          [
+            840,
+            600
+          ],
+          [
+            840,
+            640
+          ]
+        ]
+      },
+      {
+        "id": "pipe_8",
+        "from": {
+          "node": "plate",
+          "port": "primary_out"
+        },
+        "to": {
+          "node": "wp_merge",
+          "port": "c"
+        },
+        "points": [
+          [
+            760,
+            800
+          ]
+        ]
+      },
+      {
+        "id": "pipe_9",
+        "from": {
+          "node": "wp_merge",
+          "port": "a"
+        },
+        "to": {
+          "node": "wmz",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_10",
+        "from": {
+          "node": "wmz",
+          "port": "out"
+        },
+        "to": {
+          "node": "wp_return",
+          "port": "b"
+        },
+        "points": [
+          [
+            400,
+            640
+          ],
+          [
+            400,
+            620
+          ]
+        ]
+      },
+      {
+        "id": "pipe_11",
+        "from": {
+          "node": "wp_return",
+          "port": "a"
+        },
+        "to": {
+          "node": "wp1",
+          "port": "return"
+        },
+        "points": [
+          [
+            280,
+            620
+          ],
+          [
+            280,
+            330
+          ]
+        ]
+      },
+      {
+        "id": "pipe_12",
+        "from": {
+          "node": "wp_return",
+          "port": "c"
+        },
+        "to": {
+          "node": "wp2",
+          "port": "return"
+        },
+        "points": [
+          [
+            320,
+            680
+          ],
+          [
+            240,
+            680
+          ],
+          [
+            240,
+            610
+          ]
+        ]
+      },
+      {
+        "id": "pipe_13",
+        "from": {
+          "node": "plate",
+          "port": "secondary_out"
+        },
+        "to": {
+          "node": "charge",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_14",
+        "from": {
+          "node": "charge",
+          "port": "out"
+        },
+        "to": {
+          "node": "buffer",
+          "port": "charge_in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_15",
+        "from": {
+          "node": "buffer",
+          "port": "charge_out"
+        },
+        "to": {
+          "node": "plate",
+          "port": "secondary_in"
+        },
+        "points": [
+          [
+            1240,
+            780
+          ],
+          [
+            1240,
+            800
+          ]
+        ]
+      },
+      {
+        "id": "pipe_16",
+        "from": {
+          "node": "buffer",
+          "port": "heating_out"
+        },
+        "to": {
+          "node": "heating_pump",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_17",
+        "from": {
+          "node": "heating_pump",
+          "port": "out"
+        },
+        "to": {
+          "node": "heating",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_18",
+        "from": {
+          "node": "heating",
+          "port": "out"
+        },
+        "to": {
+          "node": "buffer",
+          "port": "heating_in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_19",
+        "from": {
+          "node": "ww",
+          "port": "hot"
+        },
+        "to": {
+          "node": "ww_branch1",
+          "port": "a"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_20",
+        "from": {
+          "node": "ww_branch1",
+          "port": "b"
+        },
+        "to": {
+          "node": "ww_branch2",
+          "port": "a"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_21",
+        "from": {
+          "node": "ww_branch1",
+          "port": "c"
+        },
+        "to": {
+          "node": "tap1",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_22",
+        "from": {
+          "node": "ww_branch2",
+          "port": "c"
+        },
+        "to": {
+          "node": "tap2",
+          "port": "in"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_23",
+        "from": {
+          "node": "ww_branch2",
+          "port": "b"
+        },
+        "to": {
+          "node": "turn",
+          "port": "hot"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_24",
+        "from": {
+          "node": "turn",
+          "port": "return"
+        },
+        "to": {
+          "node": "circulation",
+          "port": "in"
+        },
+        "points": [
+          [
+            1880,
+            420
+          ],
+          [
+            1880,
+            510
+          ]
+        ]
+      },
+      {
+        "id": "pipe_25",
+        "from": {
+          "node": "circulation",
+          "port": "out"
+        },
+        "to": {
+          "node": "ww",
+          "port": "circulation"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_26",
+        "from": {
+          "node": "we2",
+          "port": "supply"
+        },
+        "to": {
+          "node": "we2_valve",
+          "port": "common"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_27",
+        "from": {
+          "node": "we2_valve",
+          "port": "a"
+        },
+        "to": {
+          "node": "ww",
+          "port": "we2_in"
+        },
+        "points": [
+          [
+            680,
+            900
+          ],
+          [
+            680,
+            560
+          ],
+          [
+            1220,
+            560
+          ],
+          [
+            1220,
+            460
+          ]
+        ]
+      },
+      {
+        "id": "pipe_28",
+        "from": {
+          "node": "we2_valve",
+          "port": "b"
+        },
+        "to": {
+          "node": "buffer",
+          "port": "we2_in"
+        },
+        "points": [
+          [
+            1180,
+            960
+          ],
+          [
+            1180,
+            860
+          ]
+        ]
+      },
+      {
+        "id": "pipe_29",
+        "from": {
+          "node": "ww",
+          "port": "we2_out"
+        },
+        "to": {
+          "node": "we2_merge",
+          "port": "b"
+        },
+        "points": [
+          [
+            1240,
+            510
+          ],
+          [
+            1240,
+            1050
+          ]
+        ]
+      },
+      {
+        "id": "pipe_30",
+        "from": {
+          "node": "buffer",
+          "port": "we2_out"
+        },
+        "to": {
+          "node": "we2_merge",
+          "port": "c"
+        },
+        "points": [
+          [
+            1200,
+            910
+          ],
+          [
+            1200,
+            1090
+          ],
+          [
+            780,
+            1090
+          ]
+        ]
+      },
+      {
+        "id": "pipe_31",
+        "from": {
+          "node": "we2_merge",
+          "port": "a"
+        },
+        "to": {
+          "node": "we2",
+          "port": "return"
+        },
+        "points": [
+          [
+            380,
+            1050
+          ],
+          [
+            380,
+            990
+          ]
+        ]
+      },
+      {
+        "id": "pipe_32",
+        "from": {
+          "node": "pv",
+          "port": "power"
+        },
+        "to": {
+          "node": "electric1",
+          "port": "a"
+        },
+        "points": [
+          [
+            150,
+            180
+          ]
+        ]
+      },
+      {
+        "id": "pipe_33",
+        "from": {
+          "node": "electric1",
+          "port": "c"
+        },
+        "to": {
+          "node": "house",
+          "port": "power"
+        },
+        "points": [
+          [
+            380,
+            220
+          ],
+          [
+            510,
+            220
+          ]
+        ]
+      },
+      {
+        "id": "pipe_34",
+        "from": {
+          "node": "electric1",
+          "port": "b"
+        },
+        "to": {
+          "node": "electric2",
+          "port": "a"
+        },
+        "points": []
+      },
+      {
+        "id": "pipe_35",
+        "from": {
+          "node": "electric2",
+          "port": "c"
+        },
+        "to": {
+          "node": "battery",
+          "port": "power"
+        },
+        "points": [
+          [
+            740,
+            220
+          ],
+          [
+            870,
+            220
+          ]
+        ]
+      },
+      {
+        "id": "pipe_36",
+        "from": {
+          "node": "electric2",
+          "port": "b"
+        },
+        "to": {
+          "node": "grid",
+          "port": "power"
+        },
+        "points": [
+          [
+            1230,
+            180
+          ]
+        ]
+      }
+    ]
+  }
+}

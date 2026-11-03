@@ -2,6 +2,7 @@
 # Last modified: 2025-10-24 17:33 by CNC-Buddy
 import asyncio
 import logging
+from homeassistant.exceptions import HomeAssistantError
 from typing import Optional
 
 from homeassistant.components.switch import SwitchEntity
@@ -203,6 +204,7 @@ class R290HeatPumpWaterCirculationSwitch(SwitchEntity):
             await self._ensure_auto_off_task()
         except Exception as err:
             _LOGGER.error("Failed to start water circulation: %s", err)
+            raise HomeAssistantError(f"Failed to start water circulation: {err}") from err
         self.async_write_ha_state()
 
     async def async_turn_off(self, **kwargs) -> None:
@@ -211,10 +213,10 @@ class R290HeatPumpWaterCirculationSwitch(SwitchEntity):
             await self._write_register(self._off_value)
         except Exception as err:
             _LOGGER.error("Failed to stop water circulation: %s", err)
-        finally:
-            self._attr_is_on = False
-            self.async_write_ha_state()
-            self._start_off_enforcer()
+            raise HomeAssistantError(f"Failed to stop water circulation: {err}") from err
+        self._attr_is_on = False
+        self.async_write_ha_state()
+        self._start_off_enforcer()
 
     async def async_update(self) -> None:
         try:
@@ -322,7 +324,7 @@ class R290HeatPumpWaterCirculationSwitch(SwitchEntity):
         return max(0, float(duration) * self._duration_scale)
 
     async def _write_register(self, value: int) -> None:
-        await self._hub.async_pb_write_register(self._slave, self._address, int(value))
+        await self._hub.async_pb_write_register(self._slave, self._address, int(value), **({"owner":self._batch._owner} if getattr(self._hub,"scheduler",None) and self._batch else {}))
         try:
             if self._batch and hasattr(self._batch, "request_refresh"):
                 await self._batch.request_refresh(self._scan_interval)

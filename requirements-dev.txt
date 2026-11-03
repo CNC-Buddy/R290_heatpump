@@ -1,0 +1,4 @@
+# Real loopback transport checks; CI also exercises the minimum 3.10.0.
+pymodbus==3.16.1
+# Formatting of the new polling package and tests.
+black==26.10.1

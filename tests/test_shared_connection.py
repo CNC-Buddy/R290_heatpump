@@ -159,12 +159,12 @@ class Client:
 
 
 module("homeassistant")
-module("homeassistant.core", HomeAssistant=object)
+module("homeassistant.core", HomeAssistant=object, callback=lambda f: f)
 module("homeassistant.config_entries", ConfigEntry=Entry, ConfigFlow=ConfigFlow, OptionsFlow=ConfigFlow)
 module("homeassistant.exceptions", ConfigEntryNotReady=type("ConfigEntryNotReady", (Exception,), {}),
        HomeAssistantError=type("HomeAssistantError", (Exception,), {}))
-module("homeassistant.const", CONF_HOST="host", CONF_PORT="port", CONF_SLAVE="slave", CONF_SCAN_INTERVAL="scan_interval",
-       STATE_ON="on", UnitOfTemperature=types.SimpleNamespace(CELSIUS="°C"),
+module("homeassistant.const", EVENT_COMPONENT_LOADED="component_loaded", CONF_HOST="host", CONF_PORT="port", CONF_SLAVE="slave", CONF_SCAN_INTERVAL="scan_interval",
+       STATE_ON="on", UnitOfTemperature=types.SimpleNamespace(CELSIUS="Â°C"),
        Platform=types.SimpleNamespace(SENSOR="sensor", NUMBER="number", SELECT="select", BUTTON="button", SWITCH="switch"))
 module("homeassistant.helpers")
 module("homeassistant.helpers.update_coordinator", DataUpdateCoordinator=Coordinator)
@@ -174,6 +174,8 @@ module("homeassistant.helpers.event", async_track_state_change_event=track, asyn
 module("homeassistant.helpers.selector", selector=lambda value: value)
 module("homeassistant.helpers.entity_platform", AddEntitiesCallback=object)
 module("homeassistant.components")
+module("homeassistant.components.frontend", DATA_PANELS="frontend_panels",
+       async_register_built_in_panel=lambda *args, **kwargs: None)
 module("homeassistant.components.sensor", SensorEntity=Entity, SensorDeviceClass=types.SimpleNamespace(TEMPERATURE="temperature"))
 module("homeassistant.components.button", ButtonEntity=Entity)
 module("pymodbus")
@@ -207,8 +209,10 @@ class ConfigEntries:
     def async_entries(self, domain):
         return self.entries
 
-    def async_update_entry(self, entry, *, data=None, options=None):
+    def async_update_entry(self, entry, *, data=None, options=None, title=None):
         changed = False
+        if title is not None:
+            entry.title = title
         for name, value in (("data", data), ("options", options)):
             if value is not None and getattr(entry, name) != value:
                 setattr(entry, name, dict(value))
@@ -239,6 +243,7 @@ class Hass:
         self.tasks = set()
         self.states = {}
         self.subscriptions = []
+        self.bus = types.SimpleNamespace(async_listen=lambda *args: lambda: None)
         self.services = types.SimpleNamespace(async_call=AsyncMock())
 
     def async_create_task(self, coro):

@@ -7,6 +7,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.const import CONF_SLAVE, UnitOfTemperature, UnitOfTime, PERCENTAGE
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.util import slugify
@@ -15,6 +16,7 @@ from .unit_system_parameters import UNIT_SYSTEM_WRITABLE_PARAMETERS
 from .user_parameters import USER_PARAMETERS_WRITABLE_NUMBERS
 from .pv_optimization import PV_CURVE_CONFIG
 from .const import DOMAIN
+from .curve_math import ENDPOINT_KEYS, LIMITS, points_from_options, endpoint_options, replace_endpoints
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,6 +28,10 @@ async def async_setup_entry(
 ) -> None:
     """Set up the R290 Heat Pump number entities."""
     device_type = entry.data.get("device_type", "heat_pump")
+    if device_type == "auxiliary_pump":
+        from .pump_entities import PumpManualSpeed
+        async_add_entities([PumpManualSpeed(hass.data[DOMAIN][entry.entry_id]["controller"])])
+        return
     entities = []
 
     if device_type == "heat_pump":
@@ -116,6 +122,10 @@ async def async_setup_entry(
             "inertia_hours": (0.0, 24.0, 0.1, 0.0),
             "stepsize_c": (0.0, 2.0, 0.1, 0.5),
         }
+        if "curve_points" in {**entry.data, **entry.options}:
+            for key in ENDPOINT_KEYS:
+                kind = "outdoor" if key.startswith("t_out") else "target"
+                defs[key] = (LIMITS[f"{kind}_min"], LIMITS[f"{kind}_max"], 0.1, defs[key][3])
         for key, (vmin, vmax, step, default) in defs.items():
             if key == "stepsize_c":
                 init = entry.options.get("stepsize_c")
@@ -430,7 +440,7 @@ class R290HeatPumpModbusNumber(NumberEntity):
             write_value = int(round(raw / self._scale))
             if str(self._data_type).lower() == "int16" and write_value < 0:
                 write_value &= 0xFFFF
-            await self._hub.async_pb_write_register(self._slave_id, self._address, write_value)
+            await self._hub.async_pb_write_register(self._slave_id, self._address, write_value, **({"owner":self._entry.entry_id} if getattr(self._hub,"scheduler",None) else {}))
             self._attr_native_value = float(raw)
             _LOGGER.debug("Wert %s (raw=%s) in Register %s geschrieben", value, write_value, self._address)
             try:
@@ -440,6 +450,7 @@ class R290HeatPumpModbusNumber(NumberEntity):
                 pass
         except Exception as e:
             _LOGGER.error("Fehler beim Schreiben von Modbus-Daten an %s (addr=%s, raw=%s): %s", self._name, self._address, value, e)
+            raise HomeAssistantError(f"Unable to write {self._name}: {e}") from e
 
     async def async_update(self):
         try:
@@ -530,6 +541,9 @@ class HeatCurveParamNumber(NumberEntity):
             pass
 
     def _resolve_value(self) -> float:
+        effective = {**self._entry.data, **self._entry.options}
+        if self._key in ENDPOINT_KEYS and "curve_points" in effective:
+            return endpoint_options(points_from_options(effective))[self._key]
         try:
             limit_sources = (self._entry.options, self._entry.data)
         except AttributeError:
@@ -548,17 +562,24 @@ class HeatCurveParamNumber(NumberEntity):
 
     async def async_set_native_value(self, value: float) -> None:
         numeric = float(value)
-        self._attr_native_value = numeric
+        changes = {self._key: numeric}
+        effective = {**self._entry.data, **self._entry.options}
+        if self._key in ENDPOINT_KEYS and "curve_points" in effective:
+            try:
+                points = replace_endpoints(effective, changes)
+            except ValueError as err:
+                raise HomeAssistantError(str(err)) from err
+            changes.update(curve_points=points, **endpoint_options(points))
         opts = dict(self._entry.options)
-        opts[self._key] = numeric
+        opts.update(changes)
         for legacy in self._legacy_keys:
             opts.pop(legacy, None)
-        self._hass.config_entries.async_update_entry(self._entry, options=opts)
         data_store = dict(self._entry.data)
-        data_store[self._key] = numeric
+        data_store.update(changes)
         for legacy in self._legacy_keys:
             data_store.pop(legacy, None)
-        self._hass.config_entries.async_update_entry(self._entry, data=data_store)
+        self._hass.config_entries.async_update_entry(self._entry, data=data_store, options=opts)
+        self._attr_native_value = numeric
         self.async_write_ha_state()
 
     async def async_added_to_hass(self) -> None:

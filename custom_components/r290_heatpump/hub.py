@@ -3,6 +3,10 @@
 import asyncio
 import inspect
 import logging
+from .polling.scheduler import Scheduler
+from .polling.models import RegisterAddressError
+from .polling.profiles import settings as polling_settings
+from .polling.metrics import TransportMetrics
 from typing import Optional, Dict, List, Set
 from datetime import datetime, timedelta, timezone
 
@@ -89,6 +93,9 @@ class R290HeatPumpModbusHub:
         self._last_request_success: Optional[bool] = None
         self._last_response_at: Optional[datetime] = None
         self._last_error: Optional[str] = None
+        self.scheduler = None
+        self.polling_config = polling_settings({})
+        self.metrics = TransportMetrics()
 
     @property
     def communication_status(self) -> str:
@@ -102,11 +109,36 @@ class R290HeatPumpModbusHub:
     @property
     def diagnostics(self) -> dict:
         return {
+            "polling": self.polling_diagnostics(),
             "socket_connected": bool(self._client and self._client.connected),
             "last_request_success": self._last_request_success,
             "last_response": self._last_response_at.isoformat() if self._last_response_at else None,
             "last_error": self._last_error,
         }
+
+    def polling_diagnostics(self):
+        result = self.scheduler.diagnostics() if self.scheduler else {"profile":"legacy", "running":not self._closed}
+        return {**result, "transport":self.metrics.snapshot(), "settings":dict(self.polling_config)}
+
+    async def configure_polling(self, settings):
+        config = polling_settings(settings)
+        changed = config != self.polling_config
+        transport_policy_changed = config["polling_profile"] != self.polling_config["polling_profile"]
+        if changed and self.scheduler:
+            await self.scheduler.stop()
+            self.scheduler = None
+        self.polling_config = config
+        if transport_policy_changed:
+            # A client created by legacy mode may still have protocol retries.
+            # Recreate it with the auto profile's single-attempt policy.
+            async with self._lock:
+                await self._async_close_client_locked()
+        if config["polling_profile"] == "auto" and self.scheduler is None:
+            self.scheduler = Scheduler(self._read_transport, self._write_transport, settings)
+        if self.scheduler:
+            self.scheduler.block_size = max(2, min(125, int(settings.get("block_size",49))))
+            self.scheduler.pause = float(settings.get("block_pause",.05))
+        return changed
 
     def _apply_unit(self, base: object, unit: Optional[int]) -> None:
         """Propagate unit/slave id to client/protocol objects."""
@@ -166,9 +198,9 @@ class R290HeatPumpModbusHub:
         for attempt in range(self._connect_retries + 1):
             try:
                 kwargs = {"port": self._port, "timeout": self._request_timeout}
-                if self._mode == "tcp_proxy":
-                    # One transaction per socket. Never retry writes or reconnect
-                    # in the background after a possibly executed transaction.
+                if self._mode == "tcp_proxy" or self.polling_config["polling_profile"] == "auto":
+                    # The scheduler owns retries in auto, for every transport.
+                    # In particular a possibly executed write is never replayed.
                     kwargs.update(retries=0, reconnect_delay=0)
                 if primary_framer is not None:
                     kwargs["framer"] = primary_framer
@@ -196,11 +228,23 @@ class R290HeatPumpModbusHub:
 
     async def async_close(self) -> None:
         """Retire the hub so stale callbacks cannot reconnect it."""
+        if self.scheduler:
+            await self.scheduler.stop()
         async with self._lock:
             self._closed = True
             await self._async_close_client_locked()
 
     async def async_reconnect(self) -> None:
+        scheduler = self.scheduler
+        try:
+            if scheduler:
+                await scheduler.quiesce()
+            await self._async_reconnect_transport()
+        finally:
+            if scheduler:
+                scheduler.resume(invalidate=True)
+
+    async def _async_reconnect_transport(self) -> None:
         """Reconnect the active shared hub without retiring it."""
         async with self._lock:
             # A new socket has not yet confirmed any Modbus operation. Retain
@@ -220,6 +264,20 @@ class R290HeatPumpModbusHub:
                 raise
 
     async def async_reconfigure(self, host, port, mode, *, connect_timeout,
+                                connect_retries, request_timeout, validate=False):
+        changed=(host,int(port),mode,float(connect_timeout),int(connect_retries),float(request_timeout)) != (self._host,self._port,self._mode,self._connect_timeout,self._connect_retries,self._request_timeout)
+        scheduler=self.scheduler if changed else None
+        committed=False
+        try:
+            if scheduler:await scheduler.quiesce()
+            result=await self._async_reconfigure_transport(host,port,mode,connect_timeout=connect_timeout,
+                connect_retries=connect_retries,request_timeout=request_timeout,validate=validate)
+            committed=True
+            return result
+        finally:
+            if scheduler:scheduler.resume(invalidate=committed)
+
+    async def _async_reconfigure_transport(self, host, port, mode, *, connect_timeout,
                                 connect_retries, request_timeout, validate=False) -> None:
         """Change the destination for all users while holding the I/O lock."""
         attrs = ("_host", "_port", "_mode", "_connect_timeout", "_connect_retries", "_request_timeout")
@@ -247,9 +305,25 @@ class R290HeatPumpModbusHub:
             self._last_response_at = None
             self._last_error = None
 
-    async def async_pb_call(self, unit: int, address: int, count: int, kind: str) -> _ResultWrapper:
+    async def async_pb_call(self, unit: int, address: int, count: int, kind: str, *, owner="external", priority=2) -> _ResultWrapper:
+        if self.scheduler:
+            try:
+                if kind == "holding":
+                    values = await self.scheduler.read(unit, address, count, priority=priority, owner=owner)
+                elif kind == "write_register":
+                    values = await self.scheduler.write(unit, address, count, owner=owner)
+                else:
+                    raise ValueError("Unsupported Modbus operation")
+                return _ResultWrapper(registers=values)
+            except Exception as err:
+                return _ResultWrapper(error=err)
+        return await self._async_transport_call(unit, address, count, kind)
+
+    async def _async_transport_call(self, unit: int, address: int, count: int, kind: str) -> _ResultWrapper:
         """Unified Modbus read/write call with extensive fallbacks."""
+        began = self.metrics.clock()
         async with self._lock:
+            acquired = self.metrics.clock()
             try:
                 # Fresh client AND socket: its first TCP transaction ID is 1.
                 # This works around proxies returning ID 1 for every reply
@@ -286,6 +360,8 @@ class R290HeatPumpModbusHub:
                     if result is None:
                         raise last_err or TypeError("No compatible read_holding_registers signature")
                     if hasattr(result, "isError") and result.isError():
+                        if kind == "holding" and getattr(result, "exception_code", None) == 2:
+                            raise RegisterAddressError(str(result))
                         raise ModbusException(str(result))
                     regs = getattr(result, "registers", None)
                     if regs is None or len(regs) != count:
@@ -317,6 +393,8 @@ class R290HeatPumpModbusHub:
                     if result is None:
                         raise last_err or TypeError("No suitable write_register signature")
                     if hasattr(result, "isError") and result.isError():
+                        if kind == "holding" and getattr(result, "exception_code", None) == 2:
+                            raise RegisterAddressError(str(result))
                         raise ModbusException(str(result))
                     if self._mode == "tcp_proxy" and (
                         getattr(result, "address", None) != address
@@ -338,6 +416,7 @@ class R290HeatPumpModbusHub:
                 _LOGGER.debug("Modbus call failed: %s", err)
                 return _ResultWrapper(error=err)
             finally:
+                self.metrics.record(unit, kind, began, acquired, self._last_request_success is True)
                 if self._mode == "tcp_proxy":
                     await self._async_close_client_locked()
 
@@ -346,16 +425,31 @@ class R290HeatPumpModbusHub:
         self._last_response_at = datetime.now(timezone.utc)
         self._last_error = None
 
-    async def async_pb_write_register(self, unit: int, address: int, value: int, kind: str = "holding") -> None:
-        result = await self.async_pb_call(unit, address, value, "write_register")
+    async def _write_transport(self, unit, address, value):
+        result = await self._async_transport_call(unit, address, value, "write_register")
         if result.isError():
+            raise result._error
+
+    async def _read_transport(self, unit, start, count):
+        result = await self._async_transport_call(unit, start, count, "holding")
+        if result.isError():
+            raise result._error
+        return result.registers
+
+    async def async_pb_write_register(self, unit: int, address: int, value: int, kind: str = "holding", *, owner="external") -> None:
+        result = await self.async_pb_call(unit, address, value, "write_register", owner=owner)
+        if result.isError():
+            if isinstance(result._error, RuntimeError):
+                raise result._error
             raise RuntimeError(str(result)) from result._error
 
-    async def async_read_block(self, unit: int, start: int, count: int) -> List[int]:
-        res = await self.async_pb_call(unit, start, count, "holding")
-        if res.isError():
-            raise RuntimeError(str(res))
-        return res.registers
+    async def async_read_block(self, unit: int, start: int, count: int, *, owner="external", priority=2) -> List[int]:
+        result = await self.async_pb_call(unit, start, count, "holding", owner=owner, priority=priority)
+        if result.isError():
+            if isinstance(result._error, RuntimeError):
+                raise result._error
+            raise RuntimeError(str(result)) from result._error
+        return result.registers
 
 
 class ModbusBatchCoordinator(DataUpdateCoordinator[Dict[int, int]]):
@@ -386,6 +480,8 @@ class ModbusBatchCoordinator(DataUpdateCoordinator[Dict[int, int]]):
         self._max_count = max(1, min(125, int(block_size)))
         self._pause = max(0.0, float(block_pause))
         self._stopped = False
+        self.observations = {}
+        self._interval_seconds = interval_seconds
 
     async def async_shutdown(self) -> None:
         self._stopped = True
@@ -414,9 +510,20 @@ class ModbusBatchCoordinator(DataUpdateCoordinator[Dict[int, int]]):
             count = end - start + 1
             try:
                 regs = await self._hub.async_read_block(self._unit, start, count)
+                received_at = datetime.now(timezone.utc).isoformat()
                 for offset, addr in enumerate(range(start, end + 1)):
                     result[addr] = regs[offset]
+                    old = self.observations.get(addr, {})
+                    self.observations[addr] = {
+                        "value": regs[offset], "received_at": received_at,
+                        "changed_at": old.get("changed_at") if old.get("value") == regs[offset] else received_at,
+                        "previous": old.get("previous") if old.get("value") == regs[offset] else old.get("value"),
+                        "error": None, "interval": self._interval_seconds,
+                    }
             except Exception as err:
+                for addr in range(start, end + 1):
+                    self.observations[addr] = {**self.observations.get(addr, {}),
+                        "error": str(err), "attempted_at": datetime.now(timezone.utc).isoformat()}
                 _LOGGER.debug("Batch read failed for %s..%s: %s", start, end, err)
             await asyncio.sleep(self._pause)
             i = j
@@ -484,6 +591,16 @@ class ModbusBatchManager:
         if not coord:
             return None
         return coord.data.get(address)
+
+    def diagnostics(self):
+        """Only received observations; inspecting them never initiates a read."""
+        result = {}
+        for coord in self._coordinators.values():
+            for address, sample in coord.observations.items():
+                old = result.get(str(address), {})
+                if max(sample.get("received_at", ""), sample.get("attempted_at", "")) >= max(old.get("received_at", ""), old.get("attempted_at", "")):
+                    result[str(address)] = dict(sample)
+        return result
 
     def reconnect_probe(self):
         """Use an already configured register from the fastest active group."""

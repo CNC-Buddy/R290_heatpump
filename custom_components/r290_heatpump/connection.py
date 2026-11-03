@@ -7,6 +7,7 @@ from homeassistant.exceptions import ConfigEntryNotReady
 
 from .const import DOMAIN
 from .hub import R290HeatPumpModbusHub
+from .polling.profiles import DEFAULTS as POLLING_DEFAULTS, settings as polling_settings
 
 BRIDGE_ENTRY_ID = "bridge_entry_id"
 CONNECTION_DEFAULTS = {
@@ -18,7 +19,7 @@ CONNECTION_DEFAULTS = {
     "block_size": 49,
     "block_pause": 0.05,
 }
-CONNECTION_KEYS = {"host", *CONNECTION_DEFAULTS}
+CONNECTION_KEYS = {"host", *CONNECTION_DEFAULTS, *POLLING_DEFAULTS}
 
 
 def connection_settings(data):
@@ -29,16 +30,30 @@ def connection_settings(data):
         settings[key] = int(settings[key])
     for key in ("connect_timeout", "request_timeout", "block_pause"):
         settings[key] = float(settings[key])
-    return settings
+    return {**settings, **polling_settings(data)}
 
 
 def _endpoint(data):
     return (data.get("host"), int(data.get("port", 502)), data.get("connection_type", "rtuovertcp"))
 
 
+class DuplicateBridgeError(ValueError):
+    """A second bridge would run an independent scheduler on the same socket."""
+
+
+def check_bridge_endpoint(hass, settings, exclude_entry_id=None):
+    endpoint = (str(settings.get('host', '')).strip().lower().rstrip('.'), int(settings.get('port', 502)))
+    for entry in hass.config_entries.async_entries(DOMAIN):
+        if entry.entry_id == exclude_entry_id or entry.data.get('device_type') != 'modbus_bridge':
+            continue
+        other = (str(entry.data.get('host', '')).strip().lower().rstrip('.'), int(entry.data.get('port', 502)))
+        if endpoint == other:
+            raise DuplicateBridgeError('A bridge already owns this host and port; add slaves to that bridge')
+
+
 def resolve_bridge(hass, entry):
     """Bind legacy entries to the bridge, including stale pre-proxy addresses."""
-    if entry.data.get("device_type") == "cop_calculator":
+    if entry.data.get("device_type") in ("cop_calculator", "auxiliary_pump"):
         return None
     if entry.data.get("device_type") == "modbus_bridge":
         return entry
@@ -90,11 +105,17 @@ async def async_acquire_connection(hass, entry):
         # only after that update has committed, never from a stale snapshot.
         bridge = resolve_bridge(hass, entry)
         settings = connection_settings((bridge or entry).data)
+        if bridge and settings['polling_profile'] == 'auto':
+            try:
+                check_bridge_endpoint(hass, settings, bridge.entry_id)
+            except DuplicateBridgeError as err:
+                raise ConfigEntryNotReady(str(err)) from err
         key = ("bridge", bridge.entry_id) if bridge else ("endpoint", *_endpoint(settings))
         connections = store.setdefault("_connections", {})
         shared = connections.get(key)
         if shared is None:
             shared = {"hub": R290HeatPumpModbusHub(**_hub_kwargs(settings)), "users": set()}
+            await shared["hub"].configure_polling(settings)
             connections[key] = shared
         else:
             await shared["hub"].async_reconfigure(**_hub_kwargs(settings))
@@ -130,11 +151,14 @@ async def async_release_connection(hass, entry, runtime):
 async def async_update_bridge_connection(hass, bridge, values=None, *, validate=False):
     """Switch every reader/writer atomically, then persist the new endpoint."""
     store = hass.data.setdefault(DOMAIN, {})
+    reload_entries = []
     async with _lock(store):
         settings = connection_settings(bridge.data if values is None else values)
+        if settings['polling_profile'] == 'auto':
+            check_bridge_endpoint(hass, settings, bridge.entry_id)
         related = []
         for entry in hass.config_entries.async_entries(DOMAIN):
-            if entry.data.get("device_type") == "cop_calculator":
+            if entry.data.get("device_type") in ("cop_calculator", "auxiliary_pump"):
                 continue
             try:
                 parent = resolve_bridge(hass, entry)
@@ -150,6 +174,13 @@ async def async_update_bridge_connection(hass, bridge, values=None, *, validate=
             # Reconfigure the existing object: entity write paths keep references
             # to it, so replacing only a dictionary or batch hub is insufficient.
             await hub.async_reconfigure(**_hub_kwargs(settings), validate=validate)
+            if shared and polling_settings(settings) != hub.polling_config:
+                for related_entry in related:
+                    runtime = store.get(related_entry.entry_id)
+                    if runtime and runtime.get("connection_key") == key:
+                        await runtime["batch"].async_shutdown()
+                        reload_entries.append(related_entry.entry_id)
+            await hub.configure_polling(settings)
         finally:
             if shared is None:
                 await hub.async_close()
@@ -166,3 +197,8 @@ async def async_update_bridge_connection(hass, bridge, values=None, *, validate=
                 updated[BRIDGE_ENTRY_ID] = bridge.entry_id
             if updated != dict(entry.data):
                 hass.config_entries.async_update_entry(entry, data=updated)
+
+    # Reload only after releasing the connection lock. The bridge retains the
+    # same transport while child entries detach and reattach their consumers.
+    for entry_id in reload_entries:
+        await hass.config_entries.async_reload(entry_id)

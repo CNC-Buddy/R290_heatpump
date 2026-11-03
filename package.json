@@ -1,0 +1,15 @@
+{
+  "name": "r290-nextgen",
+  "private": true,
+  "version": "1.1.0",
+  "scripts": {
+    "test:electric": "node tests/frontend-electric.mjs",
+    "test:theme": "node tests/frontend-theme.mjs",
+    "test:schematic": "node tests/schematic-model.mjs && node tests/schematic-routing.mjs && node tests/frontend-schematic-editing.mjs && node tests/frontend-schematic.mjs && node tests/frontend-dashboard.mjs",
+    "test:ui": "node tests/frontend-electric.mjs && node tests/frontend-checks.mjs && node tests/frontend-languages.mjs && node tests/frontend-plant-service.mjs && node tests/frontend-heat-sources.mjs && node tests/schematic-model.mjs && node tests/frontend-schematic.mjs && node tests/frontend-schematic-editing.mjs && node tests/frontend-curves.mjs && node tests/schematic-routing.mjs && node tests/chart-model.mjs && node tests/frontend-dashboard.mjs && node tests/frontend-operating.mjs",
+    "browser:install": "playwright install chromium"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

@@ -1,0 +1,211 @@
+/* Display-inspired navy theme. Shared by the panel and the schematic shadow root.
+   Colours describe presentation only; no state or control behaviour lives here. */
+:host {
+  color-scheme: dark;
+  --bg: #07141e;
+  --surface: #102531;
+  --surface-raised: #15313f;
+  --surface-inset: #0b1c27;
+  --paper: #102531;
+  --ink: #edf5fa;
+  --muted: #a7bdcb;
+  --line: #2d5060;
+  --border: #2d5060;
+  --card-border: #3d7186;
+  --accent: #49d3ec;
+  --accent-soft: #173e4d;
+  --green: #50d5a0;
+  --mint: #123c34;
+  --orange: #ffb268;
+  --red: #ff9996;
+  --warning: #f5bd65;
+  --warning-bg: #362c1d;
+  --error-bg: #3a252d;
+  --plot-1: #4dd7f0;
+  --plot-2: #38d4b4;
+  --plot-3: #ffb268;
+  --plot-4: #b695f3;
+  --plot-5: #82b8f5;
+  --plot-6: #ff8f9e;
+  color: var(--ink);
+  font-family: Inter, "Segoe UI", system-ui, sans-serif;
+  background: transparent;
+}
+/* Only the page owns a background. Embedded schematics share their parent's
+   surface, including the space around the toolbar. */
+:host(r290-control-panel) { background: var(--bg); }
+:host(r290-control-panel) #panel-root {
+  /* HA's custom-panel wrapper has auto height. A percentage would collapse
+     to the content; dynamic viewport height also follows mobile browser bars. */
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+:host(r290-control-panel) .shell { flex: 1; }
+* { scrollbar-color: #527787 var(--surface-inset); }
+::selection { background: #276479; color: #fff; }
+a { color: var(--accent); }
+button:focus-visible, a:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, summary:focus-visible,
+[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+button, input, select, textarea { color-scheme: dark; }
+input[type=checkbox], input[type=radio] { accent-color: var(--accent); }
+button.primary, .primary { background: var(--accent); border-color: var(--accent); color: #06212c; }
+button.primary:hover, .primary:hover { background: #7ee6f6; border-color: #7ee6f6; filter: none; }
+button.secondary, .secondary, .pill { background: var(--surface-inset); border-color: var(--line); }
+.secondary:hover, .icon-button:hover, .nav:hover, .current-value:hover {
+  background: var(--surface-raised); border-color: var(--card-border);
+}
+.pill.selected, .section-tabs button.active, .language-switch button[aria-pressed=true] {
+  color: var(--accent); background: var(--accent-soft); border-color: var(--accent);
+}
+.language-switch { border-color: var(--line); }
+.section-tabs { border-color: var(--line); }
+.section-tabs button.active { box-shadow: inset 0 -2px var(--accent); }
+.shell {
+  /* Static waves frame the title and footer. The title stays on the quiet
+     left edge; opaque cards keep the decoration outside plots and readings. */
+  background-color: var(--bg);
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20300%22%20fill%3D%22none%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22light%22%3E%3Cstop%20stop-color%3D%22%232386bb%22%20stop-opacity%3D%220%22%2F%3E%3Cstop%20offset%3D%22.32%22%20stop-color%3D%22%232386bb%22%2F%3E%3Cstop%20offset%3D%22.75%22%20stop-color%3D%22%2349d3ec%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%232386bb%22%20stop-opacity%3D%22.3%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cg%20stroke%3D%22url%28%23light%29%22%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%20-15%29%22%20opacity%3D%220.280%22%20stroke-width%3D%22.9%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%20-8%29%22%20opacity%3D%220.268%22%20stroke-width%3D%22.9%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%20-1%29%22%20opacity%3D%220.256%22%20stroke-width%3D%22.9%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%206%29%22%20opacity%3D%220.244%22%20stroke-width%3D%22.9%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%2013%29%22%20opacity%3D%220.232%22%20stroke-width%3D%22.9%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%2020%29%22%20opacity%3D%220.220%22%20stroke-width%3D%22.9%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%2027%29%22%20opacity%3D%220.208%22%20stroke-width%3D%22.9%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%2034%29%22%20opacity%3D%220.196%22%20stroke-width%3D%22.9%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%2041%29%22%20opacity%3D%220.184%22%20stroke-width%3D%22.9%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%2048%29%22%20opacity%3D%220.172%22%20stroke-width%3D%22.9%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%206%29%22%20opacity%3D%22.30%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%22.1%2015%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%2022%29%22%20opacity%3D%22.30%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%22.1%2015%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%2038%29%22%20opacity%3D%22.30%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%22.1%2015%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%2054%29%22%20opacity%3D%22.30%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%22.1%2015%22%2F%3E%3Cpath%20d%3D%22M340%20270%20C620%20265%20700%2070%201010%2094%20S1360%20280%201710%2065%22%20transform%3D%22translate%280%2070%29%22%20opacity%3D%22.30%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%22.1%2015%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"), radial-gradient(ellipse at 80% 20%, #16465b 0, #0b2838 34%, transparent 72%), url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%20360%22%20fill%3D%22none%22%3E%3Cdefs%3E%3Cfilter%20id%3D%22glow%22%20x%3D%22-20%25%22%20y%3D%22-100%25%22%20width%3D%22140%25%22%20height%3D%22300%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2216%22%2F%3E%3C%2Ffilter%3E%3ClinearGradient%20id%3D%22fade%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22white%22%20stop-opacity%3D%220%22%2F%3E%3Cstop%20offset%3D%22.25%22%20stop-color%3D%22white%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22white%22%20stop-opacity%3D%22.8%22%2F%3E%3C%2FlinearGradient%3E%3Cmask%20id%3D%22edge%22%3E%3Crect%20width%3D%221600%22%20height%3D%22360%22%20fill%3D%22url%28%23fade%29%22%2F%3E%3C%2Fmask%3E%3C%2Fdefs%3E%3Cg%20mask%3D%22url%28%23edge%29%22%3E%3Cpath%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20transform%3D%22translate%280%2056%29%22%20stroke%3D%22%2316a7e0%22%20stroke-width%3D%2236%22%20opacity%3D%22.21%22%20filter%3D%22url%28%23glow%29%22%2F%3E%3Cg%20stroke%3D%22%2338c5f0%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20transform%3D%22translate%280%200%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.170%22%20stroke-width%3D%221.30%22%20stroke-dasharray%3D%22.1%2018.0%22%2F%3E%3Cpath%20transform%3D%22translate%280%208%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.182%22%20stroke-width%3D%221.33%22%20stroke-dasharray%3D%22.1%2017.7%22%2F%3E%3Cpath%20transform%3D%22translate%280%2016%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.194%22%20stroke-width%3D%221.37%22%20stroke-dasharray%3D%22.1%2017.4%22%2F%3E%3Cpath%20transform%3D%22translate%280%2024%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.206%22%20stroke-width%3D%221.41%22%20stroke-dasharray%3D%22.1%2017.1%22%2F%3E%3Cpath%20transform%3D%22translate%280%2032%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.218%22%20stroke-width%3D%221.44%22%20stroke-dasharray%3D%22.1%2016.8%22%2F%3E%3Cpath%20transform%3D%22translate%280%2040%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.230%22%20stroke-width%3D%221.48%22%20stroke-dasharray%3D%22.1%2016.5%22%2F%3E%3Cpath%20transform%3D%22translate%280%2048%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.242%22%20stroke-width%3D%221.51%22%20stroke-dasharray%3D%22.1%2016.2%22%2F%3E%3Cpath%20transform%3D%22translate%280%2056%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.254%22%20stroke-width%3D%221.55%22%20stroke-dasharray%3D%22.1%2015.9%22%2F%3E%3Cpath%20transform%3D%22translate%280%2064%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.266%22%20stroke-width%3D%221.58%22%20stroke-dasharray%3D%22.1%2015.6%22%2F%3E%3Cpath%20transform%3D%22translate%280%2072%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.278%22%20stroke-width%3D%221.62%22%20stroke-dasharray%3D%22.1%2015.3%22%2F%3E%3Cpath%20transform%3D%22translate%280%2080%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.290%22%20stroke-width%3D%221.65%22%20stroke-dasharray%3D%22.1%2015.0%22%2F%3E%3Cpath%20transform%3D%22translate%280%2088%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.302%22%20stroke-width%3D%221.69%22%20stroke-dasharray%3D%22.1%2014.7%22%2F%3E%3Cpath%20transform%3D%22translate%280%2096%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.314%22%20stroke-width%3D%221.72%22%20stroke-dasharray%3D%22.1%2014.4%22%2F%3E%3Cpath%20transform%3D%22translate%280%20104%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.326%22%20stroke-width%3D%221.76%22%20stroke-dasharray%3D%22.1%2014.1%22%2F%3E%3Cpath%20transform%3D%22translate%280%20112%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.338%22%20stroke-width%3D%221.79%22%20stroke-dasharray%3D%22.1%2013.8%22%2F%3E%3Cpath%20transform%3D%22translate%280%20120%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.350%22%20stroke-width%3D%221.83%22%20stroke-dasharray%3D%22.1%2013.5%22%2F%3E%3Cpath%20transform%3D%22translate%280%20128%29%22%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20opacity%3D%220.362%22%20stroke-width%3D%221.86%22%20stroke-dasharray%3D%22.1%2013.2%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M-90%20125%20C190%20-40%20350%2015%20610%20135%20S1040%20270%201310%20105%20S1580%2035%201700%20140%22%20transform%3D%22translate%280%2054%29%22%20stroke%3D%22%2339c4f3%22%20stroke-width%3D%221%22%20opacity%3D%22.20%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"), radial-gradient(ellipse at 75% 100%, #0b3040 0, transparent 45%);
+  background-position: right 72px, right top, center bottom, center bottom;
+  background-size: max(100%, 1100px) 300px, 100% 390px, max(100%, 1200px) 360px, 100% 100%;
+  background-repeat: no-repeat;
+  padding-bottom: 96px;
+}
+.app-header { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; min-height: 72px; background: linear-gradient(105deg, #0b2634, #081b26 45%, #103342); border-color: #326176; gap: 24px; }
+.header-brand { padding: 0; }
+.app-header .brand { width: 250px; justify-self: end; line-height: 0; }
+.brand svg { display: block; width: 100%; height: auto; overflow: visible; }
+.header-meta { margin-left: 0; }
+.connection-indicator { color: var(--muted); font-size: 12px; }
+.connection-indicator .dot { color: var(--green); }
+.connection-indicator.offline .dot { color: var(--red); }
+.nav.active:after { height: 3px; background: var(--accent); }
+.content { padding-top: 16px; }
+.site-context { font-size: 11px; margin-bottom: 14px; }
+.page-heading { margin: 20px 0 24px; }
+.page-heading h1 { font-size: 36px; letter-spacing: -.8px; font-weight: 700; }
+.page-heading p, .overview-title p { color: var(--muted); }
+.eyebrow { color: var(--accent); letter-spacing: 1.4px; }
+.card, .metric { background: var(--surface); border: 1px solid var(--card-border); border-radius: 10px; box-shadow: none; }
+.card { padding: 22px; }
+.card-header h2, .operating-grid h2 { font-size: 20px; letter-spacing: -.3px; }
+.metric { padding: 20px; }
+.metric .label { color: var(--ink); font-size: 14px; margin-bottom: 12px; }
+.metric .value { font-size: clamp(27px, 2.1cqw, 36px); font-weight: 650; letter-spacing: -.6px; }
+.metric .value small { font-size: 16px; color: var(--muted); font-weight: 450; }
+.metric .foot { font-size: 12px; line-height: 1.5; }
+.metric-glyph { color: var(--accent); float: right; margin: 0 0 10px 12px; }
+.metric-glyph .ui-icon { width: 25px; height: 25px; stroke-width: 1.5; }
+.metric .value, .v, .suggestion, .pump-readings, .curve-metrics strong { font-variant-numeric: tabular-nums; }
+.badge { background: var(--surface-inset); border-color: var(--line); color: var(--muted); font-size: 11px; }
+.badge.green, .notice.info { color: #8de4bd; background: #15372f; border-color: #347660; }
+.badge.amber, .badge.warm, .notice { color: var(--warning); background: var(--warning-bg); border-color: #79613a; }
+.badge.red, .notice.error { color: var(--red); background: var(--error-bg); border-color: #86505a; }
+.notice a { color: inherit; text-decoration: underline; }
+.reason { color: var(--ink); background: #15372f; border-color: var(--green); }
+.ring { background: conic-gradient(var(--accent) calc(var(--percentage)*1%), var(--surface-raised) 0); }
+.ring-inner { background: var(--surface); }
+.mode-summary, .dialog .change-preview { background: var(--surface-inset); }
+.mode-summary>div+div, .operating-context, .current-value { border-color: var(--line); }
+.service-component { background: var(--surface-inset); border-color: var(--line); }
+.empty .empty-icon { color: var(--accent); }
+.hot-text { color: var(--orange); fill: var(--orange)!important; }
+.cold-text { color: #81caed; fill: #81caed!important; }
+.mobile-unit { background: var(--surface-inset); }
+.mobile-stores>div { background: var(--surface-inset); border-color: var(--line); }
+.mobile-stores strong { color: var(--orange); }
+th { color: var(--muted); background: var(--surface-inset); font-size: 11px; letter-spacing: .6px; }
+td, .table-wrap, .chart-sensors label { border-color: var(--line); }
+.table-wrap tr.diff { background: #302d22; }
+.diagnostic-error { background: var(--error-bg); }
+.param-value.editable { color: var(--accent); background: var(--surface-inset); border-color: var(--line); }
+.param-value.editable:hover { border-color: var(--accent); }
+.param-code { color: var(--accent); background: var(--accent-soft); }
+input:not([type=checkbox]):not([type=radio]), select, textarea, .register-table textarea {
+  color: var(--ink); background: var(--surface-inset); border-color: #426575;
+}
+input::placeholder, textarea::placeholder { color: #a1b6c2; opacity: 1; }
+input:disabled, select:disabled, .curve-fields input:disabled, .curve-fields select:disabled {
+  color: var(--muted); background: var(--surface-inset); border-color: var(--line);
+}
+label.field, .curve-fields .field { font-size: 13px; }
+label.field small { font-size: 11px; }
+.curve-draft { stroke: var(--plot-2); }
+.curve-legend .draft-key { border-color: var(--plot-2); }
+.curve-point-error { color: var(--red); }
+.curve-guide { stroke: var(--muted); }
+.dialog { background: var(--surface); border-color: var(--card-border); border-radius: 12px; box-shadow: 0 24px 80px #0008; }
+.dialog::backdrop { background: #020b14ba; backdrop-filter: blur(3px); }
+.toast { background: #164d40; color: #eefcf7; border: 1px solid #39876d; box-shadow: 0 6px 30px #0006; }
+.toast.error { background: #642f3b; border-color: #a76170; }
+.chart .grid-line, .chart .vertical { stroke: var(--line); }
+.chart text { fill: var(--muted); }
+.chart-legend { color: var(--muted); }
+.chart-key { border-radius: 2px; }
+.chart-caption, .toggle-hint { font-size: 11px; }
+.phase-track { background: var(--surface-inset); }
+.phase-history>small { display: block; font-size: 11px; line-height: 1.6; }
+.phase-axis { font-size: 11px; }
+.history-controls .pill { border-radius: 7px; }
+.operating-grid { gap: 16px; }
+.operating-grid .table-wrap { margin-top: 18px; }
+.operating-status { margin-top: -8px; }
+.operating-pump-now { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 22px; padding: 18px 0 4px; border-top: 1px solid var(--line); }
+.operating-pump-now>span { display: flex; align-items: baseline; flex-wrap: wrap; gap: 20px; font-variant-numeric: tabular-nums; }
+.operating-pump-now b { font-size: 28px; }
+.operating-power>.status-row { flex-wrap: wrap; }
+.operating-power>.status-row .split { flex: 1; flex-wrap: wrap; }
+.operating-power>.status-row .split>strong { white-space: nowrap; }
+.chart-legend button:focus-visible, .chart-gear:focus-visible { outline: 2px solid var(--accent); }
+
+/* The editor owns a shadow root too. The same tokens also reach SVG labels. */
+.stage-wrap, .readonly .stage-wrap { background: var(--surface-inset); border: 1px solid var(--line); border-radius: 10px; }
+.inspector { background: var(--surface); border-color: var(--line); border-radius: 10px; }
+.inspector button, .toolbar button, .live-tools button { background: var(--surface-inset); border-color: var(--line); }
+.inspector button:hover, .toolbar button:hover, .live-tools button:hover { background: var(--surface-raised); }
+.toolbar .primary { color: #06212c; background: var(--accent); border-color: var(--accent); }
+.hint, .sg-status, .port-warning { color: var(--muted); }
+.port-warning { color: var(--warning); }
+.checks { background: var(--surface-inset); }
+.legend, .readonly .legend, .zone-field { color: var(--muted); border-color: var(--line); }
+.port-list button.active { color: var(--accent); background: var(--accent-soft); border-color: var(--accent); }
+.sg-reading, .sg-status, .sg-node-label { stroke: var(--surface-inset); }
+.sg-reading { fill: #b6d7e9; }
+.sg-status { fill: var(--muted); }
+.sg-node-label, .readonly .sg-node-label, .readonly .sg-value { fill: var(--ink); }
+.sg-edge.selected .sg-pipe { filter: drop-shadow(0 0 3px #49d3ec99); }
+
+@container r290 (max-width:1000px) {
+  .app-header { grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px 12px; padding-top: 14px; }
+  .header-brand { grid-column: 1; grid-row: 1; }
+  .header-meta { grid-column: 2; grid-row: 1; justify-self: end; }
+  .app-header .brand { grid-column: 3; grid-row: 1; width: 225px; }
+  .app-header nav { grid-column: 1 / -1; grid-row: 2; margin-top: 0; }
+  .app-header .connection-indicator > span:last-child { display: none; }
+}
+@container r290 (max-width:650px) {
+  .shell { padding-bottom: 72px; background-position: right 122px, right top, center bottom, center bottom; background-size: 850px 240px, 100% 460px, 1000px 260px, 100% 100%; }
+  .content { padding: 14px 16px 0; }
+  .app-header { padding: 12px 14px 0; gap: 8px; }
+  .app-header .brand { width: 185px; }
+  .header-meta { gap: 2px; }
+  .header-brand .icon-button, .header-meta .icon-button { width: 30px; padding: 5px; }
+  .page-heading h1 { font-size: 30px; }
+  .card { padding: 18px; }
+  .metric { padding: 16px 14px; }
+  .metric .label { font-size: 12px; }
+  .metric .value { font-size: 27px; }
+  .metric .value small { font-size: 13px; }
+  .metric .foot { font-size: 11px; }
+  .metric-glyph { display: none; }
+  .operating-status { margin-top: 0; }
+  .connection-indicator { font-size: 11px; }
+  .dialog { padding: 20px; }
+}
+@container r290 (max-width:380px) {
+  .app-header .brand { grid-column: 2 / -1; width: 205px; }
+  .header-meta { grid-column: 1 / -1; grid-row: 2; }
+  .app-header nav { grid-row: 3; }
+}

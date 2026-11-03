@@ -1,0 +1,3020 @@
+{
+  "schema": 1,
+  "notes": "Manual summaries; PDF pages are one-based. Defaults/ranges remain unchanged. No verified live firmware behaviour is implied by a matching register name.",
+  "parameters": {
+    "P011": {
+      "address": 267,
+      "de": "Abschaltschwelle des Hochdruckschutzes. Der Registerwert ist als Temperatur angegeben, nicht in bar; das Servicehandbuch beschreibt die Hochdruck-Sättigungstemperatur als Vergleichsgröße.",
+      "en": "High-pressure protection shutdown threshold. The register is expressed as temperature, not bar; the service manual identifies the high-pressure saturation temperature as the comparison value.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            52,
+            83
+          ]
+        }
+      ]
+    },
+    "P013": {
+      "address": 269,
+      "de": "Schutzschwelle auf der Niederdruckseite des Kältekreises. Angegeben als Temperatur, nicht als Druck in bar. Bei Unterschreitung kann die Geräteschutzregelung den Verdichter abschalten.",
+      "en": "Protection threshold on the low-pressure side of the refrigerant circuit. Expressed as temperature, not pressure in bar. Falling below it can cause the device protection to stop the compressor.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            52,
+            83
+          ]
+        }
+      ]
+    },
+    "P012": {
+      "address": 268,
+      "de": "Temperaturschwelle zur Begrenzung der Verdichterfrequenz auf der Hochdruckseite. Sie dient der Leistungsreduzierung vor einer Schutzabschaltung; sie ist keine Frequenzvorgabe in Hz. Der genaue Abstand zur Abschaltschwelle ist firmwareabhängig.",
+      "en": "Temperature threshold for limiting compressor frequency on the high-pressure side. It reduces output before protection shutdown; it is not a frequency setpoint in Hz. The exact margin to the shutdown threshold depends on firmware.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P014": {
+      "address": 270,
+      "de": "Temperaturschwelle zur Begrenzung der Verdichterfrequenz auf der Niederdruckseite. Sie dient der Leistungsreduzierung vor einer Schutzabschaltung; sie ist keine Frequenzvorgabe in Hz. Der genaue Abstand zur Abschaltschwelle ist firmwareabhängig.",
+      "en": "Temperature threshold for limiting compressor frequency on the low-pressure side. It reduces output before protection shutdown; it is not a frequency setpoint in Hz. The exact margin to the shutdown threshold depends on firmware.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P015": {
+      "address": 271,
+      "de": "Obere Heißgas-/Verdichteraustrittstemperatur für die Schutzabschaltung. Bezieht sich auf den Kältekreis, nicht auf den Heizungs-Vorlauf.",
+      "en": "Upper discharge-gas/compressor-outlet temperature for protection shutdown. Refers to the refrigerant circuit, not the heating-water supply.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            52,
+            83
+          ]
+        }
+      ]
+    },
+    "P016": {
+      "address": 272,
+      "de": "Heißgastemperaturschwelle für die Begrenzung der Verdichterfrequenz. Die Einheit ist °C; der Parameter begrenzt nicht direkt die Frequenz in Hz.",
+      "en": "Discharge-gas temperature threshold for limiting compressor frequency. Its unit is °C; it does not directly specify a frequency limit in Hz.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P017": {
+      "address": 273,
+      "de": "Temperaturkriterium zum Erhöhen der Lüfterdrehzahl im Modus Kühlen. Kein Drehzahl-Sollwert und keine Zeitverzögerung: Das Register ist in °C dokumentiert. Die genaue Vergleichstemperatur ist in der Registertabelle nicht erläutert.",
+      "en": "Temperature criterion for increasing fan speed during cooling. This is neither a speed setpoint nor a time delay: the register is documented in °C. The register table does not specify the exact comparison temperature.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P018": {
+      "address": 274,
+      "de": "Temperaturkriterium zum Absenken der Lüfterdrehzahl im Modus Kühlen. Kein Drehzahl-Sollwert und keine Zeitverzögerung: Das Register ist in °C dokumentiert. Die genaue Vergleichstemperatur ist in der Registertabelle nicht erläutert.",
+      "en": "Temperature criterion for reducing fan speed during cooling. This is neither a speed setpoint nor a time delay: the register is documented in °C. The register table does not specify the exact comparison temperature.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P019": {
+      "address": 275,
+      "de": "Temperaturkriterium zum Absenken der Lüfterdrehzahl im Modus Heizen. Kein Drehzahl-Sollwert und keine Zeitverzögerung: Das Register ist in °C dokumentiert. Die genaue Vergleichstemperatur ist in der Registertabelle nicht erläutert.",
+      "en": "Temperature criterion for reducing fan speed during heating. This is neither a speed setpoint nor a time delay: the register is documented in °C. The register table does not specify the exact comparison temperature.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P020": {
+      "address": 276,
+      "de": "Temperaturkriterium zum Erhöhen der Lüfterdrehzahl im Modus Heizen. Kein Drehzahl-Sollwert und keine Zeitverzögerung: Das Register ist in °C dokumentiert. Die genaue Vergleichstemperatur ist in der Registertabelle nicht erläutert.",
+      "en": "Temperature criterion for increasing fan speed during heating. This is neither a speed setpoint nor a time delay: the register is documented in °C. The register table does not specify the exact comparison temperature.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P021": {
+      "address": 277,
+      "de": "Untere Außentemperaturgrenze für den Start der Wärmepumpe. Unterhalb dieser Grenze kann der Verdichterstart gesperrt werden; dies ist nicht die Einschaltschwelle der Frostschutz-Umwälzung.",
+      "en": "Lower outdoor-temperature limit for starting the heat pump. Below it, compressor start may be inhibited; this is not the threshold for frost-protection circulation.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P022": {
+      "address": 278,
+      "de": "Außentemperaturkriterium für die Freigabe der elektrischen Zusatzheizung. Protokoll 0x0116 und Servicehandbuch nennen diese Funktion; die abweichende Excel-Notiz zu Startsperre/Abtauung passt dazu nicht. Freigabe ist noch kein dauerhafter Heizbefehl.",
+      "en": "Outdoor-temperature criterion for enabling auxiliary electric heating. Protocol address 0x0116 and the service manual name this function; the conflicting spreadsheet note about start inhibition/defrost does not match. Enablement is not a continuous heating command.",
+      "level": "conflict",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            45,
+            47,
+            83
+          ]
+        }
+      ]
+    },
+    "P024": {
+      "address": 280,
+      "de": "Manueller Temperatur-Korrekturwert für den Rücklauffühler. Korrigiert den von der Gerätesteuerung verwendeten Messwert; verändert nicht unmittelbar den gewünschten Sollwert. Nur eine nachgewiesene Fühlerabweichung damit ausgleichen.",
+      "en": "Manual temperature correction for the return-water sensor. Adjusts the reading used by the device controller, rather than directly changing the desired setpoint. Use it only to compensate a verified sensor error.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P025": {
+      "address": 281,
+      "de": "Manueller Temperatur-Korrekturwert für den Vorlauffühler. Korrigiert den von der Gerätesteuerung verwendeten Messwert; verändert nicht unmittelbar den gewünschten Sollwert. Nur eine nachgewiesene Fühlerabweichung damit ausgleichen.",
+      "en": "Manual temperature correction for the outlet-water sensor. Adjusts the reading used by the device controller, rather than directly changing the desired setpoint. Use it only to compensate a verified sensor error.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P098": {
+      "address": 354,
+      "de": "Manueller Temperatur-Korrekturwert für den Warmwasserspeicherfühler. Korrigiert den von der Gerätesteuerung verwendeten Messwert; verändert nicht unmittelbar den gewünschten Sollwert. Nur eine nachgewiesene Fühlerabweichung damit ausgleichen.",
+      "en": "Manual temperature correction for the DHW-tank sensor. Adjusts the reading used by the device controller, rather than directly changing the desired setpoint. Use it only to compensate a verified sensor error.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P026": {
+      "address": 282,
+      "de": "Wiedereinschalt-Hysterese im Heiz-/Kühlbetrieb. Sie bestimmt den Abstand zur Solltemperatur, ab dem erneut Wärme- bzw. Kühlbedarf entsteht. Ein größerer Abstand erlaubt größere Temperaturschwankungen. Die tatsächlich verwendete Regeltemperatur hängt von der Gerätekonfiguration ab; dies ist nicht die Vorlauf-Rücklauf-Spreizung P099.",
+      "en": "Restart hysteresis for heating/cooling. Defines the distance from the setpoint at which heating or cooling demand returns. A larger distance permits larger temperature swings. The control temperature depends on device configuration; this is not the supply/return difference P099.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            41,
+            42,
+            43,
+            83
+          ]
+        }
+      ]
+    },
+    "P027": {
+      "address": 283,
+      "de": "Wiedereinschalt-Hysterese im Fußbodenheizbetrieb. Sie bestimmt den Abstand zur Solltemperatur, ab dem erneut Wärme- bzw. Kühlbedarf entsteht. Ein größerer Abstand erlaubt größere Temperaturschwankungen. Die tatsächlich verwendete Regeltemperatur hängt von der Gerätekonfiguration ab; dies ist nicht die Vorlauf-Rücklauf-Spreizung P099.",
+      "en": "Restart hysteresis for floor heating. Defines the distance from the setpoint at which heating or cooling demand returns. A larger distance permits larger temperature swings. The control temperature depends on device configuration; this is not the supply/return difference P099.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            41,
+            42,
+            43,
+            83
+          ]
+        }
+      ]
+    },
+    "P029": {
+      "address": 285,
+      "de": "Dauer eines Frostschutz-Umwälzlaufs. Das Protokoll nennt einen Lauf je zehn Minuten; der Eintritt in den Frostschutz hängt zusätzlich von Temperaturbedingungen ab. Dieser Wert beschreibt die Laufdauer, nicht die Verdichterlaufzeit und nicht das Intervall P175.",
+      "en": "Duration of one frost-protection circulation run. The protocol specifies one run every ten minutes; entering frost protection also depends on temperature conditions. This value is the run duration, not compressor runtime or interval P175.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P031": {
+      "address": 287,
+      "de": "Kumulierte Betriebszeit als Kriterium für den Beginn einer Abtauung. Weitere Abtaubedingungen bleiben erforderlich. Die Dokumentation enthält widersprüchliche Einheiten; nicht als Spulentemperatur interpretieren.",
+      "en": "Accumulated operating time used as a criterion for starting defrost. Other defrost conditions still apply. Documentation contains conflicting units; do not interpret it as a coil-temperature setting.",
+      "level": "conflict",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P032": {
+      "address": 288,
+      "de": "Temperaturschwelle des Außenwärmetauschers für den Eintritt in die Abtauung. Die Auswertung erfolgt zusammen mit den übrigen Bedingungen des gewählten Abtaumodus.",
+      "en": "Outdoor-coil temperature threshold for entering defrost. Evaluated together with the other conditions of the selected defrost mode.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P033": {
+      "address": 289,
+      "de": "Abtau-Temperaturdifferenz 1: eines der Eintrittskriterien der Abtauregelung. Die Registertabelle benennt die beteiligten Fühler und die Verknüpfung der beiden Differenzen nicht eindeutig; daher keine konkrete Schaltformel ableiten.",
+      "en": "Defrost temperature difference 1: one of the defrost entry criteria. The register table does not clearly identify the sensor pair or how the two differences are combined; no exact switching formula can be derived.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P034": {
+      "address": 290,
+      "de": "Abtau-Temperaturdifferenz 2: eines der Eintrittskriterien der Abtauregelung. Die Registertabelle benennt die beteiligten Fühler und die Verknüpfung der beiden Differenzen nicht eindeutig; daher keine konkrete Schaltformel ableiten.",
+      "en": "Defrost temperature difference 2: one of the defrost entry criteria. The register table does not clearly identify the sensor pair or how the two differences are combined; no exact switching formula can be derived.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P035": {
+      "address": 291,
+      "de": "Zeitliche Obergrenze eines Abtauvorgangs. Die reguläre Beendigung kann vorher durch die Austrittsbedingungen erfolgen. Es handelt sich um eine Zeit, auch wenn einzelne Tabellen fälschlich °C angeben.",
+      "en": "Maximum duration of a defrost operation. Normal exit conditions can end it sooner. This is a time value despite some tables incorrectly labelling it °C.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            84
+          ]
+        }
+      ]
+    },
+    "P036": {
+      "address": 292,
+      "de": "Temperatur des Außenwärmetauschers für das Beenden der Abtauung. Keine Lüfter-Solltemperatur; weitere Mindestzeit- und Schutzbedingungen können gelten.",
+      "en": "Outdoor-coil temperature used to end defrost. Not a fan temperature setpoint; minimum-time and protection conditions may also apply.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P038": {
+      "address": 294,
+      "de": "Konstante für die anfängliche Öffnung des elektronischen Haupt-Expansionsventils beim Heizen. Beeinflusst die Startberechnung im Kältekreis; ist keine Vorgabe für das hydraulische Dreiwegeventil.",
+      "en": "Constant for the initial main electronic expansion-valve opening during heating. Affects the refrigerant-circuit startup calculation; it is not a command for the hydraulic three-way valve.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P040": {
+      "address": 296,
+      "de": "Korrektur der Soll-Überhitzung im Modus Kühlen. Die Überhitzung beschreibt Kältemitteltemperatur gegenüber Sättigungstemperatur; sie ist nicht die Wasserspreizung. Verändert das Regelziel des elektronischen Expansionsventils.",
+      "en": "Correction of target refrigerant superheat during cooling. Superheat is refrigerant temperature relative to saturation temperature, not the water temperature difference. Adjusts the electronic expansion valve's control target.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P042": {
+      "address": 298,
+      "de": "Korrektur der Soll-Überhitzung im Modus Heizen. Die Überhitzung beschreibt Kältemitteltemperatur gegenüber Sättigungstemperatur; sie ist nicht die Wasserspreizung. Verändert das Regelziel des elektronischen Expansionsventils.",
+      "en": "Correction of target refrigerant superheat during heating. Superheat is refrigerant temperature relative to saturation temperature, not the water temperature difference. Adjusts the electronic expansion valve's control target.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P041": {
+      "address": 297,
+      "de": "Temperaturkorrektur der Hochdruck-Schutz- und Frequenzbegrenzungsschwellen beim Heizen. Wirkt auf die Kältekreis-Schutzregelung und nicht auf die Heizkurve.",
+      "en": "Temperature correction for high-pressure protection and frequency-limiting thresholds during heating. Affects refrigerant-circuit protection, not the heating curve.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    "P045": {
+      "address": 301,
+      "de": "Kommunikationsadresse des Geräts. Eine Änderung kann die bestehende Modbus-Verbindung unterbrechen. Die Adresse muss zur Buskonfiguration passen und darf nicht doppelt vergeben sein.",
+      "en": "Device communication address. Changing it can interrupt the existing Modbus connection. It must match the bus configuration and must not duplicate another address.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P046": {
+      "address": 302,
+      "de": "Schalthysterese für das Flüssigkeitseinspritz-Magnetventil im Kältekreis. Die Differenz trennt dessen Ein- und Ausschaltbedingungen; sie steuert keine Heizungs-Umwälzpumpe.",
+      "en": "Switching hysteresis for the refrigerant liquid-injection solenoid valve. Separates its on/off conditions; it does not control a heating circulation pump.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P047": {
+      "address": 303,
+      "de": "Konstante der EVI-Sollüberhitzung für die Kältemitteleinspritzung. Die genaue Berechnungsformel wird in der Registertabelle nicht beschrieben.",
+      "en": "EVI target-superheat constant for refrigerant injection. The register table does not describe the exact calculation formula.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P049": {
+      "address": 305,
+      "de": "Prozentvorgabe für die Verdichter-Betriebsfrequenz im Warmwasserbetrieb. Die Bezugsfrequenz ist in der Registertabelle nicht näher definiert. Nicht mit dem Anteil freigegebener Kaskadengeräte P168 verwechseln.",
+      "en": "Percentage setting for compressor operating frequency during DHW production. The reference frequency is not further defined in the register table. Do not confuse it with the permitted cascade-unit ratio P168.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P050": {
+      "address": 306,
+      "de": "Konstante A der Sollfrequenzberechnung für Kühlen: Y = 9X/5 + A. Eine Änderung verschiebt die berechnete Frequenz. Die Registertabelle definiert die Eingangsgröße X nicht eindeutig; keine Außentemperaturzuordnung voraussetzen.",
+      "en": "Constant A in the target-frequency calculation for cooling: Y = 9X/5 + A. Changing it shifts the calculated frequency. The register table does not unambiguously define input X; do not assume it is outdoor temperature.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P054": {
+      "address": 310,
+      "de": "Konstante B der Sollfrequenzberechnung für Heizen: Y = B − X. Eine Änderung verschiebt die berechnete Frequenz. Die Registertabelle definiert die Eingangsgröße X nicht eindeutig; keine Außentemperaturzuordnung voraussetzen.",
+      "en": "Constant B in the target-frequency calculation for heating: Y = B − X. Changing it shifts the calculated frequency. The register table does not unambiguously define input X; do not assume it is outdoor temperature.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P060": {
+      "address": 316,
+      "de": "Konstante B der Sollfrequenzberechnung für Warmwasser: Y = B − X. Eine Änderung verschiebt die berechnete Frequenz. Die Registertabelle definiert die Eingangsgröße X nicht eindeutig; keine Außentemperaturzuordnung voraussetzen.",
+      "en": "Constant B in the target-frequency calculation for DHW: Y = B − X. Changing it shifts the calculated frequency. The register table does not unambiguously define input X; do not assume it is outdoor temperature.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P051": {
+      "address": 307,
+      "de": "Untere Grenze der Verdichterfrequenz im Modus Kühlen. Begrenzt die Modulation in Hz, fordert aber keinen Start an. Weitere Betriebs- und Schutzgrenzen können die tatsächlich gefahrene Frequenz einschränken.",
+      "en": "Lower compressor-frequency limit during cooling. Constrains modulation in Hz but does not request a start. Other operating and protection limits can further restrict actual frequency.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P052": {
+      "address": 308,
+      "de": "Obere Grenze der Verdichterfrequenz im Modus Kühlen. Begrenzt die Modulation in Hz, fordert aber keinen Start an. Weitere Betriebs- und Schutzgrenzen können die tatsächlich gefahrene Frequenz einschränken.",
+      "en": "Upper compressor-frequency limit during cooling. Constrains modulation in Hz but does not request a start. Other operating and protection limits can further restrict actual frequency.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P053": {
+      "address": 309,
+      "de": "Untere Grenze der Verdichterfrequenz im Modus Kühlen. Begrenzt die Modulation in Hz, fordert aber keinen Start an. Weitere Betriebs- und Schutzgrenzen können die tatsächlich gefahrene Frequenz einschränken.",
+      "en": "Lower compressor-frequency limit during cooling. Constrains modulation in Hz but does not request a start. Other operating and protection limits can further restrict actual frequency.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P055": {
+      "address": 311,
+      "de": "Obere Grenze der Verdichterfrequenz im Modus Heizen. Begrenzt die Modulation in Hz, fordert aber keinen Start an. Weitere Betriebs- und Schutzgrenzen können die tatsächlich gefahrene Frequenz einschränken.",
+      "en": "Upper compressor-frequency limit during heating. Constrains modulation in Hz but does not request a start. Other operating and protection limits can further restrict actual frequency.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P056": {
+      "address": 312,
+      "de": "Untere Grenze der Verdichterfrequenz im Modus Heizen. Begrenzt die Modulation in Hz, fordert aber keinen Start an. Weitere Betriebs- und Schutzgrenzen können die tatsächlich gefahrene Frequenz einschränken.",
+      "en": "Lower compressor-frequency limit during heating. Constrains modulation in Hz but does not request a start. Other operating and protection limits can further restrict actual frequency.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P061": {
+      "address": 317,
+      "de": "Obere Grenze der Verdichterfrequenz im Modus Warmwasser. Begrenzt die Modulation in Hz, fordert aber keinen Start an. Weitere Betriebs- und Schutzgrenzen können die tatsächlich gefahrene Frequenz einschränken.",
+      "en": "Upper compressor-frequency limit during DHW. Constrains modulation in Hz but does not request a start. Other operating and protection limits can further restrict actual frequency.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P062": {
+      "address": 318,
+      "de": "Untere Grenze der Verdichterfrequenz im Modus Warmwasser. Begrenzt die Modulation in Hz, fordert aber keinen Start an. Weitere Betriebs- und Schutzgrenzen können die tatsächlich gefahrene Frequenz einschränken.",
+      "en": "Lower compressor-frequency limit during DHW. Constrains modulation in Hz but does not request a start. Other operating and protection limits can further restrict actual frequency.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P057": {
+      "address": 313,
+      "de": "Mindest-Verdichterfrequenz Stufe 1 für Heizen. Das Vergleichs-Servicehandbuch ordnet diese Stufe Außentemperaturen über 0 °C zu. Die genaue Stufenauswahl und Grenzfallbehandlung der installierten Firmware sind damit nicht bestätigt.",
+      "en": "Stage 1 minimum compressor frequency for heating. The comparison service manual assigns this stage to outdoor temperatures above 0 °C. This does not verify the exact stage selection or boundary handling in the installed firmware.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            84
+          ]
+        }
+      ]
+    },
+    "P058": {
+      "address": 314,
+      "de": "Mindest-Verdichterfrequenz Stufe 2 für Heizen. Das Vergleichs-Servicehandbuch ordnet diese Stufe Außentemperaturen von −10 bis unter 0 °C zu. Die genaue Stufenauswahl und Grenzfallbehandlung der installierten Firmware sind damit nicht bestätigt.",
+      "en": "Stage 2 minimum compressor frequency for heating. The comparison service manual assigns this stage to outdoor temperatures from −10 to below 0 °C. This does not verify the exact stage selection or boundary handling in the installed firmware.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            84
+          ]
+        }
+      ]
+    },
+    "P059": {
+      "address": 315,
+      "de": "Mindest-Verdichterfrequenz Stufe 3 für Heizen. Das Vergleichs-Servicehandbuch ordnet diese Stufe Außentemperaturen unter −10 °C zu. Die genaue Stufenauswahl und Grenzfallbehandlung der installierten Firmware sind damit nicht bestätigt.",
+      "en": "Stage 3 minimum compressor frequency for heating. The comparison service manual assigns this stage to outdoor temperatures below −10 °C. This does not verify the exact stage selection or boundary handling in the installed firmware.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            84
+          ]
+        }
+      ]
+    },
+    "P063": {
+      "address": 319,
+      "de": "Mindest-Verdichterfrequenz Stufe 1 für Warmwasser. Das Vergleichs-Servicehandbuch ordnet diese Stufe Außentemperaturen über 0 °C zu. Die genaue Stufenauswahl und Grenzfallbehandlung der installierten Firmware sind damit nicht bestätigt.",
+      "en": "Stage 1 minimum compressor frequency for DHW. The comparison service manual assigns this stage to outdoor temperatures above 0 °C. This does not verify the exact stage selection or boundary handling in the installed firmware.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            84
+          ]
+        }
+      ]
+    },
+    "P064": {
+      "address": 320,
+      "de": "Mindest-Verdichterfrequenz Stufe 2 für Warmwasser. Das Vergleichs-Servicehandbuch ordnet diese Stufe Außentemperaturen von −10 bis unter 0 °C zu. Die genaue Stufenauswahl und Grenzfallbehandlung der installierten Firmware sind damit nicht bestätigt.",
+      "en": "Stage 2 minimum compressor frequency for DHW. The comparison service manual assigns this stage to outdoor temperatures from −10 to below 0 °C. This does not verify the exact stage selection or boundary handling in the installed firmware.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            84
+          ]
+        }
+      ]
+    },
+    "P065": {
+      "address": 321,
+      "de": "Mindest-Verdichterfrequenz Stufe 3 für Warmwasser. Das Vergleichs-Servicehandbuch ordnet diese Stufe Außentemperaturen unter −10 °C zu. Die genaue Stufenauswahl und Grenzfallbehandlung der installierten Firmware sind damit nicht bestätigt.",
+      "en": "Stage 3 minimum compressor frequency for DHW. The comparison service manual assigns this stage to outdoor temperatures below −10 °C. This does not verify the exact stage selection or boundary handling in the installed firmware.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            84
+          ]
+        }
+      ]
+    },
+    "P066": {
+      "address": 322,
+      "de": "Startvorgabe für die DC-Lüfterfrequenz. Der Wert betrifft den Außenlüfter, nicht Verdichter oder Wasserpumpe. Die Zuordnung von Hz zu realer Drehzahl hängt vom Lüfter-/Treiberaufbau ab.",
+      "en": "Initial setting for DC fan frequency. Applies to the outdoor fan, not the compressor or water pump. Conversion from Hz to actual speed depends on the fan/driver design.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P067": {
+      "address": 323,
+      "de": "Untere Grenze beim Heizen für die DC-Lüfterfrequenz. Der Wert betrifft den Außenlüfter, nicht Verdichter oder Wasserpumpe. Die Zuordnung von Hz zu realer Drehzahl hängt vom Lüfter-/Treiberaufbau ab.",
+      "en": "Lower limit during heating for DC fan frequency. Applies to the outdoor fan, not the compressor or water pump. Conversion from Hz to actual speed depends on the fan/driver design.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P068": {
+      "address": 324,
+      "de": "Obere Grenze beim Heizen für die DC-Lüfterfrequenz. Der Wert betrifft den Außenlüfter, nicht Verdichter oder Wasserpumpe. Die Zuordnung von Hz zu realer Drehzahl hängt vom Lüfter-/Treiberaufbau ab.",
+      "en": "Upper limit during heating for DC fan frequency. Applies to the outdoor fan, not the compressor or water pump. Conversion from Hz to actual speed depends on the fan/driver design.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P069": {
+      "address": 325,
+      "de": "Untere Grenze beim Kühlen für die DC-Lüfterfrequenz. Der Wert betrifft den Außenlüfter, nicht Verdichter oder Wasserpumpe. Die Zuordnung von Hz zu realer Drehzahl hängt vom Lüfter-/Treiberaufbau ab.",
+      "en": "Lower limit during cooling for DC fan frequency. Applies to the outdoor fan, not the compressor or water pump. Conversion from Hz to actual speed depends on the fan/driver design.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P070": {
+      "address": 326,
+      "de": "Obere Grenze beim Kühlen für die DC-Lüfterfrequenz. Der Wert betrifft den Außenlüfter, nicht Verdichter oder Wasserpumpe. Die Zuordnung von Hz zu realer Drehzahl hängt vom Lüfter-/Treiberaufbau ab.",
+      "en": "Upper limit during cooling for DC fan frequency. Applies to the outdoor fan, not the compressor or water pump. Conversion from Hz to actual speed depends on the fan/driver design.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P089": {
+      "address": 345,
+      "de": "Obere Grenze im Leisemodus für die DC-Lüfterfrequenz. Der Wert betrifft den Außenlüfter, nicht Verdichter oder Wasserpumpe. Die Zuordnung von Hz zu realer Drehzahl hängt vom Lüfter-/Treiberaufbau ab.",
+      "en": "Upper limit in quiet mode for DC fan frequency. Applies to the outdoor fan, not the compressor or water pump. Conversion from Hz to actual speed depends on the fan/driver design.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P173": {
+      "address": 429,
+      "de": "Untere Zielfrequenz beim Heizen für die DC-Lüfterfrequenz. Der Wert betrifft den Außenlüfter, nicht Verdichter oder Wasserpumpe. Die Zuordnung von Hz zu realer Drehzahl hängt vom Lüfter-/Treiberaufbau ab.",
+      "en": "Lower target frequency during heating for DC fan frequency. Applies to the outdoor fan, not the compressor or water pump. Conversion from Hz to actual speed depends on the fan/driver design.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            21
+          ]
+        }
+      ]
+    },
+    "P071": {
+      "address": 327,
+      "de": "Verdichterfrequenz als Kriterium zum Zuschalten der EVI-/Enthalpieerhöhung. Kein direkter Frequenzbefehl; zusätzliche Temperatur- und Zeitbedingungen können gelten.",
+      "en": "Compressor-frequency criterion for enabling EVI/enhanced vapour injection. Not a direct frequency command; additional temperature and time conditions may apply.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P072": {
+      "address": 328,
+      "de": "Verdichterfrequenz als Kriterium zum Abschalten der EVI-/Enthalpieerhöhung. Kein direkter Frequenzbefehl; zusätzliche Temperatur- und Zeitbedingungen können gelten.",
+      "en": "Compressor-frequency criterion for disabling EVI/enhanced vapour injection. Not a direct frequency command; additional temperature and time conditions may apply.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P073": {
+      "address": 329,
+      "de": "Anfangsöffnung 1 des elektronischen Haupt-Expansionsventils beim Kühlen, in Ventilschritten. Die Auswahl zwischen den drei Startöffnungen ist nicht erläutert. Betrifft den Kältekreis und nicht ein Wasser-Umschaltventil.",
+      "en": "Initial opening 1 of the main electronic expansion valve during cooling, in valve steps. Selection between the three startup openings is not explained. Applies to the refrigerant circuit, not a water diverter valve.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P074": {
+      "address": 330,
+      "de": "Anfangsöffnung 2 des elektronischen Haupt-Expansionsventils beim Kühlen, in Ventilschritten. Die Auswahl zwischen den drei Startöffnungen ist nicht erläutert. Betrifft den Kältekreis und nicht ein Wasser-Umschaltventil.",
+      "en": "Initial opening 2 of the main electronic expansion valve during cooling, in valve steps. Selection between the three startup openings is not explained. Applies to the refrigerant circuit, not a water diverter valve.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P075": {
+      "address": 331,
+      "de": "Anfangsöffnung 3 des elektronischen Haupt-Expansionsventils beim Kühlen, in Ventilschritten. Die Auswahl zwischen den drei Startöffnungen ist nicht erläutert. Betrifft den Kältekreis und nicht ein Wasser-Umschaltventil.",
+      "en": "Initial opening 3 of the main electronic expansion valve during cooling, in valve steps. Selection between the three startup openings is not explained. Applies to the refrigerant circuit, not a water diverter valve.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P076": {
+      "address": 332,
+      "de": "Untere Öffnungsgrenze des elektronischen Hauptventils beim Kühlen, in Ventilschritten. Begrenzt die Kältemittel-Dosierung. Keine Prozentvorgabe für die Zusatzpumpe oder das Dreiwegeventil.",
+      "en": "Lower opening limit of the electronic Hauptventils beim Kühlen, in valve steps. Constrains refrigerant metering. Not a percentage setting for the auxiliary pump or three-way valve.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P077": {
+      "address": 333,
+      "de": "Untere Öffnungsgrenze des elektronischen Hauptventils beim Heizen, in Ventilschritten. Begrenzt die Kältemittel-Dosierung. Keine Prozentvorgabe für die Zusatzpumpe oder das Dreiwegeventil.",
+      "en": "Lower opening limit of the electronic Hauptventils beim Heizen, in valve steps. Constrains refrigerant metering. Not a percentage setting for the auxiliary pump or three-way valve.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P078": {
+      "address": 334,
+      "de": "Obere Öffnungsgrenze des elektronischen Hauptventils, in Ventilschritten. Begrenzt die Kältemittel-Dosierung. Keine Prozentvorgabe für die Zusatzpumpe oder das Dreiwegeventil.",
+      "en": "Upper opening limit of the electronic Hauptventils, in valve steps. Constrains refrigerant metering. Not a percentage setting for the auxiliary pump or three-way valve.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P082": {
+      "address": 338,
+      "de": "Obere Öffnungsgrenze des elektronischen Hilfsventils, in Ventilschritten. Begrenzt die Kältemittel-Dosierung. Keine Prozentvorgabe für die Zusatzpumpe oder das Dreiwegeventil.",
+      "en": "Upper opening limit of the electronic Hilfsventils, in valve steps. Constrains refrigerant metering. Not a percentage setting for the auxiliary pump or three-way valve.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P083": {
+      "address": 339,
+      "de": "Untere Öffnungsgrenze des elektronischen Hilfsventils, in Ventilschritten. Begrenzt die Kältemittel-Dosierung. Keine Prozentvorgabe für die Zusatzpumpe oder das Dreiwegeventil.",
+      "en": "Lower opening limit of the electronic Hilfsventils, in valve steps. Constrains refrigerant metering. Not a percentage setting for the auxiliary pump or three-way valve.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P079": {
+      "address": 335,
+      "de": "Koeffizient c der Berechnung für die Anfangsöffnung des elektronischen Hauptventils. Die Registertabelle nennt keine vollständige Formel; der Wert ist kein direkt anfahrbarer Öffnungsgrad.",
+      "en": "Coefficient c used to calculate the initial opening of the electronic main valve. The register table gives no complete formula; this is not a direct opening command.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P080": {
+      "address": 336,
+      "de": "Koeffizient a der Berechnung für die Anfangsöffnung des elektronischen Hauptventils. Die Registertabelle nennt keine vollständige Formel; der Wert ist kein direkt anfahrbarer Öffnungsgrad.",
+      "en": "Coefficient a used to calculate the initial opening of the electronic main valve. The register table gives no complete formula; this is not a direct opening command.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P081": {
+      "address": 337,
+      "de": "Koeffizient b der Berechnung für die Anfangsöffnung des elektronischen Hauptventils. Die Registertabelle nennt keine vollständige Formel; der Wert ist kein direkt anfahrbarer Öffnungsgrad.",
+      "en": "Coefficient b used to calculate the initial opening of the electronic main valve. The register table gives no complete formula; this is not a direct opening command.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            18
+          ]
+        }
+      ]
+    },
+    "P085": {
+      "address": 341,
+      "de": "Koeffizient c der Berechnung für die Anfangsöffnung des elektronischen Hilfsventils. Die Registertabelle nennt keine vollständige Formel; der Wert ist kein direkt anfahrbarer Öffnungsgrad.",
+      "en": "Coefficient c used to calculate the initial opening of the electronic auxiliary valve. The register table gives no complete formula; this is not a direct opening command.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P086": {
+      "address": 342,
+      "de": "Koeffizient a der Berechnung für die Anfangsöffnung des elektronischen Hilfsventils. Die Registertabelle nennt keine vollständige Formel; der Wert ist kein direkt anfahrbarer Öffnungsgrad.",
+      "en": "Coefficient a used to calculate the initial opening of the electronic auxiliary valve. The register table gives no complete formula; this is not a direct opening command.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P087": {
+      "address": 343,
+      "de": "Koeffizient b der Berechnung für die Anfangsöffnung des elektronischen Hilfsventils. Die Registertabelle nennt keine vollständige Formel; der Wert ist kein direkt anfahrbarer Öffnungsgrad.",
+      "en": "Coefficient b used to calculate the initial opening of the electronic auxiliary valve. The register table gives no complete formula; this is not a direct opening command.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P084": {
+      "address": 340,
+      "de": "Zeitabstand zwischen Regelanpassungen des elektronischen Haupt-Expansionsventils. Ein kleinerer Wert ermöglicht häufigere Anpassungen im Kältekreis; dies ist kein Pumpenintervall.",
+      "en": "Time between control adjustments of the electronic main expansion valve. A smaller value permits more frequent refrigerant-circuit adjustments; this is not a pump interval.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P094": {
+      "address": 350,
+      "de": "Zeitabstand zwischen Regelanpassungen des elektronischen Hilfs-Expansionsventils. Ein kleinerer Wert ermöglicht häufigere Anpassungen im Kältekreis; dies ist kein Pumpenintervall.",
+      "en": "Time between control adjustments of the electronic auxiliary expansion valve. A smaller value permits more frequent refrigerant-circuit adjustments; this is not a pump interval.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P088": {
+      "address": 344,
+      "de": "Maximale Verdichterfrequenz bei aktiviertem Leisemodus. Begrenzt die verfügbare Leistung in diesem Modus; erzwingt weder diese Frequenz noch einen Verdichterstart.",
+      "en": "Maximum compressor frequency when quiet mode is active. Limits available output in that mode; does not force this frequency or start the compressor.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P090": {
+      "address": 346,
+      "de": "Außentemperaturkriterium für den Eintritt in den EVI-Betrieb (Kältemitteleinspritzung). Gehört zu einer Gruppe von Freigabebedingungen; allein aus diesem Register lässt sich keine vollständige Ein-/Ausschaltregel ableiten.",
+      "en": "Outdoor-temperature criterion for entering EVI operation (refrigerant injection). Part of a group of enabling conditions; this register alone does not define a complete on/off rule.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P091": {
+      "address": 347,
+      "de": "Sperrzeit für den Eintritt in den EVI-Betrieb (Kältemitteleinspritzung). Gehört zu einer Gruppe von Freigabebedingungen; allein aus diesem Register lässt sich keine vollständige Ein-/Ausschaltregel ableiten.",
+      "en": "Inhibit time for entering EVI operation (refrigerant injection). Part of a group of enabling conditions; this register alone does not define a complete on/off rule.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P092": {
+      "address": 348,
+      "de": "Temperaturdifferenzkriterium für den Eintritt in den EVI-Betrieb (Kältemitteleinspritzung). Gehört zu einer Gruppe von Freigabebedingungen; allein aus diesem Register lässt sich keine vollständige Ein-/Ausschaltregel ableiten.",
+      "en": "Temperature-difference criterion for entering EVI operation (refrigerant injection). Part of a group of enabling conditions; this register alone does not define a complete on/off rule.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P093": {
+      "address": 349,
+      "de": "Erforderliche kontinuierliche Verdichterlaufzeit für den Eintritt in den EVI-Betrieb (Kältemitteleinspritzung). Gehört zu einer Gruppe von Freigabebedingungen; allein aus diesem Register lässt sich keine vollständige Ein-/Ausschaltregel ableiten.",
+      "en": "Required continuous compressor runtime for entering EVI operation (refrigerant injection). Part of a group of enabling conditions; this register alone does not define a complete on/off rule.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P096": {
+      "address": 352,
+      "de": "Hysterese für das Nachladen des Warmwasserspeichers. Das Servicehandbuch beschreibt den erneuten Start unter Warmwassersollwert minus P096; weitere Freigaben bleiben erforderlich. Größere Werte erlauben stärkere Speicherabkühlung vor dem Nachladen.",
+      "en": "Hysteresis for reheating the DHW tank. The service manual describes restarting below the DHW setpoint minus P096; other enabling conditions still apply. Larger values permit more tank cooling before reheating.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            42,
+            84
+          ]
+        }
+      ]
+    },
+    "P097": {
+      "address": 353,
+      "de": "Automatische Korrektur der Warmwasserspeichertemperatur. Achtung: Protokoll/Excel nennen 0 = aktiv, 1 = aus; das Hainzel-Handbuch nennt die umgekehrte Belegung. Die Zuordnung ist für die installierte Firmware nicht bestätigt; nicht als gesicherte Umschaltanweisung verwenden.",
+      "en": "Automatic DHW-tank temperature compensation. Caution: protocol/spreadsheet say 0 = enabled, 1 = disabled; the Hainzel manual gives the opposite mapping. The mapping is not verified for the installed firmware and must not be treated as a confirmed switching instruction.",
+      "level": "conflict",
+      "sources": [
+        {
+          "file": "Solareast/Hainzel - Engineering Manual-R290 V1-0_DE.pdf",
+          "pages": [
+            151
+          ]
+        }
+      ]
+    },
+    "P099": {
+      "address": 355,
+      "de": "Zielspreizung zwischen Wasseraustritt und Wassereintritt für die interne drehzahlgeregelte Umwälzpumpe. Größere Spreizung bedeutet bei gleicher Wärmeleistung weniger Durchfluss. Mindestdurchfluss und Pumpengrenzen bleiben vorrangig. Dieser Parameter stellt nicht die separate Zusatzpumpe ein.",
+      "en": "Target difference between water outlet and inlet for the internal variable-speed circulation pump. At the same heat output, a larger difference corresponds to lower flow. Minimum flow and pump limits still take priority. This parameter does not configure the separate auxiliary pump.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            41,
+            84
+          ]
+        }
+      ]
+    },
+    "P100": {
+      "address": 356,
+      "de": "Untere PWM-Ansteuerungsgrenze der internen Umwälzpumpe während der Drehzahlregelung. Begrenzt die Absenkung, garantiert aber keinen bestimmten Durchfluss. Die separate Zusatzpumpe hat eigene Grenzen.",
+      "en": "Lower PWM control limit for the internal circulation pump during speed regulation. Limits reduction but does not guarantee a particular flow. The separate auxiliary pump has its own limits.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P103": {
+      "address": 359,
+      "de": "Mindestlaufzeit vor regulärer temperaturbedingter Abschaltung oder Wechsel des kombinierten Betriebsmodus. Keine generelle Überbrückung von Schutzabschaltungen. Das Vergleichs-Servicehandbuch beschreibt 0 als ohne diese Begrenzung.",
+      "en": "Minimum runtime before normal temperature-related shutdown or combined-mode switching. Does not generally override protective shutdowns. The comparison service manual describes 0 as removing this restriction.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            41,
+            85
+          ]
+        }
+      ]
+    },
+    "P104": {
+      "address": 360,
+      "de": "Prozentuale Betriebsfrequenzvorgabe während eines Moduswechsels. Betrifft den Verdichter; kein Anteil der Kaskadengeräte. Die Bezugsfrequenz ist nicht genauer erläutert.",
+      "en": "Percentage operating-frequency setting during a mode change. Applies to the compressor, not the proportion of cascade units. The reference frequency is not explained further.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P105": {
+      "address": 361,
+      "de": "Untere Außentemperaturgrenze für den Start im Kühlbetrieb. Begrenzt den zulässigen Einsatzbereich; ist keine Wasser-Solltemperatur und keine Heizkurvenstützstelle.",
+      "en": "Lower outdoor-temperature limit for starting cooling. Restricts the permitted operating envelope; it is neither a water-temperature setpoint nor a heating-curve point.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            41,
+            42,
+            85
+          ]
+        }
+      ]
+    },
+    "P106": {
+      "address": 362,
+      "de": "Obere Außentemperaturgrenze für den Start im Heizbetrieb. Begrenzt den zulässigen Einsatzbereich; ist keine Wasser-Solltemperatur und keine Heizkurvenstützstelle.",
+      "en": "Upper outdoor-temperature limit for starting heating. Restricts the permitted operating envelope; it is neither a water-temperature setpoint nor a heating-curve point.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            41,
+            42,
+            85
+          ]
+        }
+      ]
+    },
+    "P107": {
+      "address": 363,
+      "de": "Obere Außentemperaturgrenze für den Start im Warmwasserbetrieb. Begrenzt den zulässigen Einsatzbereich; ist keine Wasser-Solltemperatur und keine Heizkurvenstützstelle.",
+      "en": "Upper outdoor-temperature limit for starting DHW. Restricts the permitted operating envelope; it is neither a water-temperature setpoint nor a heating-curve point.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            41,
+            42,
+            85
+          ]
+        }
+      ]
+    },
+    "P108": {
+      "address": 364,
+      "de": "Obere Grenze des einstellbaren Wassersollwerts für Warmwasser. Beschränkt den zulässigen Sollwertbereich; setzt nicht selbst den aktuellen Sollwert und entspricht keiner garantierten Isttemperatur.",
+      "en": "Upper bound of the adjustable water-temperature setpoint for DHW. Restricts the permitted setpoint range; does not itself set the current target or guarantee an actual temperature.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P109": {
+      "address": 365,
+      "de": "Untere Grenze des einstellbaren Wassersollwerts für Warmwasser. Beschränkt den zulässigen Sollwertbereich; setzt nicht selbst den aktuellen Sollwert und entspricht keiner garantierten Isttemperatur.",
+      "en": "Lower bound of the adjustable water-temperature setpoint for DHW. Restricts the permitted setpoint range; does not itself set the current target or guarantee an actual temperature.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P110": {
+      "address": 366,
+      "de": "Obere Grenze des einstellbaren Wassersollwerts für Heizen. Beschränkt den zulässigen Sollwertbereich; setzt nicht selbst den aktuellen Sollwert und entspricht keiner garantierten Isttemperatur.",
+      "en": "Upper bound of the adjustable water-temperature setpoint for heating. Restricts the permitted setpoint range; does not itself set the current target or guarantee an actual temperature.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P111": {
+      "address": 367,
+      "de": "Untere Grenze des einstellbaren Wassersollwerts für Heizen. Beschränkt den zulässigen Sollwertbereich; setzt nicht selbst den aktuellen Sollwert und entspricht keiner garantierten Isttemperatur.",
+      "en": "Lower bound of the adjustable water-temperature setpoint for heating. Restricts the permitted setpoint range; does not itself set the current target or guarantee an actual temperature.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P112": {
+      "address": 368,
+      "de": "Obere Grenze des einstellbaren Wassersollwerts für Kühlen. Beschränkt den zulässigen Sollwertbereich; setzt nicht selbst den aktuellen Sollwert und entspricht keiner garantierten Isttemperatur.",
+      "en": "Upper bound of the adjustable water-temperature setpoint for cooling. Restricts the permitted setpoint range; does not itself set the current target or guarantee an actual temperature.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P113": {
+      "address": 369,
+      "de": "Untere Grenze des einstellbaren Wassersollwerts für Kühlen. Beschränkt den zulässigen Sollwertbereich; setzt nicht selbst den aktuellen Sollwert und entspricht keiner garantierten Isttemperatur.",
+      "en": "Lower bound of the adjustable water-temperature setpoint for cooling. Restricts the permitted setpoint range; does not itself set the current target or guarantee an actual temperature.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P114": {
+      "address": 370,
+      "de": "Anzahl der Verdichter innerhalb eines Geräts: 1 oder 2. Nicht die Anzahl der parallel angeschlossenen Wärmepumpen in der Kaskade.",
+      "en": "Number of compressors inside one unit: 1 or 2. Not the number of parallel heat pumps in the cascade.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            19
+          ]
+        }
+      ]
+    },
+    "P117": {
+      "address": 373,
+      "de": "Außentemperaturschwelle für die Frostschutzlogik. Kann Umwälzung auch bei ausgeschaltetem Verdichter auslösen. Zusätzliche Wasser-/Speichertemperaturbedingungen bestimmen weitergehende Schutzmaßnahmen.",
+      "en": "Outdoor-temperature threshold for frost protection. Can trigger circulation even with the compressor off. Additional water/tank-temperature conditions determine further protective actions.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            49,
+            50
+          ]
+        }
+      ]
+    },
+    "P118": {
+      "address": 374,
+      "de": "Wassertemperaturschwelle der Frostschutzlogik. Zusammen mit den übrigen Bedingungen kann daraus nicht nur Umwälzung, sondern auch ein Heizstart zum Frostschutz entstehen. Nicht mit dem Gefrierpunkt des eingefüllten Mediums gleichsetzen.",
+      "en": "Water-temperature threshold for frost protection. Together with other conditions it can trigger protective heating as well as circulation. It is not the freezing point of the fluid in the circuit.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            49,
+            50
+          ]
+        }
+      ]
+    },
+    "P121": {
+      "address": 377,
+      "de": "Untere Grenze des gesperrten Frequenzbandes 1 beim Heizen. Gehört zur Aussparung bestimmter Verdichterfrequenzen und nicht zur normalen Mindest-/Maximalfrequenz. Wie die Firmware das Band überfährt, ist nicht beschrieben.",
+      "en": "Lower boundary of blocked frequency band 1 during heating. Defines excluded compressor frequencies rather than the normal minimum/maximum frequency. How firmware crosses the band is not described.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P122": {
+      "address": 378,
+      "de": "Obere Grenze des gesperrten Frequenzbandes 1 beim Heizen. Gehört zur Aussparung bestimmter Verdichterfrequenzen und nicht zur normalen Mindest-/Maximalfrequenz. Wie die Firmware das Band überfährt, ist nicht beschrieben.",
+      "en": "Upper boundary of blocked frequency band 1 during heating. Defines excluded compressor frequencies rather than the normal minimum/maximum frequency. How firmware crosses the band is not described.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P123": {
+      "address": 379,
+      "de": "Untere Grenze des gesperrten Frequenzbandes 2 beim Heizen. Gehört zur Aussparung bestimmter Verdichterfrequenzen und nicht zur normalen Mindest-/Maximalfrequenz. Wie die Firmware das Band überfährt, ist nicht beschrieben.",
+      "en": "Lower boundary of blocked frequency band 2 during heating. Defines excluded compressor frequencies rather than the normal minimum/maximum frequency. How firmware crosses the band is not described.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P124": {
+      "address": 380,
+      "de": "Obere Grenze des gesperrten Frequenzbandes 2 beim Heizen. Gehört zur Aussparung bestimmter Verdichterfrequenzen und nicht zur normalen Mindest-/Maximalfrequenz. Wie die Firmware das Band überfährt, ist nicht beschrieben.",
+      "en": "Upper boundary of blocked frequency band 2 during heating. Defines excluded compressor frequencies rather than the normal minimum/maximum frequency. How firmware crosses the band is not described.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P125": {
+      "address": 381,
+      "de": "Untere Grenze des gesperrten Frequenzbandes 3 beim Heizen. Gehört zur Aussparung bestimmter Verdichterfrequenzen und nicht zur normalen Mindest-/Maximalfrequenz. Wie die Firmware das Band überfährt, ist nicht beschrieben.",
+      "en": "Lower boundary of blocked frequency band 3 during heating. Defines excluded compressor frequencies rather than the normal minimum/maximum frequency. How firmware crosses the band is not described.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P126": {
+      "address": 382,
+      "de": "Obere Grenze des gesperrten Frequenzbandes 3 beim Heizen. Gehört zur Aussparung bestimmter Verdichterfrequenzen und nicht zur normalen Mindest-/Maximalfrequenz. Wie die Firmware das Band überfährt, ist nicht beschrieben.",
+      "en": "Upper boundary of blocked frequency band 3 during heating. Defines excluded compressor frequencies rather than the normal minimum/maximum frequency. How firmware crosses the band is not described.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P127": {
+      "address": 383,
+      "de": "Untere Grenze des gesperrten Frequenzbandes 1 beim Kühlen. Gehört zur Aussparung bestimmter Verdichterfrequenzen und nicht zur normalen Mindest-/Maximalfrequenz. Wie die Firmware das Band überfährt, ist nicht beschrieben.",
+      "en": "Lower boundary of blocked frequency band 1 during cooling. Defines excluded compressor frequencies rather than the normal minimum/maximum frequency. How firmware crosses the band is not described.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P128": {
+      "address": 384,
+      "de": "Obere Grenze des gesperrten Frequenzbandes 1 beim Kühlen. Gehört zur Aussparung bestimmter Verdichterfrequenzen und nicht zur normalen Mindest-/Maximalfrequenz. Wie die Firmware das Band überfährt, ist nicht beschrieben.",
+      "en": "Upper boundary of blocked frequency band 1 during cooling. Defines excluded compressor frequencies rather than the normal minimum/maximum frequency. How firmware crosses the band is not described.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P129": {
+      "address": 385,
+      "de": "Untere Grenze des gesperrten Frequenzbandes 2 beim Kühlen. Gehört zur Aussparung bestimmter Verdichterfrequenzen und nicht zur normalen Mindest-/Maximalfrequenz. Wie die Firmware das Band überfährt, ist nicht beschrieben.",
+      "en": "Lower boundary of blocked frequency band 2 during cooling. Defines excluded compressor frequencies rather than the normal minimum/maximum frequency. How firmware crosses the band is not described.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P130": {
+      "address": 386,
+      "de": "Obere Grenze des gesperrten Frequenzbandes 2 beim Kühlen. Gehört zur Aussparung bestimmter Verdichterfrequenzen und nicht zur normalen Mindest-/Maximalfrequenz. Wie die Firmware das Band überfährt, ist nicht beschrieben.",
+      "en": "Upper boundary of blocked frequency band 2 during cooling. Defines excluded compressor frequencies rather than the normal minimum/maximum frequency. How firmware crosses the band is not described.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P131": {
+      "address": 387,
+      "de": "Untere Grenze des gesperrten Frequenzbandes 3 beim Kühlen. Gehört zur Aussparung bestimmter Verdichterfrequenzen und nicht zur normalen Mindest-/Maximalfrequenz. Wie die Firmware das Band überfährt, ist nicht beschrieben.",
+      "en": "Lower boundary of blocked frequency band 3 during cooling. Defines excluded compressor frequencies rather than the normal minimum/maximum frequency. How firmware crosses the band is not described.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P132": {
+      "address": 388,
+      "de": "Obere Grenze des gesperrten Frequenzbandes 3 beim Kühlen. Gehört zur Aussparung bestimmter Verdichterfrequenzen und nicht zur normalen Mindest-/Maximalfrequenz. Wie die Firmware das Band überfährt, ist nicht beschrieben.",
+      "en": "Upper boundary of blocked frequency band 3 during cooling. Defines excluded compressor frequencies rather than the normal minimum/maximum frequency. How firmware crosses the band is not described.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P134": {
+      "address": 390,
+      "de": "Untere Durchflussschwelle der Geräteschutzüberwachung. Unterschreitung kann einen Wasserflussfehler und Abschaltung auslösen. Dies ist eine Schutzschwelle, nicht automatisch der für effizienten oder sicheren Dauerbetrieb empfohlene Mindestdurchfluss.",
+      "en": "Lower flow threshold of device protection. Falling below it can cause a water-flow fault and shutdown. This is a protection threshold, not automatically the recommended minimum flow for efficient or safe continuous operation.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            51,
+            85
+          ]
+        }
+      ]
+    },
+    "P135": {
+      "address": 391,
+      "de": "Temperaturdifferenz für den Eintritt in die Antikondensationsfunktion. Das Servicehandbuch nennt eine Abhängigkeit von P120. Fühlerpaar und vollständige Schaltbedingungen sind nicht eindeutig erläutert.",
+      "en": "Temperature difference for entering anti-condensation operation. The service manual states a dependency on P120. The sensor pair and complete switching conditions are not clearly explained.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            85
+          ]
+        }
+      ]
+    },
+    "P136": {
+      "address": 392,
+      "de": "Außentemperaturkriterium für das Öffnen des Drossel-Bypassventils im Kältekreis. Nicht das hydraulische Umschaltventil zwischen Warmwasser und Heizung.",
+      "en": "Outdoor-temperature criterion for opening the refrigerant throttle bypass valve. Not the hydraulic diverter between DHW and heating.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P137": {
+      "address": 393,
+      "de": "Zeitverzögerung des Drossel-Bypassventils in Bezug auf den Verdichter. Das Protokoll nennt Sekunden, erläutert aber die genaue Start-/Stoppsequenz nicht.",
+      "en": "Throttle-bypass-valve delay relative to the compressor. The protocol specifies seconds but does not explain the exact start/stop sequence.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P138": {
+      "address": 394,
+      "de": "Verdichterfrequenzvorgabe während der Abtauung. Gilt für den Kältekreis; die Umwälzpumpe hat eine getrennte Ansteuerung. Temperaturabhängige Abtaustufen können zusätzlich wirksam sein.",
+      "en": "Compressor-frequency setting during defrost. Applies to the refrigerant circuit; the circulation pump is controlled separately. Temperature-dependent defrost stages may also apply.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P141": {
+      "address": 397,
+      "de": "Zeitkriterium des taupunktbezogenen Abtaumodus. Nur im Zusammenhang mit dem gewählten Abtaumodus beurteilen; die vollständige Eintrittslogik ist nicht beschrieben.",
+      "en": "Time criterion for the dew-point-based defrost mode. Interpret together with the selected defrost mode; the complete entry logic is not documented.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P142": {
+      "address": 398,
+      "de": "Konstante der taupunktbezogenen Abtauregelung. Bedeutung der Konstante innerhalb der Berechnungsformel und genaue Skalierung sind in den vorliegenden Unterlagen nicht erläutert.",
+      "en": "Constant for dew-point-based defrost control. Its role in the calculation formula and exact scaling are not explained in the available documents.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P143": {
+      "address": 399,
+      "de": "Wassertemperaturkriterium für den Eintritt in die Abtauung. Ein einzelner erfüllter Grenzwert bestätigt keinen Abtaustart; weitere Kriterien des gewählten Modus gelten.",
+      "en": "Water-temperature criterion for entering defrost. Meeting this one threshold does not confirm a defrost start; other criteria of the selected mode apply.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P144": {
+      "address": 400,
+      "de": "Außentemperaturkriterium für den Eintritt in die Abtauung. Ein einzelner erfüllter Grenzwert bestätigt keinen Abtaustart; weitere Kriterien des gewählten Modus gelten.",
+      "en": "Outdoor-temperature criterion for entering defrost. Meeting this one threshold does not confirm a defrost start; other criteria of the selected mode apply.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P145": {
+      "address": 401,
+      "de": "Frostschutzgrenze für die Wasseraustrittstemperatur. Gehört zum Geräteschutz und ist von Zieltemperatur sowie Zielspreizung getrennt zu betrachten.",
+      "en": "Freeze-protection limit for outlet-water temperature. Part of device protection, separate from target temperature and target temperature difference.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P146": {
+      "address": 402,
+      "de": "Messbereichsvorgabe für die Durchflussrückmeldung der Pumpe, in L/min. Laut Servicehandbuch passend zum Pumpenmodell einstellen. Kein Ziel- oder Mindestdurchfluss.",
+      "en": "Range setting for pump flow feedback, in L/min. The service manual says to match it to the pump model. Not a target or minimum flow setting.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            85
+          ]
+        }
+      ]
+    },
+    "P148": {
+      "address": 404,
+      "de": "Temperaturgrenze des Frostschutzes im Kühlbetrieb. Wird in Abhängigkeit vom gewählten Frostschutzmodus P147 verwendet. Die Registertabelle allein bestätigt nicht, welcher Fühler der installierten Firmware maßgeblich ist.",
+      "en": "Freeze-protection temperature limit during cooling. Used according to frost-protection mode P147. The register table alone does not confirm which sensor the installed firmware uses.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P149": {
+      "address": 405,
+      "de": "Wasseraustrittstemperatur, ab der die Verdichterfrequenz begrenzt werden kann. Der Parameter ist in °C angegeben, obwohl der Name Frequenz enthält; kein maximaler Hz-Wert.",
+      "en": "Outlet-water temperature at which compressor frequency may be limited. The parameter is expressed in °C despite its name mentioning frequency; it is not a maximum Hz value.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            20
+          ]
+        }
+      ]
+    },
+    "P153": {
+      "address": 409,
+      "de": "Obere Temperaturvorgabe für den kombinierten Betrieb mit einer zusätzlichen Wärmequelle auf der Seite Warmwasser. Betrifft diese Kombination und nicht zwingend den normalen alleinigen Wärmepumpenbetrieb.",
+      "en": "Upper temperature setting for combined operation with an additional heat source on the DHW side. Applies to that combination, not necessarily normal heat-pump-only operation.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            21
+          ]
+        }
+      ]
+    },
+    "P154": {
+      "address": 410,
+      "de": "Obere Temperaturvorgabe für den kombinierten Betrieb mit einer zusätzlichen Wärmequelle auf der Seite Heizung. Betrifft diese Kombination und nicht zwingend den normalen alleinigen Wärmepumpenbetrieb.",
+      "en": "Upper temperature setting for combined operation with an additional heat source on the heating side. Applies to that combination, not necessarily normal heat-pump-only operation.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            21
+          ]
+        }
+      ]
+    },
+    "P155": {
+      "address": 411,
+      "de": "Auswahl eines Verdichtercodes, in den Unterlagen ausdrücklich als reservierte Funktion bezeichnet. Eine nutzbare Wirkung und passende Codes für dieses Gerät sind nicht dokumentiert.",
+      "en": "Compressor-code selection, explicitly marked as a reserved function. A usable effect and suitable codes for this unit are not documented.",
+      "level": "reserved",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            21
+          ]
+        }
+      ]
+    },
+    "P157": {
+      "address": 413,
+      "de": "Temperaturdifferenz für die Reduzierung am elektronischen Hilfs-Expansionsventil. Welche Temperaturen verglichen werden und wie stark das Ventil reagiert, ist in der Registertabelle nicht angegeben.",
+      "en": "Temperature difference used for reduction at the auxiliary electronic expansion valve. The register table does not specify the compared temperatures or the amount of valve response.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            21
+          ]
+        }
+      ]
+    },
+    "P159": {
+      "address": 415,
+      "de": "Konstante der temperaturabhängigen Begrenzung beim Heizen, zusammen mit der Freigabebedingung P158. Die vollständige Formel fehlt; der Wert darf nicht unmittelbar als Vorlaufsolltemperatur interpretiert werden.",
+      "en": "Constant for temperature-dependent limiting during heating, associated with enabling condition P158. The complete formula is absent; do not interpret this value directly as a supply-temperature setpoint.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            21
+          ]
+        }
+      ]
+    },
+    "P160": {
+      "address": 416,
+      "de": "Koeffizient der temperaturabhängigen Begrenzung beim Heizen, zusammen mit der Freigabebedingung P158. Die vollständige Formel fehlt; der Wert darf nicht unmittelbar als Vorlaufsolltemperatur interpretiert werden.",
+      "en": "Coefficient for temperature-dependent limiting during heating, associated with enabling condition P158. The complete formula is absent; do not interpret this value directly as a supply-temperature setpoint.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            21
+          ]
+        }
+      ]
+    },
+    "P163": {
+      "address": 419,
+      "de": "Untergrenze der Pumpenregelung, aber widersprüchlich dokumentiert: Protokoll/Excel nennen eine prozentuale Rückmeldung, das Servicehandbuch einen Mindestdurchfluss in L/min. Funktion und Einheit müssen für diese Firmware bestätigt werden; nicht ungeprüft als Prozent oder L/min einstellen.",
+      "en": "Lower limit in pump control, with conflicting documentation: protocol/spreadsheet describe percentage feedback, whereas the service manual describes minimum flow in L/min. Function and unit must be confirmed for this firmware; do not blindly configure it as percent or L/min.",
+      "level": "conflict",
+      "sources": [
+        {
+          "file": "Solareast/ARDEN-R290-Heat-Pump-Service-Manual-.pdf",
+          "pages": [
+            41,
+            86
+          ]
+        }
+      ]
+    },
+    "P168": {
+      "address": 424,
+      "de": "Begrenzt laut Kaskadenkapitel die Gesamtzahl der startenden Geräte im Warmwasserbetrieb, sofern die entsprechende Kaskadenregelung über P164 aktiv ist. 100 % erlaubt alle Geräte; dies ist kein Verdichter-Leistungswert und keine Zuschaltverzögerung. Für die Zuschaltung sind auch P165 und P170 relevant. Bei zwei Geräten kann 50 % die verfügbare Anzahl auf ein Gerät begrenzen, statt das zweite nur später zu starten. Die Rundung bei Zwischenwerten wie 60 % oder 75 % und der genaue Erststartablauf sind nicht dokumentiert.",
+      "en": "According to the cascade section, limits the total number of starting units in DHW mode when the corresponding cascade control is enabled through P164. 100% permits all units; it is neither compressor output nor a staging delay. P165 and P170 also affect staging. With two units, 50% may limit availability to one unit rather than merely delay the second. Rounding at intermediate settings such as 60% or 75% and the exact initial-start sequence are not documented.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            90,
+            91
+          ]
+        }
+      ]
+    },
+    "P169": {
+      "address": 425,
+      "de": "Begrenzt laut Kaskadenkapitel die Gesamtzahl der startenden Geräte im Heiz-/Kühlbetrieb, sofern die entsprechende Kaskadenregelung über P164 aktiv ist. 100 % erlaubt alle Geräte; dies ist kein Verdichter-Leistungswert und keine Zuschaltverzögerung. Für die Zuschaltung sind auch P165 und P170 relevant. Bei zwei Geräten kann 50 % die verfügbare Anzahl auf ein Gerät begrenzen, statt das zweite nur später zu starten. Die Rundung bei Zwischenwerten wie 60 % oder 75 % und der genaue Erststartablauf sind nicht dokumentiert.",
+      "en": "According to the cascade section, limits the total number of starting units in heating/cooling mode when the corresponding cascade control is enabled through P164. 100% permits all units; it is neither compressor output nor a staging delay. P165 and P170 also affect staging. With two units, 50% may limit availability to one unit rather than merely delay the second. Rounding at intermediate settings such as 60% or 75% and the exact initial-start sequence are not documented.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            90,
+            91
+          ]
+        }
+      ]
+    },
+    "P170": {
+      "address": 426,
+      "de": "Zeitparameter für das Zuschalten des nächsten Geräts bei aktiver Kaskadenregelung. Zusammen mit P164, der Zuschalt-Temperaturdifferenz P165 und der Geräteanzahlbegrenzung P168/P169 zu beurteilen. Das Handbuch bestätigt keine zwingende Mindestwartezeit zwischen den allerersten Verdichterstarts; der genaue Beginn bzw. Rücksetzpunkt dieses Zeitzyklus ist nicht beschrieben.",
+      "en": "Time setting for staging the next unit when cascade control is enabled. Interpret together with P164, staging temperature difference P165 and unit-count limit P168/P169. The manual does not establish a mandatory minimum delay between the initial compressor starts; the exact start/reset point of this cycle is not described.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            90,
+            91
+          ]
+        }
+      ]
+    },
+    "P171": {
+      "address": 427,
+      "de": "Außentemperaturgrenze zum Ausblenden des Niederdruckschalters. Die englische Übersetzung nennt teilweise fälschlich Niederspannung. Welche Schutzprüfung bei welcher Vergleichsrichtung entfällt, ist nicht ausreichend belegt.",
+      "en": "Outdoor-temperature threshold for masking the low-pressure switch. Some English labels incorrectly say low voltage. The precise masked protection check and comparison direction are not sufficiently documented.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            21
+          ]
+        }
+      ]
+    },
+    "P172": {
+      "address": 428,
+      "de": "Konstante c für die Sollfrequenzberechnung des DC-Lüfters. Keine unmittelbar gemessene Drehzahl. Die vollständige Formel und ihre Eingangsgrößen sind nicht dokumentiert.",
+      "en": "Constant c for the DC-fan target-frequency calculation. Not a directly measured speed. The complete formula and its inputs are not documented.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            21
+          ]
+        }
+      ]
+    },
+    "P174": {
+      "address": 430,
+      "de": "Öffnung des elektronischen Haupt-Expansionsventils während der Abtauung, in Ventilschritten. Nicht die Stellung eines hydraulischen Dreiwege- oder Kugelventils.",
+      "en": "Main electronic expansion-valve opening during defrost, in valve steps. Not the position of a hydraulic three-way or ball valve.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            178
+          ]
+        }
+      ]
+    },
+    "P175": {
+      "address": 431,
+      "de": "Intervallzyklus der Wasserpumpe bei temperaturbedingtem Stillstand des Geräts. Das technische Handbuch ordnet Register 0x01AF ausdrücklich diesem Pumpenintervall zu. Nicht mit der Laufdauer P029 oder der Kaskaden-Zuschaltverzögerung P170 verwechseln. Die Bedeutung von 0 und der exakte Wiedereinschaltablauf sind nicht erläutert.",
+      "en": "Water-pump interval cycle while the unit is stopped at its target temperature. The technical manual explicitly assigns register 0x01AF to this pump interval. Do not confuse it with run duration P029 or cascade loading delay P170. The meaning of 0 and the exact restart sequence are not explained.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            178
+          ]
+        }
+      ]
+    },
+    "P176": {
+      "address": 432,
+      "de": "Mindestdauer des Abtaubetriebs, in Sekunden. Kann das reguläre temperaturbedingte Abtauende verzögern; ist keine allgemeine Aufhebung von Schutzabschaltungen.",
+      "en": "Minimum duration of defrost operation, in seconds. May delay normal temperature-based defrost completion; does not generally override protective shutdowns.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            178
+          ]
+        }
+      ]
+    },
+    "P177": {
+      "address": 433,
+      "de": "Wassertemperaturgrenze zur Auswahl temperaturabhängiger Abtaustufen. Gehört zur Umschaltung der Abtaufrequenz; keine normale Heizsolltemperatur. Die genaue Zuordnung der Stufen ist nicht erläutert.",
+      "en": "Water-temperature threshold for selecting temperature-dependent defrost stages. Related to selecting defrost frequency, not a normal heating setpoint. The exact stage mapping is not explained.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            178
+          ]
+        }
+      ]
+    },
+    "P178": {
+      "address": 434,
+      "de": "Verdichterfrequenz für die Abtaustufe bei hoher Wassertemperatur. Im Zusammenhang mit der temperaturabhängigen Stufenauswahl P177 zu beurteilen.",
+      "en": "Compressor frequency for the high-water-temperature defrost stage. Interpret together with temperature-dependent stage selection P177.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            178
+          ]
+        }
+      ]
+    },
+    "P184": {
+      "address": 440,
+      "de": "Werkskennfeld: Verdichterfrequenz am dokumentierten Betriebspunkt 35D. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: compressor frequency at documented point 35D. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            21
+          ]
+        }
+      ]
+    },
+    "P185": {
+      "address": 441,
+      "de": "Werkskennfeld: Verdichterfrequenz am dokumentierten Betriebspunkt 35C. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: compressor frequency at documented point 35C. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P186": {
+      "address": 442,
+      "de": "Werkskennfeld: Verdichterfrequenz am dokumentierten Betriebspunkt 35B. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: compressor frequency at documented point 35B. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P187": {
+      "address": 443,
+      "de": "Werkskennfeld: Verdichterfrequenz am dokumentierten Betriebspunkt 35A. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: compressor frequency at documented point 35A. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P188": {
+      "address": 444,
+      "de": "Werkskennfeld: Verdichterfrequenz am dokumentierten Betriebspunkt 35E. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: compressor frequency at documented point 35E. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P189": {
+      "address": 445,
+      "de": "Werkskennfeld: Verdichterfrequenz am dokumentierten Betriebspunkt 55D. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: compressor frequency at documented point 55D. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P190": {
+      "address": 446,
+      "de": "Werkskennfeld: Verdichterfrequenz am dokumentierten Betriebspunkt 55C. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: compressor frequency at documented point 55C. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P191": {
+      "address": 447,
+      "de": "Werkskennfeld: Verdichterfrequenz am dokumentierten Betriebspunkt 55B. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: compressor frequency at documented point 55B. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P192": {
+      "address": 448,
+      "de": "Werkskennfeld: Verdichterfrequenz am dokumentierten Betriebspunkt 55A. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: compressor frequency at documented point 55A. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P193": {
+      "address": 449,
+      "de": "Werkskennfeld: Verdichterfrequenz am dokumentierten Betriebspunkt 55E. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: compressor frequency at documented point 55E. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P194": {
+      "address": 450,
+      "de": "Werkskennfeld: Lüfterfrequenz am dokumentierten Betriebspunkt 35D. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: fan frequency at documented point 35D. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P195": {
+      "address": 451,
+      "de": "Werkskennfeld: Lüfterfrequenz am dokumentierten Betriebspunkt 35C. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: fan frequency at documented point 35C. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P196": {
+      "address": 452,
+      "de": "Werkskennfeld: Lüfterfrequenz am dokumentierten Betriebspunkt 35B. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: fan frequency at documented point 35B. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P197": {
+      "address": 453,
+      "de": "Werkskennfeld: Lüfterfrequenz am dokumentierten Betriebspunkt 35A. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: fan frequency at documented point 35A. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P198": {
+      "address": 454,
+      "de": "Werkskennfeld: Lüfterfrequenz am dokumentierten Betriebspunkt 35E. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: fan frequency at documented point 35E. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P199": {
+      "address": 455,
+      "de": "Werkskennfeld: Lüfterfrequenz am dokumentierten Betriebspunkt 55D. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: fan frequency at documented point 55D. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P200": {
+      "address": 456,
+      "de": "Werkskennfeld: Lüfterfrequenz am dokumentierten Betriebspunkt 55C. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: fan frequency at documented point 55C. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P201": {
+      "address": 457,
+      "de": "Werkskennfeld: Lüfterfrequenz am dokumentierten Betriebspunkt 55B. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: fan frequency at documented point 55B. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P202": {
+      "address": 458,
+      "de": "Werkskennfeld: Lüfterfrequenz am dokumentierten Betriebspunkt 55A. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: fan frequency at documented point 55A. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P203": {
+      "address": 459,
+      "de": "Werkskennfeld: Lüfterfrequenz am dokumentierten Betriebspunkt 55E. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: fan frequency at documented point 55E. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P204": {
+      "address": 460,
+      "de": "Werkskennfeld: Sollüberhitzung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 35D. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve target superheat at documented point 35D. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P205": {
+      "address": 461,
+      "de": "Werkskennfeld: Sollüberhitzung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 35C. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve target superheat at documented point 35C. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P206": {
+      "address": 462,
+      "de": "Werkskennfeld: Sollüberhitzung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 35B. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve target superheat at documented point 35B. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P207": {
+      "address": 463,
+      "de": "Werkskennfeld: Sollüberhitzung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 35A. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve target superheat at documented point 35A. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P208": {
+      "address": 464,
+      "de": "Werkskennfeld: Sollüberhitzung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 35E. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve target superheat at documented point 35E. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P209": {
+      "address": 465,
+      "de": "Werkskennfeld: Sollüberhitzung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 55D. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve target superheat at documented point 55D. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P210": {
+      "address": 466,
+      "de": "Werkskennfeld: Sollüberhitzung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 55C. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve target superheat at documented point 55C. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P211": {
+      "address": 467,
+      "de": "Werkskennfeld: Sollüberhitzung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 55B. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve target superheat at documented point 55B. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P212": {
+      "address": 468,
+      "de": "Werkskennfeld: Sollüberhitzung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 55A. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve target superheat at documented point 55A. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P213": {
+      "address": 469,
+      "de": "Werkskennfeld: Sollüberhitzung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 55E. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve target superheat at documented point 55E. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P214": {
+      "address": 470,
+      "de": "Werkskennfeld: Anfangsöffnung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 35D. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve initial opening at documented point 35D. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P215": {
+      "address": 471,
+      "de": "Werkskennfeld: Anfangsöffnung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 35C. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve initial opening at documented point 35C. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P216": {
+      "address": 472,
+      "de": "Werkskennfeld: Anfangsöffnung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 35B. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve initial opening at documented point 35B. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P217": {
+      "address": 473,
+      "de": "Werkskennfeld: Anfangsöffnung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 35A. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve initial opening at documented point 35A. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P218": {
+      "address": 474,
+      "de": "Werkskennfeld: Anfangsöffnung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 35E. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve initial opening at documented point 35E. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P219": {
+      "address": 475,
+      "de": "Werkskennfeld: Anfangsöffnung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 55D. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve initial opening at documented point 55D. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P220": {
+      "address": 476,
+      "de": "Werkskennfeld: Anfangsöffnung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 55C. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve initial opening at documented point 55C. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P221": {
+      "address": 477,
+      "de": "Werkskennfeld: Anfangsöffnung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 55B. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve initial opening at documented point 55B. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P222": {
+      "address": 478,
+      "de": "Werkskennfeld: Anfangsöffnung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 55A. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve initial opening at documented point 55A. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ]
+    },
+    "P223": {
+      "address": 479,
+      "de": "Werkskennfeld: Anfangsöffnung des Haupt-Expansionsventils am dokumentierten Betriebspunkt 55E. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: main expansion-valve initial opening at documented point 55E. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P224": {
+      "address": 480,
+      "de": "Werkskennfeld: Sollüberhitzung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 35D. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve target superheat at documented point 35D. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P225": {
+      "address": 481,
+      "de": "Werkskennfeld: Sollüberhitzung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 35C. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve target superheat at documented point 35C. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P226": {
+      "address": 482,
+      "de": "Werkskennfeld: Sollüberhitzung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 35B. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve target superheat at documented point 35B. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P227": {
+      "address": 483,
+      "de": "Werkskennfeld: Sollüberhitzung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 35A. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve target superheat at documented point 35A. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P228": {
+      "address": 484,
+      "de": "Werkskennfeld: Sollüberhitzung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 35E. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve target superheat at documented point 35E. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P229": {
+      "address": 485,
+      "de": "Werkskennfeld: Sollüberhitzung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 55D. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve target superheat at documented point 55D. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P230": {
+      "address": 486,
+      "de": "Werkskennfeld: Sollüberhitzung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 55C. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve target superheat at documented point 55C. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P231": {
+      "address": 487,
+      "de": "Werkskennfeld: Sollüberhitzung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 55B. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve target superheat at documented point 55B. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P232": {
+      "address": 488,
+      "de": "Werkskennfeld: Sollüberhitzung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 55A. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve target superheat at documented point 55A. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P233": {
+      "address": 489,
+      "de": "Werkskennfeld: Sollüberhitzung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 55E. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve target superheat at documented point 55E. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P234": {
+      "address": 490,
+      "de": "Werkskennfeld: Anfangsöffnung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 35D. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve initial opening at documented point 35D. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P235": {
+      "address": 491,
+      "de": "Werkskennfeld: Anfangsöffnung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 35C. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve initial opening at documented point 35C. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P236": {
+      "address": 492,
+      "de": "Werkskennfeld: Anfangsöffnung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 35B. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve initial opening at documented point 35B. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P237": {
+      "address": 493,
+      "de": "Werkskennfeld: Anfangsöffnung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 35A. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve initial opening at documented point 35A. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P238": {
+      "address": 494,
+      "de": "Werkskennfeld: Anfangsöffnung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 35E. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve initial opening at documented point 35E. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P239": {
+      "address": 495,
+      "de": "Werkskennfeld: Anfangsöffnung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 55D. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve initial opening at documented point 55D. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P240": {
+      "address": 496,
+      "de": "Werkskennfeld: Anfangsöffnung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 55C. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve initial opening at documented point 55C. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P241": {
+      "address": 497,
+      "de": "Werkskennfeld: Anfangsöffnung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 55B. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve initial opening at documented point 55B. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P242": {
+      "address": 498,
+      "de": "Werkskennfeld: Anfangsöffnung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 55A. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve initial opening at documented point 55A. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P243": {
+      "address": 499,
+      "de": "Werkskennfeld: Anfangsöffnung des Hilfs-Expansionsventils am dokumentierten Betriebspunkt 55E. Das ist ein hinterlegter Kennfeldwert, nicht der aktuell gemessene Zustand. Die Unterlagen ordnen die Buchstaben nicht eindeutig konkreten Außenbedingungen zu; keine Heizkurvenstützstelle.",
+      "en": "Factory operating-point table: auxiliary expansion-valve initial opening at documented point 55E. This is a stored table value, not a live measurement. The documents do not unambiguously map the letters to specific outdoor conditions; it is not a heating-curve point.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P244": {
+      "address": 500,
+      "de": "Ziel-Wasserdurchfluss für die dokumentierte 35-Wassertemperatur-Betriebsbedingung, in L/min. Eine Kennfeldvorgabe und kein aktueller Durchflusswert. Wann die Firmware diesen Betriebspunkt verwendet, ist nicht näher erläutert.",
+      "en": "Target water flow for the documented 35 water-temperature operating condition, in L/min. A table setting rather than a live flow reading. The firmware's selection of this point is not explained further.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P245": {
+      "address": 501,
+      "de": "Ziel-Wasserdurchfluss für die dokumentierte 55-Wassertemperatur-Betriebsbedingung, in L/min. Eine Kennfeldvorgabe und kein aktueller Durchflusswert. Wann die Firmware diesen Betriebspunkt verwendet, ist nicht näher erläutert.",
+      "en": "Target water flow for the documented 55 water-temperature operating condition, in L/min. A table setting rather than a live flow reading. The firmware's selection of this point is not explained further.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P246": {
+      "address": 502,
+      "de": "Lüfterfrequenz unter der Nennbedingung mit niedriger Wassertemperatur. Gehört zum Werkskennfeld und ist kein allgemeiner Lüfter-Sollwert für jeden Betriebszustand.",
+      "en": "Fan frequency at the low-water-temperature rated condition. Part of the factory operating-point table, not a universal fan setpoint for all operation.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            23
+          ]
+        }
+      ]
+    },
+    "P247": {
+      "address": 503,
+      "de": "Anfangsöffnung des elektronischen Haupt-Expansionsventils unter der 35-Nennbedingung, in Schritten. Kennfeldvorgabe für den Kältekreis; keine Pumpen- oder Wasser-Ventileinstellung.",
+      "en": "Initial main electronic expansion-valve opening at the 35 rated condition, in steps. Refrigerant-circuit table setting, not a pump or water-valve setting.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            24
+          ]
+        }
+      ]
+    },
+    "P249": {
+      "address": 505,
+      "de": "Anfangsöffnung des elektronischen Haupt-Expansionsventils unter der 55-Nennbedingung, in Schritten. Kennfeldvorgabe für den Kältekreis; keine Pumpen- oder Wasser-Ventileinstellung.",
+      "en": "Initial main electronic expansion-valve opening at the 55 rated condition, in steps. Refrigerant-circuit table setting, not a pump or water-valve setting.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            24
+          ]
+        }
+      ]
+    },
+    "P248": {
+      "address": 504,
+      "de": "Dokumentationskonflikt: Excel bezeichnet dies als Hauptventilöffnung, das technische Handbuch nennt an derselben Adresse 0x01F8 die Lüfterfrequenz bei hoher Wassertemperatur (Hz). Die tatsächliche Funktion ist für die installierte Firmware offen.",
+      "en": "Documentation conflict: the spreadsheet names a main-valve opening, while the technical manual identifies the same address 0x01F8 as high-water-temperature fan frequency (Hz). The actual function remains unverified for the installed firmware.",
+      "level": "conflict",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            181
+          ]
+        }
+      ]
+    },
+    "P250": {
+      "address": 506,
+      "de": "Sollüberhitzung des elektronischen Haupt-Expansionsventils unter der 35-Nennbedingung. Ein Kältekreis-Kennfeldwert; nicht die Wasserspreizung zwischen Vorlauf und Rücklauf.",
+      "en": "Main electronic expansion-valve target superheat at the 35 rated condition. A refrigerant-circuit table value, not the difference between supply and return water temperatures.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            24
+          ]
+        }
+      ]
+    },
+    "P252": {
+      "address": 508,
+      "de": "Sollüberhitzung des elektronischen Haupt-Expansionsventils unter der 55-Nennbedingung. Ein Kältekreis-Kennfeldwert; nicht die Wasserspreizung zwischen Vorlauf und Rücklauf.",
+      "en": "Main electronic expansion-valve target superheat at the 55 rated condition. A refrigerant-circuit table value, not the difference between supply and return water temperatures.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            24
+          ]
+        }
+      ]
+    },
+    "P251": {
+      "address": 507,
+      "de": "Stromschwelle zum Abschalten der Leistungsfaktorkorrektur (PFC) im Antrieb. Betrifft die Leistungselektronik, nicht einen Heizkreis. Der genaue Strommesspunkt und Ablauf sind nicht erläutert.",
+      "en": "Current threshold for disabling power-factor correction (PFC) in the drive. Applies to power electronics, not a heating circuit. The exact current measurement point and sequence are not explained.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            24
+          ]
+        }
+      ]
+    },
+    "P253": {
+      "address": 509,
+      "de": "Stromschwelle zum Einschalten der Leistungsfaktorkorrektur (PFC) im Antrieb. Betrifft die Leistungselektronik, nicht einen Heizkreis. Der genaue Strommesspunkt und Ablauf sind nicht erläutert.",
+      "en": "Current threshold for enabling power-factor correction (PFC) in the drive. Applies to power electronics, not a heating circuit. The exact current measurement point and sequence are not explained.",
+      "level": "partial",
+      "sources": [
+        {
+          "file": "Modbus_protocol_V1.2.9.pdf",
+          "pages": [
+            24
+          ]
+        }
+      ]
+    },
+    "P256": {
+      "address": 512,
+      "de": "Zeitbegrenzung für den Betrieb bei der entsprechenden Smart-Grid-/EVU-Signalkombination. Wirkt nur bei aktivierter SG-Funktion. Die Unterlagen nennen unterschiedliche Zeitangaben; die Darstellung ist keine Empfehlung zur Übernahme eines Handbuchdefaults.",
+      "en": "Runtime limit under the corresponding Smart-Grid/EVU signal combination. Applies only when SG operation is enabled. Documents give conflicting time values; this explanation does not recommend applying a manual default.",
+      "level": "conflict",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            91,
+            181
+          ]
+        }
+      ]
+    },
+    "P258": {
+      "address": 514,
+      "de": "Regelintervall des Mischventils für die zweite Temperaturzone. Bestimmt, wie oft die Regelung eine Ventilkorrektur vornehmen kann; nicht die vollständige Motorlaufzeit P259.",
+      "en": "Control interval of the mixing valve for the second temperature zone. Determines how often control can adjust the valve; not the full actuator travel time P259.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            90,
+            181
+          ]
+        }
+      ]
+    },
+    "P259": {
+      "address": 515,
+      "de": "Zeit für den vollständigen Stellweg des Mischventilantriebs. Muss zum verwendeten Antrieb passen; dient der zeitbasierten Positionssteuerung und ist kein Pumpennachlauf.",
+      "en": "Time for the mixing-valve actuator's full travel. Must match the actuator; used for time-based position control, not pump postrun.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            90,
+            181
+          ]
+        }
+      ]
+    },
+    "P260": {
+      "address": 516,
+      "de": "Obere prozentuale Ansteuerungsgrenze der internen DC-Wasserpumpe. Begrenzt deren Regelbereich; nicht die maximale Leistung der externen Zusatzpumpe.",
+      "en": "Upper percentage control limit for the internal DC water pump. Limits its control range, not the maximum output of the external auxiliary pump.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            155,
+            181
+          ]
+        }
+      ]
+    },
+    "P261": {
+      "address": 517,
+      "de": "Ansteuerung der internen Wasserpumpe bei konstant gehaltener Temperatur bzw. temperaturbedingter Bereitschaft. Ob die Pumpe in diesem Zustand läuft, hängt zusätzlich von der Pumpenbetriebsart ab. Kein dauerhafter Sollwert der Zusatzpumpe.",
+      "en": "Internal water-pump output during constant-temperature operation or temperature-related standby. Whether the pump runs in that state also depends on its operating mode. Not a continuous setpoint for the auxiliary pump.",
+      "level": "documented",
+      "sources": [
+        {
+          "file": "Technisches Handbuch.pdf",
+          "pages": [
+            155,
+            181
+          ]
+        }
+      ]
+    }
+  }
+}

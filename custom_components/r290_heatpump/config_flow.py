@@ -1,3 +1,4 @@
+from .polling.profiles import settings as polling_settings, DEFAULTS as POLLING_DEFAULTS, BOUNDS as POLLING_BOUNDS
 # Version: 1.0.2
 # Last modified: 2025-11-11 14:11 by CNC-Buddy
 import logging
@@ -9,8 +10,10 @@ from homeassistant.helpers.selector import selector
 from .hub import R290HeatPumpModbusHub
 from .const import CONNECTION_TYPE_LABELS
 from .dashboard import async_setup_dashboard
+from .sidebar import apply_sidebar_visibility, PANEL_VISIBILITY, DASHBOARD_VISIBILITY
 from .pv_optimization import PV_CURVE_CONFIG
-from .connection import BRIDGE_ENTRY_ID, connection_settings, async_update_bridge_connection
+from .connection import (BRIDGE_ENTRY_ID, connection_settings, async_update_bridge_connection,
+                         check_bridge_endpoint, DuplicateBridgeError)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -20,6 +23,7 @@ DEVICE_TYPES = {
     "modbus_bridge": "Modbus Bridge",
     "heat_pump": "Heat Pump",
     "cop_calculator": "COP Calculator",
+    "auxiliary_pump": "Auxiliary Pump Controller",
     # Only expose the four concrete curve kinds
     "heating_curve": "Heating Curve",
     "floor_heating_curve": "Floor Heating Curve",
@@ -41,8 +45,18 @@ def _connection_type_selector():
     })
 
 
+def _polling_fields(values=None):
+    # Keep submitted fields visible even when cross-field validation fails.
+    values={**POLLING_DEFAULTS, **(values or {})}
+    fields={vol.Optional("polling_profile",default=values["polling_profile"]): selector({"select":{"options":["legacy","auto"],"translation_key":"polling_profile"}})}
+    for key,(low,high) in POLLING_BOUNDS.items():
+        fields[vol.Optional(key,default=values[key])]=vol.All(vol.Coerce(float),vol.Range(min=low,max=high))
+    return fields
+
+
 class R290HeatPumpModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
+    MINOR_VERSION = 2
 
     @staticmethod
     def async_get_options_flow(config_entry):
@@ -59,6 +73,8 @@ class R290HeatPumpModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return await self.async_step_heat_pump()
             if device_type == "cop_calculator":
                 return await self.async_step_cop_calculator()
+            if device_type == "auxiliary_pump":
+                return await self.async_step_auxiliary_pump()
             if device_type in ("heating_curve", "floor_heating_curve", "cooling_curve", "hot_water_curve"):
                 # Merke die Auswahl und gehe direkt in den Kurven-Flow ohne erneute Auswahl
                 self._selected_curve_kind = device_type
@@ -79,8 +95,13 @@ class R290HeatPumpModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_modbus_bridge(self, user_input=None):
         errors = {}
+        if user_input is not None:
+            try:polling_settings(user_input)
+            except (ValueError,TypeError):
+                errors["base"] = "invalid_polling_settings"
         schema = vol.Schema(
             {
+                **_polling_fields(user_input),
                 vol.Required("connection_type", default="rtuovertcp"): _connection_type_selector(),
                 vol.Required("host"): str,
                 vol.Required("port", default=502): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535)),
@@ -93,11 +114,12 @@ class R290HeatPumpModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Optional("create_dashboard", default=True): bool,
             }
         )
-        if user_input is not None:
+        if user_input is not None and not errors:
             try:
                 connection_type = user_input["connection_type"]
                 host = user_input["host"]
                 port = user_input["port"]
+                check_bridge_endpoint(self.hass, user_input)
                 hub = R290HeatPumpModbusHub(host=host, port=port, mode=connection_type, connect_timeout=float(user_input.get("connect_timeout", 8.0)), connect_retries=int(user_input.get("connect_retries", 2)), request_timeout=float(user_input.get("request_timeout", 5.0)))
                 await hub.async_connect()
                 try:
@@ -114,6 +136,7 @@ class R290HeatPumpModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     title="R290 Heat Pump Modbus Bridge",
                     data={
                         "device_type": "modbus_bridge",
+                        **polling_settings(user_input),
                         "connection_type": connection_type,
                         "host": host,
                         "port": port,
@@ -125,6 +148,8 @@ class R290HeatPumpModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         "create_dashboard": bool(user_input.get("create_dashboard", True)),
                     },
                 )
+            except DuplicateBridgeError:
+                errors["base"] = "duplicate_bridge"
             except Exception as err:
                 _LOGGER.error("Modbus bridge flow error: %s", err)
                 errors["base"] = "cannot_connect"
@@ -400,12 +425,34 @@ class R290HeatPumpModbusConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_import(self, import_info):
         return await self.async_step_user(import_info)
 
+    async def async_step_auxiliary_pump(self, user_input=None):
+        from .pump_config import pump_schema
+        if user_input is not None:
+            self._pump_input = dict(user_input)
+            return await self.async_step_pump_limits()
+        from .pump_suggestions import suggest_pump_entities
+        return self.async_show_form(step_id="auxiliary_pump", data_schema=pump_schema(suggest_pump_entities(self.hass)))
+
+    async def async_step_pump_limits(self, user_input=None):
+        from .pump_config import pump_schema, validate_config
+        errors = {}
+        if user_input is not None:
+            try:
+                values = validate_config(self.hass, {**self._pump_input, **user_input})
+                return self.async_create_entry(title=values["name"], data={"device_type": "auxiliary_pump", **values})
+            except (ValueError, TypeError) as err:
+                errors["base"] = "invalid_pump_config"
+                return self.async_show_form(step_id="pump_limits", data_schema=pump_schema(user_input, limits=True), errors=errors, description_placeholders={"detail": str(err)})
+        return self.async_show_form(step_id="pump_limits", data_schema=pump_schema(limits=True), description_placeholders={"detail": ""})
+
 
 class R290HeatPumpOptionsFlow(config_entries.OptionsFlow):
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
         self._entry = config_entry
 
     async def async_step_init(self, user_input=None):
+        if self._entry.data.get("device_type") == "auxiliary_pump":
+            return await self.async_step_auxiliary_pump(user_input)
         errors = {}
         data = self._entry.data
         opts = dict(self._entry.options)
@@ -418,8 +465,16 @@ class R290HeatPumpOptionsFlow(config_entries.OptionsFlow):
         default_port = conn.get("port", data.get("port", 502))
 
         if device_type == "modbus_bridge":
+            bridges = [e for e in self.hass.config_entries.async_entries(DOMAIN)
+                       if e.data.get("device_type") == "modbus_bridge"]
+            primary_bridge = bool(bridges and bridges[0].entry_id == self._entry.entry_id)
+            sidebar_fields = {
+                vol.Optional(PANEL_VISIBILITY, default=opts.get(PANEL_VISIBILITY, True)): bool,
+                vol.Optional(DASHBOARD_VISIBILITY, default=opts.get(DASHBOARD_VISIBILITY, True)): bool,
+            } if primary_bridge else {}
             schema = vol.Schema(
                 {
+                    **_polling_fields({**data, **(user_input or {})}),
                     vol.Required("connection_type", default=default_mode): _connection_type_selector(),
                     vol.Required("host", default=default_host): str,
                     vol.Required("port", default=default_port): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535)),
@@ -428,6 +483,7 @@ class R290HeatPumpOptionsFlow(config_entries.OptionsFlow):
                     vol.Optional("request_timeout", default=conn.get("request_timeout", 5.0)): vol.All(vol.Coerce(float), vol.Range(min=1.0, max=30.0)),
                     vol.Optional("block_size", default=conn.get("block_size", 49)): selector({"number": {"min": 1, "max": 125, "step": 1, "mode": "box"}}),
                     vol.Optional("block_pause", default=conn.get("block_pause", 0.05)): vol.All(vol.Coerce(float), vol.Range(min=0.0, max=2.0)),
+                    **sidebar_fields,
                     # Action checkbox to (re)create the Lovelace dashboard on demand
                     vol.Optional("recreate_dashboard", default=False): bool,
                 }
@@ -478,13 +534,18 @@ class R290HeatPumpOptionsFlow(config_entries.OptionsFlow):
         if user_input is not None:
             try:
                 if device_type == "modbus_bridge":
+                    try:
+                        polling_settings({**self._entry.data, **user_input})
+                    except (ValueError, TypeError):
+                        return self.async_show_form(step_id="init", data_schema=schema,
+                                                    errors={"base": "invalid_polling_settings"})
                     await async_update_bridge_connection(
                         self.hass, self._entry, {**self._entry.data, **user_input}, validate=True
                     )
                     # Recreate dashboard if requested
                     try:
                         if bool(user_input.get("recreate_dashboard", False)):
-                            await async_setup_dashboard(self.hass)
+                            await async_setup_dashboard(self.hass, force=True)
                     except Exception:
                         _LOGGER.debug("Dashboard creation deferred or failed in options flow.")
                     try:
@@ -494,7 +555,12 @@ class R290HeatPumpOptionsFlow(config_entries.OptionsFlow):
                             ent.async_write_ha_state()
                     except Exception:
                         pass
-                    return self.async_create_entry(title="Options", data=self._entry.options)
+                    updated_options = dict(self._entry.options)
+                    for key in (PANEL_VISIBILITY, DASHBOARD_VISIBILITY):
+                        if key in user_input and primary_bridge:
+                            updated_options[key] = bool(user_input[key])
+                    apply_sidebar_visibility(self.hass, updated_options)
+                    return self.async_create_entry(title="Options", data=updated_options)
                 elif device_type == "cop_calculator":
                     heat = user_input["heat_meter"]
                     power_sel = user_input["power_meter"]
@@ -559,11 +625,42 @@ class R290HeatPumpOptionsFlow(config_entries.OptionsFlow):
                     fast = int(user_input[CONF_SCAN_INTERVAL])
                     slow = int(user_input["long_scan_interval"])
                     return self.async_create_entry(title="Options", data={CONF_SCAN_INTERVAL: fast, "long_scan_interval": slow})
+            except DuplicateBridgeError:
+                errors["base"] = "duplicate_bridge"
             except Exception as err:
                 _LOGGER.error("Options flow error: %s", err)
                 errors["base"] = "cannot_connect"
 
         return self.async_show_form(step_id="init", data_schema=schema, errors=errors)
+
+    async def async_step_auxiliary_pump(self, user_input=None):
+        from .pump_config import ENTITY_FIELDS, pump_schema
+        values = {**self._entry.data, **self._entry.options}
+        if user_input is not None:
+            # An omitted optional selector explicitly removes its old mapping.
+            self._pump_input = {k: v for k, v in values.items() if k not in ENTITY_FIELDS}
+            self._pump_input.update(user_input)
+            return await self.async_step_pump_limits()
+        from .pump_suggestions import suggest_pump_entities
+        return self.async_show_form(step_id="auxiliary_pump", data_schema=pump_schema(suggest_pump_entities(self.hass, values)))
+
+    async def async_step_pump_limits(self, user_input=None):
+        from .pump_config import pump_schema, validate_config
+        values = self._pump_input
+        if user_input is not None:
+            try:
+                values = validate_config(self.hass, {**values, **user_input}, exclude_entry=self._entry.entry_id)
+                # Store the full mapping; empty selectors override legacy data.
+                from .pump_config import ENTITY_FIELDS
+                for key, (_, multiple, required) in ENTITY_FIELDS.items():
+                    if not required and key not in values:
+                        values[key] = [] if multiple else ""
+                if self._entry.title != values["name"]:
+                    self.hass.config_entries.async_update_entry(self._entry, title=values["name"])
+                return self.async_create_entry(title="", data=values)
+            except (ValueError, TypeError) as err:
+                return self.async_show_form(step_id="pump_limits", data_schema=pump_schema({**values, **user_input}, limits=True), errors={"base": "invalid_pump_config"}, description_placeholders={"detail": str(err)})
+        return self.async_show_form(step_id="pump_limits", data_schema=pump_schema(values, limits=True), description_placeholders={"detail": ""})
 
 
 

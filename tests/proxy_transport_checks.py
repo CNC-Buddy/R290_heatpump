@@ -28,8 +28,12 @@ for name, attrs in {
     module.__dict__.update(attrs)
     sys.modules[name] = module
 
+component = Path(__file__).parents[1] / "custom_components/r290_heatpump"
+package = types.ModuleType("transport_under_test")
+package.__path__ = [str(component)]
+sys.modules[package.__name__] = package
 spec = importlib.util.spec_from_file_location(
-    "hub_under_test", Path(__file__).parents[1] / "custom_components/r290_heatpump/hub.py"
+    "transport_under_test.hub", component / "hub.py"
 )
 hub_module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(hub_module)
@@ -49,6 +53,7 @@ class TransportChecks(unittest.IsolatedAsyncioTestCase):
         self.tasks = set()
         self.writers = set()
         self.requests = []
+        self.memory = {}
         self.connection_count = 0
         self.fault = None
         self.fixed_id = True
@@ -88,6 +93,8 @@ class TransportChecks(unittest.IsolatedAsyncioTestCase):
                     tid = header[:2]
                 unit, function, address, value = struct.unpack(">BBHH", data)
                 self.requests.append((connection, tid, unit, function, address, value))
+                if function == 6:
+                    self.memory[unit, address] = value
                 fault, self.fault = self.fault, None
                 if fault == "timeout":
                     continue
@@ -100,7 +107,7 @@ class TransportChecks(unittest.IsolatedAsyncioTestCase):
                 elif function == 3:
                     count = value - 1 if fault == "short" else value
                     payload = bytes([unit, function, count * 2]) + b"".join(
-                        struct.pack(">H", address + i) for i in range(count)
+                        struct.pack(">H", self.memory.get((unit, address+i), address+i)) for i in range(count)
                     )
                 elif function == 6:
                     payload = struct.pack(">BBHH", unit, function, address,
@@ -185,6 +192,47 @@ class TransportChecks(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(self.hub.diagnostics["socket_connected"])
         self.assertEqual(self.hub.communication_status, "Not checked")
         self.assertIsNone(self.hub.diagnostics["last_response"])
+
+    async def test_auto_lost_write_ack_verified_over_new_socket_without_retry(self):
+        await self.hub.configure_polling({"polling_profile": "auto", "block_pause": 0})
+        self.fault = "timeout"
+        await self.hub.async_pb_write_register(2, 0x301, 35)
+        self.assertEqual([(r[2], r[3], r[4]) for r in self.requests],
+                         [(2, 6, 0x301), (2, 3, 0x301)])
+        self.assertEqual(self.connection_count, 2)
+        self.assertTrue(all(r[1] == b"\x00\x01" for r in self.requests))
+        self.assertEqual(self.hub.scheduler.verified_writes, 1)
+
+    async def test_auto_two_units_and_duplicate_callers_use_single_worker(self):
+        await self.hub.configure_polling({"polling_profile": "auto", "block_pause": 0})
+        answers = await asyncio.gather(
+            self.hub.async_read_block(1, 74, 2),
+            self.hub.async_read_block(2, 74, 2),
+            self.hub.async_read_block(1, 74, 2),
+        )
+        self.assertEqual(answers, [[74, 75]] * 3)
+        self.assertEqual(len(self.requests), 2)
+        self.assertEqual(self.connection_count, 2)
+
+    async def test_auto_persistent_transports_do_not_retry_lost_write_ack(self):
+        for mode in ('tcp','rtuovertcp'):
+            with self.subTest(mode=mode):
+                self.rtu = mode == 'rtuovertcp'
+                self.fixed_id = False
+                await self.hub.async_reconfigure('127.0.0.1', self.server.sockets[0].getsockname()[1], mode,
+                    connect_timeout=1, connect_retries=0, request_timeout=.15)
+                await self.hub.configure_polling({'polling_profile':'auto','block_pause':0})
+                before = len(self.requests)
+                self.fault = 'timeout'
+                await self.hub.async_pb_write_register(1, 0x301, 41)
+                self.assertEqual([r[3] for r in self.requests[before:]],[6,3])
+
+    async def test_auto_illegal_address_preserves_typed_error(self):
+        await self.hub.configure_polling({"polling_profile": "auto", "block_pause": 0})
+        self.fault = "exception"
+        with self.assertRaises(hub_module.RegisterAddressError):
+            await self.hub.async_read_block(1, 0, 4)
+        self.assertEqual(self.hub.scheduler.limits[1], 2)
 
     async def test_reconnect_resets_error_and_checks_a_new_socket_in_every_mode(self):
         for mode in ("rtuovertcp", "tcp", "tcp_proxy"):

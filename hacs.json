@@ -1,6 +1,8 @@
 {
-  "name": "R290 Heatpump",
+  "name": "R290 NextGen",
   "content_in_root": false,
-  "domains": ["r290_heatpump"],
+  "domains": [
+    "r290_heatpump"
+  ],
   "country": "DE"
 }
