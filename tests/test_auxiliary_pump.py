@@ -5,6 +5,7 @@ import importlib
 import sys
 import types
 import unittest
+import time
 from unittest.mock import AsyncMock
 
 import test_shared_connection as fixture
@@ -344,7 +345,7 @@ class ControllerTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_active_stale_temperature_enters_fallback(self):
         await self.controller.async_set_mode("auto")
-        self.controller.logic.running_since = 0
+        self.controller.logic.running_since = time.monotonic() - 1000
         put(self.hass, "sensor.supply", 35, "°C", age=1000)
         await self.controller.async_evaluate()
         self.assertEqual(self.controller.decision.phase, "fallback")
@@ -383,7 +384,7 @@ class ControllerTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_missing_actuator_feedback_latches_observer(self):
         await self.controller.async_set_mode("auto")
-        self.controller._feedback_since = 0
+        self.controller._feedback_since = time.monotonic() - 1000
         put(self.hass, "number.pump", 1, min=0, max=10, step=.1)
         await self.controller.async_evaluate()
         self.assertEqual(self.controller.mode, "observe")
@@ -458,7 +459,7 @@ class ControllerTests(unittest.IsolatedAsyncioTestCase):
         put(self.hass, "number.pump", 6, min=0, max=10, step=1)
         self.controller.config["max_step"] = 10
         await self.controller.async_set_mode("manual", manual_speed=65)
-        self.controller.logic.running_since = 0
+        self.controller.logic.running_since = time.monotonic() - 1000
         await self.controller.async_evaluate()
         self.assertEqual(self.controller.last_command, 60)
         count = self.hass.services.async_call.await_count

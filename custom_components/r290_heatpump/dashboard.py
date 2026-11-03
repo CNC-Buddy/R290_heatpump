@@ -1,4 +1,4 @@
-﻿# Version: 1.0.1
+# Version: 1.0.1
 # Last modified: 2025-10-24 17:33 by CNC-Buddy
 """Register a Lovelace dashboard shipped with the R290 Heat Pump integration."""
 from __future__ import annotations
