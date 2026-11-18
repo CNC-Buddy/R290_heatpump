@@ -74,6 +74,19 @@ class Entity:
         pass
 
 
+class EntityRegistry:
+    def __init__(self):
+        self.entities = {}
+
+    def async_get(self, entity_id):
+        return self.entities.get(entity_id)
+
+    def async_get_entity_id(self, domain, platform, unique_id):
+        return next((entity_id for entity_id, entry in self.entities.items()
+                     if entity_id.startswith(domain + ".") and entry.platform == platform
+                     and entry.unique_id == unique_id), None)
+
+
 class Coordinator:
     @classmethod
     def __class_getitem__(cls, item):
@@ -167,6 +180,8 @@ module("homeassistant.const", EVENT_COMPONENT_LOADED="component_loaded", CONF_HO
        STATE_ON="on", UnitOfTemperature=types.SimpleNamespace(CELSIUS="Â°C"),
        Platform=types.SimpleNamespace(SENSOR="sensor", NUMBER="number", SELECT="select", BUTTON="button", SWITCH="switch"))
 module("homeassistant.helpers")
+module("homeassistant.helpers.entity_registry", async_get=lambda hass: hass.entity_registry,
+       EVENT_ENTITY_REGISTRY_UPDATED="entity_registry_updated")
 module("homeassistant.helpers.update_coordinator", DataUpdateCoordinator=Coordinator)
 module("homeassistant.helpers.device_registry", DeviceInfo=dict, async_get=lambda hass: hass.registry,
        async_entries_for_config_entry=lambda registry, entry_id: [d for d in registry.devices.values() if entry_id in d.config_entries])
@@ -239,6 +254,7 @@ class Hass:
     def __init__(self, entries):
         self.data = {}
         self.registry = Registry()
+        self.entity_registry = EntityRegistry()
         self.config_entries = ConfigEntries(self, entries)
         self.tasks = set()
         self.states = {}

@@ -35,5 +35,5 @@ jobs:
         uses: "hacs/action@main"
         with:
           category: "integration"
-          # Entferne diesen Schlüssel, wenn du Logos zur Home Assistant Brands-Repo hinzugefügt hast
-          ignore: "brands"
+          # Benutzerdefiniertes Repository: Die nichtkommerzielle Lizenz erfüllt die OSI-Vorgabe des Standardkatalogs nicht.
+          ignore: "brands license"

@@ -156,8 +156,16 @@ class R290HeatPumpModbusSelect(SelectEntity):
         if option not in self._options:
             raise ValueError("Invalid option")
         value = self._options[option]
-        await self._hub.async_pb_write_register(self._slave, self._address, int(value), **({"owner":self._batch._owner} if getattr(self._hub,"scheduler",None) and self._batch else {}))
+        scheduled = self._hub.scheduler is not None
+        owner = {"owner": self._batch._owner} if scheduled and self._batch else {}
+        await self._hub.async_pb_write_register(self._slave, self._address, value, **owner)
+        if self._batch and not scheduled:
+            self._batch.cache_written_register(self._address, value)
         self._current_option = option
+        self._attr_available = True
+        self.async_write_ha_state()
+        if self._batch and not scheduled:
+            await self._batch.request_refresh(self._scan_interval)
 
     async def async_update(self):
         try:

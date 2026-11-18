@@ -16,7 +16,6 @@ fixture.module("homeassistant.components.websocket_api",
                async_response=lambda fn: fn, async_register_command=Mock())
 fixture.module("homeassistant.components.http", StaticPathConfig=lambda *args: args)
 fixture.module("homeassistant.components.panel_custom", async_register_panel=AsyncMock())
-fixture.module("homeassistant.helpers.entity_registry", async_get=lambda hass: hass.entity_registry)
 panel = importlib.import_module("r290_under_test.panel")
 
 

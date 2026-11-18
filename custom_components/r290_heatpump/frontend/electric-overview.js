@@ -1,6 +1,6 @@
-import {esc,numeric} from './model.js?v=1.1.1';
-import {electricArt} from './electric-art.js?v=1.1.1';
-import {patchHTML} from './dom.js?v=1.1.1';
+import {esc,numeric} from './model.js?v=1.1.2';
+import {electricArt} from './electric-art.js?v=1.1.2';
+import {patchHTML} from './dom.js?v=1.1.2';
 
 const t=(p,de,en)=>p.language==='en'?en:de;
 // Keep hp_power as the storage key so b18 assignments retain their history.

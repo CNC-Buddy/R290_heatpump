@@ -1,4 +1,4 @@
-import {esc,fmt} from './model.js?v=1.1.1';
+import {esc,fmt} from './model.js?v=1.1.2';
 
 export function renderBusHealth(p){
   const t=(de,en)=>p.language==='en'?en:de;

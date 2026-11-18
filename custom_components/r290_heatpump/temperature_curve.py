@@ -11,8 +11,10 @@ from homeassistant.helpers.event import (
     async_track_state_change_event,
     async_track_time_interval,
 )
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers import entity_registry as er
 
+from .const import DOMAIN
 from .pv_optimization import PV_CURVE_CONFIG
 from .curve_math import DEFAULTS, LIMITS, finite, points_from_options, interpolate
 
@@ -88,10 +90,8 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         self._external_candidate_since: Optional[float] = None
         self._external_hold_remaining: float = 0.0
         self._external_hold_handle: Optional[asyncio.TimerHandle] = None
-        self._external_number_id = f"number.r290_heatpump_{self._curve_prefix}_external_heating_offset"
-        self._external_switch_ids = [
-            f"switch.r290_heatpump_{self._curve_prefix}_external_heating_offset",
-        ]
+        self._external_ids = (None, None, None)
+        self._external_state_listener = None
         self._last_written_offsets = (0.0, 0.0)
         self._post_write_handle: Optional[asyncio.TimerHandle] = None
         slave_id = int(self._entry.data.get(CONF_SLAVE, 1))
@@ -201,7 +201,6 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
             f"number.r290_heatpump_{prefix}_pv_offset_reset_kw",
             f"number.r290_heatpump_{prefix}_pv_battery_threshold_pct",
             f"number.r290_heatpump_{prefix}_pv_hold_minutes",
-            f"number.r290_heatpump_{prefix}_external_offset_hold_minutes",
         ]
 
     def _ensure_pv_sensor_listeners(self, callback) -> None:
@@ -517,22 +516,15 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
             _LOGGER.debug("Unable to schedule post-write timer: %s", err)
 
     def _compute_external_offset(self, *, commit: bool) -> float:
-        switch_on = False
-        active_source: str | None = None
-        for entity_id in self._external_switch_ids:
-            state = self._hass.states.get(entity_id)
-            if state and state.state not in (None, "unknown", "unavailable"):
-                if str(state.state).lower() == STATE_ON:
-                    switch_on = True
-                    active_source = entity_id
-                    break
-
+        switch_id, number_id, _ = self._external_ids
+        state = self._hass.states.get(switch_id) if switch_id else None
+        switch_on = state is not None and state.state == STATE_ON
         self._external_offset_enabled = switch_on
-        self._external_offset_source = active_source
+        self._external_offset_source = switch_id if switch_on else None
 
         candidate = 0.0
-        if switch_on:
-            number_state = self._hass.states.get(self._external_number_id)
+        if switch_on and number_id:
+            number_state = self._hass.states.get(number_id)
             if number_state and number_state.state not in (None, "unknown", "unavailable"):
                 try:
                     candidate = float(number_state.state)
@@ -718,9 +710,31 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         for ent_id in self._pv_control_entity_ids(curve_prefix):
             self._listeners.append(async_track_state_change_event(self._hass, [ent_id], _maybe_write_target))
 
-        external_entities = set(self._external_switch_ids + [self._external_number_id])
-        for ent_id in external_entities:
-            self._listeners.append(async_track_state_change_event(self._hass, [ent_id], _maybe_write_target))
+        registry = er.async_get(self._hass)
+
+        @callback
+        def bind_external_controls(event=None):
+            if self._removed or (event and not event.data["entity_id"].startswith(("number.", "switch."))):
+                return
+            prefix = f"{DOMAIN}_{self._curve_prefix}_"
+            ids = tuple(
+                registry.async_get_entity_id(domain, DOMAIN, f"{prefix}{suffix}_{self._entry.entry_id}")
+                for domain, suffix in (("switch", "external_heating_offset"),
+                                       ("number", "external_offset"), ("number", "external_offset_hold"))
+            )
+            if ids == self._external_ids:
+                return
+            self._external_ids = ids
+            if self._external_state_listener:
+                self._external_state_listener()
+                self._external_state_listener = None
+            if tracked := [entity_id for entity_id in ids if entity_id]:
+                self._external_state_listener = async_track_state_change_event(
+                    self._hass, tracked, _maybe_write_target
+                )
+
+        self._listeners.append(self._hass.bus.async_listen(er.EVENT_ENTITY_REGISTRY_UPDATED, bind_external_controls))
+        bind_external_controls()
 
         # React to switch toggles as well
         try:
@@ -754,6 +768,9 @@ class R290HeatPumpTemperatureCurveSensor(SensorEntity):
         for unsub in self._listeners:
             unsub()
         self._listeners.clear()
+        if self._external_state_listener:
+            self._external_state_listener()
+            self._external_state_listener = None
         # An already-running write may finish, but no queued callback can start
         # another one after removal. Wait before releasing the shared hub.
         async with self._write_lock:

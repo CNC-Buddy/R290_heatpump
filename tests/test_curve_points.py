@@ -117,6 +117,12 @@ class CurvePointRuntimeTests(unittest.IsolatedAsyncioTestCase):
         self.entry = fixture.Entry('curve', 'heating_curve', slave=2, outdoor_sensor='sensor.out')
         self.entry.options = {'curve_points': POINTS, 'heatcurve_active': True, 'stepsize_c': 0.5}
         self.hass = fixture.Hass([self.entry])
+        self.hass.bus.async_listen = lambda event, listener: fixture.track(self.hass, event, listener)
+        self.switch_id = 'switch.renamed_external_offset'
+        self.number_id = 'number.renamed_external_offset'
+        for entity_id, suffix in ((self.switch_id, 'external_heating_offset'), (self.number_id, 'external_offset')):
+            self.hass.entity_registry.entities[entity_id] = types.SimpleNamespace(
+                platform='r290_heatpump', unique_id=f'r290_heatpump_heating_{suffix}_curve')
         self.hub = types.SimpleNamespace(async_pb_write_register=AsyncMock())
         self.sensor = fixture.curve_module.R290HeatPumpTemperatureCurveSensor(self.hass, self.entry, {}, self.hub)
         self.outdoor(10)
@@ -189,8 +195,8 @@ class CurvePointRuntimeTests(unittest.IsolatedAsyncioTestCase):
         self.entry.options.update(pv_enabled=True, pv_power_sensor='sensor.pv', pv_grid_threshold_min_kw=1,
             pv_grid_threshold_max_kw=2, pv_grid_offset_max=10, external_offset_hold_minutes=0)
         self.hass.states['sensor.pv'] = types.SimpleNamespace(state='3', attributes={'unit_of_measurement':'kW'})
-        self.hass.states[self.sensor._external_switch_ids[0]] = types.SimpleNamespace(state='on', attributes={})
-        self.hass.states[self.sensor._external_number_id] = types.SimpleNamespace(state='10', attributes={})
+        self.hass.states[self.switch_id] = types.SimpleNamespace(state='on', attributes={})
+        self.hass.states[self.number_id] = types.SimpleNamespace(state='10', attributes={})
         self.outdoor(0)
         await self.sensor._pv_callback()
         self.assertEqual(self.sensor.state, 55)
@@ -198,6 +204,30 @@ class CurvePointRuntimeTests(unittest.IsolatedAsyncioTestCase):
         await self.sensor._pv_callback()
         self.assertEqual(self.sensor.state, 52)
         self.assertTrue(self.sensor.extra_state_attributes['target_limited'])
+
+    async def test_external_offset_tracks_live_renames_and_keeps_manual_value_when_off(self):
+        self.entry.options.update(external_offset_value=4, external_offset_hold_minutes=0, pv_enabled=False)
+        self.hass.states[self.switch_id] = types.SimpleNamespace(state='on', attributes={})
+        self.hass.states[self.number_id] = types.SimpleNamespace(state='4', attributes={})
+        self.hass.states['number.r290_heatpump_heating_external_heating_offset'] = types.SimpleNamespace(state='9')
+        await self.sensor._pv_callback()
+        self.assertEqual(self.sensor.state, 34)
+
+        registry_update = next(fn for source, fn, active in self.hass.subscriptions if source == 'entity_registry_updated')
+        for old_id, new_id in ((self.number_id, 'number.new_offset'), (self.switch_id, 'switch.new_offset')):
+            entries = self.hass.entity_registry.entities
+            entries[new_id] = entries.pop(old_id)
+            self.hass.states[new_id] = self.hass.states.pop(old_id)
+            registry_update(types.SimpleNamespace(data={'action': 'update', 'old_entity_id': old_id, 'entity_id': new_id}))
+            self.assertFalse(any(old_id in source for source, fn, active in self.hass.subscriptions if active and isinstance(source, list)))
+            listener, = [fn for source, fn, active in self.hass.subscriptions if active and isinstance(source, list) and new_id in source]
+            await listener()
+            self.assertEqual(self.sensor.state, 34)
+
+        self.hass.states['switch.new_offset'].state = 'off'
+        await listener()
+        self.assertEqual(self.sensor.state, 30)
+        self.assertEqual(self.entry.options['external_offset_value'], 4)
 
     async def test_disabled_curve_never_writes_and_cooling_direction_is_preserved(self):
         self.entry.options['heatcurve_active'] = False

@@ -592,6 +592,11 @@ class ModbusBatchManager:
             return None
         return coord.data.get(address)
 
+    def cache_written_register(self, address: int, value: int) -> None:
+        for coord in self._coordinators.values():
+            if address in coord._addresses:
+                coord.data[address] = value
+
     def diagnostics(self):
         """Only received observations; inspecting them never initiates a read."""
         result = {}
